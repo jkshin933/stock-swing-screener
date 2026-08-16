@@ -45,7 +45,7 @@ GEMINI_API_KEY = os.environ.get(
 )
 DISCORD_WEBHOOK_URL = sanitize_url(os.environ.get(
     "DISCORD_WEBHOOK_URL", 
-    "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
+    "[https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB](https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB)"
 ))
 
 # 최신 5종 모델 정예 우선순위 큐
@@ -182,7 +182,7 @@ if not is_connected:
     sys.exit(1)
 
 print(f"\n🌐 [1/4] S&P 500 종목 데이터 수집 중... ({run_date_str})")
-sp500_url = sanitize_url("[https://en.wikipedia.org/wiki/List_of_S%26P_500_companies](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies)")
+sp500_url = sanitize_url("https://" + "en.wikipedia.org/wiki/List_of_S%26P_500_companies")
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(sp500_url, headers=headers)
 sp500_table = pd.read_html(io.StringIO(response.text))[0]
@@ -337,11 +337,11 @@ stage1_text = "\n".join(stage1_lines)
 print(f"✨ [STAGE 1 완료] 총 {len(df_result)}개 중 상위 20개 종목 확정")
 
 # ==============================================================================
-# 7. [AI 전담: STAGE 2 TOP 10 & STAGE 3 TOP 10] 리포트 생성
+# 7. [AI 전담: 2A 순위표 -> 2B 심층분석 -> 3A 실행표 -> 3B 매트릭스]
 # ==============================================================================
 AI_PROMPT = """# Role & Core Mission
 너는 미국 대형주 20EMA 눌림목 스윙 트레이딩 전문 퀀트 분석가다.
-입력된 STAGE 1 20개 종목의 정량 데이터와 [최근 7일 뉴스]를 종합 분석하여 SECTION 2부터 SECTION 5까지 작성하라.
+입력된 STAGE 1 20개 종목의 정량 데이터와 [최근 7일 뉴스]를 종합 분석하여 촉매 점수를 보정하고 SECTION 2부터 SECTION 5까지 작성하라.
 
 [⚠️ 리스크 등급(A/B/C/D) 절대 판정 및 촉매 점수 보정]
 • Grade A (+1★): 2주 내 어닝 없음 + 최근 7일 내 강력한 호재 뉴스 + Strong Buy 컨센서스
@@ -349,30 +349,30 @@ AI_PROMPT = """# Role & Core Mission
 • Grade C (-1★): 2주 이내 실적발표(어닝 변동성 위험) 또는 최근 7일 내 단기 악재/노이즈
 • Grade D (-2★): 3일 내 실적발표 임박 또는 치명적 규제/조사 악재 (Stage 3 추천 제외)
 
-[서식 및 출력 절대 규칙]
+[서식 및 출력 순서 절대 규칙]
 1. 모든 테이블은 1줄당 공백 포함 최대 34자(Characters)를 절대 초과하지 마라.
-2. STAGE 2-A: 입력된 20개 종목 중 최상위 10개 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 리스크, 센티먼트/등급을 상세 작성하라.
-3. STAGE 2-B: 20개 종목의 촉매 보정 후 최종 점수(6★>5★>4★) 내림차순으로 재정렬하여 **최종 TOP 10 테이블(01~10번)**만 출력하라.
-4. STAGE 3-A: 최종 선정된 **TOP 10 종목 전체에 대해 실전 매매 실행표(01~10번)**를 34자 테이블로 작성하라. (1차: 2.0R 50% 분할익절 / 2차: 52주 고가)
-5. STAGE 3-B: 최종 선정된 **TOP 10 종목 전체에 대해 시초가 매트릭스(01~10번)**를 34자 테이블로 작성하라. (정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
+2. STAGE 2-A (SECTION 2): 입력된 20개 종목 전체에 대해 리스크 등급 및 촉매 점수를 보정한 후, 최종 점수(6★>5★>4★) 내림차순으로 재정렬하여 **최종 TOP 10 테이블(01~10번)**을 가장 먼저 출력하라.
+3. STAGE 2-B (SECTION 3): STAGE 2-A에서 최종 선정된 TOP 10 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 리스크, 센티먼트/등급을 상세 작성하라.
+4. STAGE 3-A (SECTION 4): 최종 TOP 10 종목 전체에 대해 실전 매매 실행표(01~10번)를 34자 테이블로 작성하라. (1차: 2.0R 50% 분할익절 / 2차: 52주 고가)
+5. STAGE 3-B (SECTION 5): 최종 TOP 10 종목 전체에 대해 시초가 매트릭스(01~10번)를 34자 테이블로 작성하라. (정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
 6. 각 섹션은 반드시 '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
 [출력 양식 템플릿]
 
 ### [SECTION 2]
-🏢 [STAGE 2-A: TOP 10 심층 펀더멘털 & 센티먼트 분석]
+⚖️ [STAGE 2-A: 촉매 보정 최종 TOP 10]
+최종 종목 기존  점수변동 등급 핵심사유
+01  AAA (01) 5★->6★   A  클라우드수요폭증
+... (01번부터 10번까지 총 10개 종목 순위표 출력)
+
+### [SECTION 3]
+🏢 [STAGE 2-B: 최종 TOP 10 심층 펀더멘털 & 센티먼트 분석]
 01. AAA - Company Name ($2800B)
  • 사업/해자: 핵심 사업 영역 및 해자 요약
  • 7일내 뉴스: 최근 7일 뉴스 기반 모멘텀
  • 리스크: 단기 매크로/산업 리스크
  • 센티먼트: Strong Buy (수혜 지속) | 등급: A (+1★)
 ... (01번부터 10번까지 총 10개 종목 상세 작성)
-
-### [SECTION 3]
-⚖️ [STAGE 2-B: 촉매 보정 최종 TOP 10]
-최종 종목 기존  점수변동 등급 핵심사유
-01  AAA (01) 5★->6★   A  클라우드수요폭증
-... (01번부터 10번까지 총 10개 종목 출력)
 
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 10 실전 매매 실행표]
@@ -398,14 +398,14 @@ prompt_payload = f"""[분석 기준 정보 (미국 동부시각 ET)]
 아래는 파이썬에서 확정한 STAGE 1 TOP 20 종목의 정량 데이터 및 최근 7일 뉴스입니다:
 {top20_payload}
 
-위 20개 종목을 모두 평가하여:
-- SECTION 2 (STAGE 2-A): 상위 10개 종목 심층 펀더멘털 분석
-- SECTION 3 (STAGE 2-B): 촉매 보정 후 최종 TOP 10 재랭킹 테이블
+위 20개 종목 전체의 촉매를 평가하여:
+- SECTION 2 (STAGE 2-A): 촉매 보정 후 최종 TOP 10 재랭킹 테이블 (가장 먼저 출력)
+- SECTION 3 (STAGE 2-B): 위에서 선정된 최종 TOP 10 종목에 대한 심층 뉴스/센티먼트 분석
 - SECTION 4 (STAGE 3-A): 최종 TOP 10 실전 매매 실행표
 - SECTION 5 (STAGE 3-B): 최종 TOP 10 시초가 매트릭스
 를 34자 모바일 규격으로 작성해 주세요."""
 
-print(f"🚀 [4/4] Gemini AI가 STAGE 2(TOP 10) & STAGE 3(TOP 10) 리포트 생성 중...")
+print(f"🚀 [4/4] Gemini AI가 STAGE 2-A(재랭킹), 2-B(심층분석), 3-A/B 리포트 생성 중...")
 ai_sections_text = None
 
 for model_name in validated_queue:
