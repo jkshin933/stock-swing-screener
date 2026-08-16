@@ -21,19 +21,16 @@ DISCORD_WEBHOOK_URL = os.environ.get(
     "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
 )
 
-# 🎯 미국 동부 표준시 (ET - New York) 타임존
-ET_TZ = ZoneInfo("America/New_York")
-
-# 🎯 구글 공식 REST API 표준 모델 엔드포인트 목록
 MODEL_CANDIDATES = [
-    "gemini-2.0-flash",       # 1순위: 초고속 최신 안정 모델
-    "gemini-1.5-flash",       # 2순위: 표준 Flash 모델
-    "gemini-1.5-pro",         # 3순위: 심층 퀀트 분석 Pro 모델
-    "gemini-2.0-flash-lite"   # 4순위: 초경량 안전망
+    "gemini-3.7-flash",       # 1순위: 3.7 Flash (Extended Thinking)
+    "gemini-3.1-pro",         # 2순위: 3.1 Pro (Advanced reasoning)
+    "gemini-3.5-flash-lite",   # 3순위: 3.5 Flash-Lite (Fastest)
+    "gemini-2.0-flash",       # 4순위: 2.0 Flash (안전망)
+    "gemini-1.5-flash"        # 5순위: 1.5 Flash (최종 백업)
 ]
 
-MAX_RETRIES_PER_MODEL = 2
-RETRY_DELAYS = [3, 6]
+MAX_RETRIES_PER_MODEL = 3
+RETRY_DELAYS = [5, 10, 15]
 
 # ==============================================================================
 # 2. AI 시스템 프롬프트 (실제 데이터 100% 그라운딩 및 서식 완벽 고정)
