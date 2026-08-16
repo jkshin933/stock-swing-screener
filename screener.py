@@ -1,5 +1,6 @@
 import io
 import os
+import re
 import time
 import requests
 from datetime import datetime
@@ -24,28 +25,31 @@ DISCORD_WEBHOOK_URL = os.environ.get(
 ET_TZ = ZoneInfo("America/New_York")
 
 MODEL_CANDIDATES = [
-    "gemini-3.7-flash",       # 1순위: 3.7 Flash (Extended Thinking)
-    "gemini-3.1-pro",         # 2순위: 3.1 Pro (Advanced reasoning)
-    "gemini-3.5-flash-lite",   # 3순위: 3.5 Flash-Lite (Fastest)
-    "gemini-2.0-flash",       # 4순위: 2.0 Flash (안전망)
-    "gemini-1.5-flash"        # 5순위: 1.5 Flash (최종 백업)
+    "gemini-2.5-flash",       # 1순위: 2.5 Flash (최신 고성능 추론)
+    "gemini-2.0-flash",       # 2순위: 2.0 Flash (초고속 실시간)
+    "gemini-1.5-flash",       # 3순위: 1.5 Flash (안정망 백업)
+    "gemini-3.7-flash",       # 4순위: 3.7 Flash
+    "gemini-1.5-pro"          # 5순위: 1.5 Pro
 ]
 
 MAX_RETRIES_PER_MODEL = 3
 RETRY_DELAYS = [5, 10, 15]
 
 # ==============================================================================
-# 2. AI 시스템 프롬프트 (Section 4 & 5 테이블 서식 완벽 고정)
+# 2. AI 시스템 프롬프트 (실제 데이터 100% 그라운딩 및 모바일 서식 고정)
 # ==============================================================================
 SYSTEM_PROMPT = """# Role & Core Mission
 너는 미국 대형주($10B+) 추세추종 · 20EMA 눌림목 스윙 트레이딩(보유 기간 2일~2주) 전문 퀀트 분석가다.
-입력된 정량 데이터와 [최근 7일 이내 뉴스]를 바탕으로 디스코드 모바일 환경에 최적화된 리포트를 작성하라.
+
+[⚠️ 절대 규칙: 그라운딩 및 환각 방지]
+• 프롬프트 예시에 있는 가상 티커를 절대 출력하지 마라.
+• 반드시 사용자 입력으로 제공된 [실제 종목 데이터]만을 정량 채점 기준에 따라 계산하여 실시간 최고 득점 종목 10개를 선출하라.
 
 [⭐ STAGE 1 기술 점수(5★ 만점) 핵심 채점 룰]
 1. 52W 룸 (상방 여력):
    - 5.0% ~ 10.0% : 1.0점 만점 (1차 목표가 2.0R을 전고점 밑에서 안전하게 익절 가능한 스위트스팟)
-   - 3.0% ~ 5.0% 또는 10.0% ~ 15.0% : 0.5점 (전고점 근접 저항 또는 다소 깊은 눌림목)
-   - 3.0% 미만 : 0.0점 (전고점 저항에 막혀 1차 익절 실패 위험이 높으므로 감점 처리)
+   - 3.0% ~ 5.0% 또는 10.0% ~ 15.0% : 0.5점
+   - 3.0% 미만 : 0.0점 (전고점 저항 충돌 위험 감점)
 2. 거래량 급감 (RelVol < 0.60: 1.0점 / 0.60~0.90: 0.5점)
 3. 20EMA 밀착도 (0.0~1.5%: 1.0점 / 1.5~3.0%: 0.5점)
 4. 정배열 추세 (EMA20>SMA50>SMA200: 1.0점 / 기타: 0.5점)
@@ -59,79 +63,49 @@ SYSTEM_PROMPT = """# Role & Core Mission
 
 [서식 및 출력 절대 규칙]
 1. 모든 테이블은 1줄당 공백 포함 최대 34자(Characters)를 절대 초과하지 마라.
-2. STAGE 1에서는 현재가를 제외하고 작성하라. (52W 룸이 5~10%인 종목이 상위에 오르도록 랭킹 산출)
+2. STAGE 1에서는 현재가를 제외하고 작성하라.
 3. STAGE 2-A에서는 '순번. 티커 - 정식회사명 (시총)' 표기 후 [최근 7일 뉴스]를 반영하여 작성하라.
 4. STAGE 2-B는 최종 점수(6★>5★>4★) 내림차순으로 정렬하라.
-5. STAGE 3-A(실전 매매 실행표)와 STAGE 3-B(시초가 매트릭스)는 반드시 아래 가이드의 34자 테이블 형태로 작성하라.
+5. STAGE 3-A(실전 매매 실행표)와 STAGE 3-B(시초가 매트릭스)는 반드시 34자 테이블 형태로 작성하라.
 6. 각 섹션은 반드시 '### [SECTION 1]', '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
-[섹션별 리포트 작성 가이드]
+[출력 양식 템플릿 예시]
 
 ### [SECTION 1]
 🏆 [STAGE 1: 기술적 1차 셋업 TOP 10]
 순위 종목  시총   이격  52W룸 RelV 점수
-01  APH  $206B +2.1% 6.8% 0.67 5★
-02  GE   $382B +1.3% 5.6% 0.89 5★
-03  AWK  $27B  +1.6% 5.7% 0.71 5★
-04  HWM  $115B +2.4% 7.2% 0.90 4★
-05  MA   $499B +2.0% 5.1% 0.84 4★
-06  WFC  $269B +2.0% 8.3% 0.67 4★
-07  KO   $377B +2.0% 3.7% 0.58 4★
-08  DDOG $92B  +0.3% 14.6 0.83 4★
-09  APD  $69B  +2.8% 1.9% 0.46 4★
-10  BA   $183B +2.1% 9.8% 0.43 3★
+01  AAA  $2800B +0.8% 9.4% 0.57 5★
+02  BBB  $206B +2.1% 6.8% 0.67 5★
+...
 
 ### [SECTION 2]
 🏢 [STAGE 2-A: TOP 10 심층 펀더멘털 & 센티먼트 분석]
-(※ 01번부터 10번까지 회사명과 최근 7일 뉴스를 반영하여 상세 작성)
-
-01. APH - Amphenol Corp ($206B)
- • 사업/해자: AI 데이터센터/방산용 초고속 커넥터 글로벌 1위
- • 7일내 뉴스: AI 백플레인 수주 확대 및 목표가 상향
- • 리스크: IT 하드웨어 전반 공급망 병목 현상
- • 센티먼트: Strong Buy (AI 인프라 수혜) | 등급: A (+1★)
-
-02. GE - GE Aerospace ($382B)
- • 사업/해자: 민간/군용 항공기 제트 엔진 글로벌 독점 제조
- • 7일내 뉴스: 상업용 제트엔진 유지보수(MRO) 수주 증가
- • 리스크: 항공기 부품 공급망 지연 이슈
- • 센티먼트: Strong Buy (항공 수요 견조) | 등급: A (+1★)
-
-... (03번부터 10번까지 10개 기업 상세 작성)
+01. AAA - Company Name ($2800B)
+ • 사업/해자: 핵심 사업 영역 및 해자 요약
+ • 7일내 뉴스: 최근 7일 뉴스 기반 모멘텀
+ • 리스크: 단기 매크로/산업 리스크
+ • 센티먼트: Strong Buy (수혜 지속) | 등급: A (+1★)
+...
 
 ### [SECTION 3]
 ⚖️ [STAGE 2-B: 촉매 보정 및 최종 재랭킹 (FINAL TOP 10)]
 최종 종목 기존  점수변동 등급 핵심사유
-01  APH (01) 5★->6★   A  AI커넥터 수요폭증
-02  GE  (02) 5★->6★   A  항공엔진 MRO 호조
-03  AWK (03) 5★->5★   B  수도유틸 방어우수
-04  MA  (05) 4★->4★   B  결제망 견조/중립
-05  HWM (04) 4★->4★   B  항공우주 밸류중립
-06  WFC (06) 4★->4★   B  대형은행 마진안정
-07  KO  (07) 4★->4★   B  필수소비재 배당형
-08  DDOG(08) 4★->4★   B  클라우드/52W룸大
-09  APD (09) 4★->4★   B  독점가스/52W룸좁음
-10  BA  (10) 3★->2★   C  인도지연/품질이슈
+01  AAA (01) 5★->6★   A  클라우드수요폭증
+...
 
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 5 실전 매매 실행표]
 (※ 1차: 2.0R 50% 분할익절 / 2차: 52주 고가 라인)
 순위 종목  매수가  손절가  1차(2R) 2차(52W)
-01  APH  $167.1 $163.8 $173.8 $178.5
-02  GE   $368.4 $361.0 $383.2 $388.8
-03  AWK  $136.2 $133.5 $141.6 $143.9
-04  MA   $569.3 $557.9 $592.1 $598.0
-05  HWM  $289.2 $282.8 $302.0 $310.0
+01  AAA  $262.7 $257.5 $273.1 $287.2
+...
 
 ### [SECTION 5]
 🚦 [STAGE 3-B: 최종 TOP 5 시초가 매트릭스]
 (※ 정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
 순위 종목  정상진입  갭상주의  이탈취소
-01  APH  ~$167.9  ~$169.6  <$164.6
-02  GE   ~$370.2  ~$373.9  <$362.8
-03  AWK  ~$136.8  ~$138.2  <$134.1
-04  MA   ~$572.1  ~$577.8  <$560.7
-05  HWM  ~$290.6  ~$293.5  <$284.8
+01  AAA  ~$264.0  ~$266.6  <$258.7
+...
 """
 
 # ==============================================================================
@@ -180,8 +154,11 @@ def extract_recent_news(ticker_obj, max_count=3, max_days=7):
 
 run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
 
-print("🌐 [1/4] S&P 500 종목 리스트 수집 중...")
-sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+print(f"🌐 [1/4] S&P 500 종목 리스트 수집 중... ({run_date_str})")
+raw_sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+url_match = re.search(r"https?://[^\s\)\]]+", raw_sp500_url)
+sp500_url = url_match.group(0) if url_match else "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(sp500_url, headers=headers)
 sp500_table = pd.read_html(io.StringIO(response.text))[0]
@@ -285,7 +262,7 @@ candidate_df = pd.DataFrame(candidates)
 print(f"✨ [완료] 조건 충족 종목 {len(candidate_df)}개 발견")
 
 # ==============================================================================
-# 4. AI 리포트 생성 (지능형 재시도 및 폴백)
+# 4. AI 리포트 생성 (헤더 인증 및 모델 폴백)
 # ==============================================================================
 used_model_info = "Unknown Model"
 
@@ -296,53 +273,43 @@ else:
 • 실행 일시: {run_date_str}
 • 시장 데이터 기준일: {data_date_str}
 
-아래는 파이썬에서 기업 정보, 52주 최고가 및 Room52W(%) 데이터가 포함된 $10B+ 스윙 셋업 종목 데이터입니다:
+아래는 파이썬에서 추출한 실제 {len(candidate_df)}개 정량 분석 종목 데이터입니다:
 {candidate_df.to_string(index=False)}
 
-위 데이터를 바탕으로 [52W 룸 배점 기준: 5~10% 만점, 3~5% 0.5점, <3% 0점]과 [A/B/C/D 리스크 등급 기준]에 따라 SECTION 1부터 SECTION 5까지 34자 모바일 최적화 테이블 규격으로 작성해 주세요."""
+위 {len(candidate_df)}개 데이터 중에서만 52W 룸 배점 기준(5~10%: 1.0점 만점, 3~5%: 0.5점, <3%: 0점) 및 리스크 등급 기준에 따라 채점하여 SECTION 1부터 SECTION 5까지 34자 모바일 최적화 테이블 규격으로 리포트를 작성해 주세요."""
 
     print(f"🚀 [4/4] AI 퀀트 정밀 리포트 생성 중...")
-    clean_api_key = str(GEMINI_API_KEY).strip().encode("ascii", "ignore").decode("ascii")
+    clean_api_key = str(GEMINI_API_KEY).strip()
     
-    headers = {"Content-Type": "application/json"}
+    # 🎯 AQ. 인증키 완벽 호환: x-goog-api-key 헤더 탑재
+    req_headers = {
+        "Content-Type": "application/json",
+        "x-goog-api-key": clean_api_key
+    }
     payload = {
         "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
         "contents": [{"parts": [{"text": prompt_payload}]}]
     }
     
     report_text = None
-    
     for model_name in MODEL_CANDIDATES:
         api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={clean_api_key}"
-        
         current_payload = payload.copy()
-        is_thinking = False
-        if "3.7" in model_name:
-            current_payload["generationConfig"] = {"thinking_config": {"thinking_budget": 2048}}
-            is_thinking = True
-            
+        
         for attempt in range(MAX_RETRIES_PER_MODEL + 1):
             try:
-                response = requests.post(api_url, headers=headers, json=current_payload, timeout=60)
-                
-                if response.status_code != 200 and "thinking" in response.text.lower():
-                    current_payload.pop("generationConfig", None)
-                    is_thinking = False
-                    response = requests.post(api_url, headers=headers, json=current_payload, timeout=60)
+                response = requests.post(api_url, headers=req_headers, json=current_payload, timeout=90)
                 
                 if response.status_code == 200:
                     res_json = response.json()
                     report_text = res_json["candidates"][0]["content"]["parts"][0]["text"]
-                    mode_str = " (Extended Thinking)" if is_thinking else ""
-                    used_model_info = f"{model_name}{mode_str}"
+                    used_model_info = model_name
                     break
-                
                 elif response.status_code in [503, 429]:
                     if attempt < MAX_RETRIES_PER_MODEL:
                         time.sleep(RETRY_DELAYS[attempt])
                 else:
                     break
-                    
             except Exception:
                 if attempt < MAX_RETRIES_PER_MODEL:
                     time.sleep(RETRY_DELAYS[attempt])
