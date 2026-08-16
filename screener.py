@@ -21,6 +21,9 @@ DISCORD_WEBHOOK_URL = os.environ.get(
     "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
 )
 
+ET_TZ = ZoneInfo("America/New_York")
+run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")  # 정상 작동
+
 MODEL_CANDIDATES = [
     "gemini-3.7-flash",       # 1순위: 3.7 Flash (Extended Thinking)
     "gemini-3.1-pro",         # 2순위: 3.1 Pro (Advanced reasoning)
