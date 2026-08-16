@@ -10,8 +10,11 @@ import pandas as pd
 import yfinance as yf
 
 # ==============================================================================
-# 1. 환경변수 로드 (GitHub Secrets 우선 + Fallback 기본값)
+# 1. 환경변수 및 전역 설정
 # ==============================================================================
+ET_TZ = ZoneInfo("America/New_York")
+run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
+
 GEMINI_API_KEY = os.environ.get(
     "GEMINI_API_KEY", 
     "AQ.Ab8RN6KVNJKlJpNgNmoY2m4zsRrcjXbOpd0utS5tFK-u9TmcuQ"
@@ -20,9 +23,6 @@ DISCORD_WEBHOOK_URL = os.environ.get(
     "DISCORD_WEBHOOK_URL", 
     "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
 )
-
-ET_TZ = ZoneInfo("America/New_York")
-run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")  # 정상 작동
 
 MODEL_CANDIDATES = [
     "gemini-3.7-flash",       # 1순위: 3.7 Flash (Extended Thinking)
@@ -36,14 +36,14 @@ MAX_RETRIES_PER_MODEL = 3
 RETRY_DELAYS = [5, 10, 15]
 
 # ==============================================================================
-# 2. AI 시스템 프롬프트 (실제 데이터 100% 그라운딩 및 서식 완벽 고정)
+# 2. AI 시스템 프롬프트 (STAGE 1 TOP 20 및 34자 모바일 규격)
 # ==============================================================================
 SYSTEM_PROMPT = """# Role & Core Mission
 너는 미국 대형주($10B+) 추세추종 · 20EMA 눌림목 스윙 트레이딩(보유 기간 2일~2주) 전문 퀀트 분석가다.
 
 [⚠️ 절대 규칙: 그라운딩 및 환각 방지]
 • 프롬프트 예시에 있는 가상 티커를 절대 출력하지 마라.
-• 반드시 사용자 입력으로 제공된 [실제 종목 데이터]만을 정량 채점 기준에 따라 계산하여 실시간 최고 득점 종목 10개를 선출하라.
+• 반드시 사용자 입력으로 제공된 [실제 종목 데이터]만을 정량 채점 기준에 따라 계산하여 STAGE 1에는 실시간 최고 득점 종목 20개(TOP 20)를 선출하라.
 
 [⭐ STAGE 1 기술 점수(5★ 만점) 핵심 채점 룰]
 1. 52W 룸 (상방 여력):
@@ -63,20 +63,21 @@ SYSTEM_PROMPT = """# Role & Core Mission
 
 [서식 및 출력 절대 규칙]
 1. 모든 테이블은 1줄당 공백 포함 최대 34자(Characters)를 절대 초과하지 마라.
-2. STAGE 1에서는 현재가를 제외하고 작성하라.
-3. STAGE 2-A에서는 '순번. 티커 - 정식회사명 (시총)' 표기 후 [최근 7일 뉴스]를 반영하여 작성하라.
-4. STAGE 2-B는 최종 점수(6★>5★>4★) 내림차순으로 정렬하라.
-5. STAGE 3-A(실전 매매 실행표)와 STAGE 3-B(시초가 매트릭스)는 반드시 34자 테이블 형태로 작성하라.
+2. STAGE 1에서는 01번부터 20번까지 총 20개 종목을 점수 내림차순 테이블로 출력하라.
+3. STAGE 2-A에서는 STAGE 1 상위 10개 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 [최근 7일 뉴스]를 반영하여 작성하라.
+4. STAGE 2-B는 최종 점수(6★>5★>4★) 내림차순 TOP 10으로 정렬하라.
+5. STAGE 3-A(실전 매매 실행표)와 STAGE 3-B(시초가 매트릭스)는 최종 TOP 5 종목에 대해 34자 테이블 형태로 작성하라.
 6. 각 섹션은 반드시 '### [SECTION 1]', '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
 [출력 양식 템플릿 예시]
 
 ### [SECTION 1]
-🏆 [STAGE 1: 기술적 1차 셋업 TOP 10]
+🏆 [STAGE 1: 기술적 1차 셋업 TOP 20]
 순위 종목  시총   이격  52W룸 RelV 점수
 01  AAA  $2800B +0.8% 9.4% 0.57 5★
-02  BBB  $206B +2.1% 6.8% 0.67 5★
-...
+02  BBB  $206B  +2.1% 6.8% 0.67 5★
+... (03번부터 20번까지 총 20개 종목 순차 출력)
+20  TTT  $45B   +1.1% 8.2% 0.72 4★
 
 ### [SECTION 2]
 🏢 [STAGE 2-A: TOP 10 심층 펀더멘털 & 센티먼트 분석]
@@ -85,27 +86,27 @@ SYSTEM_PROMPT = """# Role & Core Mission
  • 7일내 뉴스: 최근 7일 뉴스 기반 모멘텀
  • 리스크: 단기 매크로/산업 리스크
  • 센티먼트: Strong Buy (수혜 지속) | 등급: A (+1★)
-...
+... (02번부터 10번까지 10개 종목 상세 작성)
 
 ### [SECTION 3]
 ⚖️ [STAGE 2-B: 촉매 보정 및 최종 재랭킹 (FINAL TOP 10)]
 최종 종목 기존  점수변동 등급 핵심사유
 01  AAA (01) 5★->6★   A  클라우드수요폭증
-...
+... (최종 TOP 10 종목 출력)
 
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 5 실전 매매 실행표]
 (※ 1차: 2.0R 50% 분할익절 / 2차: 52주 고가 라인)
 순위 종목  매수가  손절가  1차(2R) 2차(52W)
 01  AAA  $262.7 $257.5 $273.1 $287.2
-...
+... (최종 TOP 5 종목 출력)
 
 ### [SECTION 5]
 🚦 [STAGE 3-B: 최종 TOP 5 시초가 매트릭스]
 (※ 정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
 순위 종목  정상진입  갭상주의  이탈취소
 01  AAA  ~$264.0  ~$266.6  <$258.7
-...
+... (최종 TOP 5 종목 출력)
 """
 
 # ==============================================================================
@@ -152,8 +153,9 @@ def extract_recent_news(ticker_obj, max_count=3, max_days=7):
         
     return " | ".join(news_list) if news_list else "최근 7일 내 특이 뉴스 없음 (평이한 주가 흐름)"
 
-run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
-
+# ==============================================================================
+# 4. 데이터 수집 파이프라인
+# ==============================================================================
 print(f"🌐 [1/4] S&P 500 종목 리스트 수집 중... ({run_date_str})")
 raw_sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 url_match = re.search(r"https?://[^\s\)\]]+", raw_sp500_url)
@@ -262,7 +264,7 @@ candidate_df = pd.DataFrame(candidates)
 print(f"✨ [완료] 조건 충족 종목 {len(candidate_df)}개 발견")
 
 # ==============================================================================
-# 4. AI 리포트 생성 (헤더 인증 및 모델 폴백 + 상세 에러 추적)
+# 5. AI 리포트 생성 (헤더 인증 및 상세 에러 추적)
 # ==============================================================================
 used_model_info = "Unknown Model"
 error_logs = []
@@ -277,7 +279,10 @@ else:
 아래는 파이썬에서 추출한 실제 {len(candidate_df)}개 정량 분석 종목 데이터입니다:
 {candidate_df.to_string(index=False)}
 
-위 {len(candidate_df)}개 데이터 중에서만 52W 룸 배점 기준(5~10%: 1.0점 만점, 3~5%: 0.5점, <3%: 0점) 및 리스크 등급 기준에 따라 채점하여 SECTION 1부터 SECTION 5까지 34자 모바일 최적화 테이블 규격으로 리포트를 작성해 주세요."""
+위 {len(candidate_df)}개 데이터 중에서만 52W 룸 배점 기준(5~10%: 1.0점 만점, 3~5%: 0.5점, <3%: 0점) 및 리스크 등급 기준에 따라 채점하여:
+- STAGE 1 에는 상위 20개(TOP 20) 종목 테이블을 작성하고 (01~20번),
+- STAGE 2-A & 2-B 에는 상위 10개 종목 분석 및 재랭킹을 작성하며,
+- STAGE 3-A & 3-B 에는 최종 5개 종목 실행표와 매트릭스를 작성해 주세요. (모두 34자 모바일 최적화 테이블 규격 준수)"""
 
     print(f"🚀 [4/4] AI 퀀트 정밀 리포트 생성 중...")
     clean_api_key = str(GEMINI_API_KEY).strip()
@@ -330,7 +335,7 @@ else:
         report_text = f"⚠️ 모든 Gemini 모델 호출에 실패했습니다.\n[원인 진단]: {latest_err}"
 
 # ==============================================================================
-# 5. 디스코드 안전 분할 발송
+# 6. 디스코드 안전 분할 발송
 # ==============================================================================
 def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date):
     raw_clean_text = text.replace("```text", "").replace("```", "").strip()
