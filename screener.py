@@ -2,7 +2,7 @@ import io
 import os
 import time
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 import numpy as np
 import pandas as pd
@@ -139,8 +139,54 @@ SYSTEM_PROMPT = """# Role & Core Mission
 """
 
 # ==============================================================================
-# 3. 데이터 수집 및 7일 뉴스 필터링
+# 3. 데이터 수집 및 7일 뉴스 하이브리드 파싱 함수
 # ==============================================================================
+def extract_recent_news(ticker_obj, max_count=3, max_days=7):
+    """yfinance 구버전/신버전 뉴스 포맷을 모두 호환 파싱하여 최근 7일 뉴스 추출"""
+    news_list = []
+    current_time = time.time()
+    max_seconds = max_days * 24 * 60 * 60
+    
+    try:
+        raw_news = ticker_obj.news
+        if not raw_news:
+            return "최근 주요 뉴스 없음"
+            
+        for item in raw_news:
+            title = None
+            pub_ts = None
+            
+            # [포맷 1] 최신 yfinance 버전 (content 하위 딕셔너리)
+            if "content" in item and isinstance(item["content"], dict):
+                c = item["content"]
+                title = c.get("title")
+                pub_date_str = c.get("pubDate")
+                if pub_date_str:
+                    try:
+                        dt = datetime.fromisoformat(pub_date_str.replace("Z", "+00:00"))
+                        pub_ts = dt.timestamp()
+                    except Exception:
+                        pass
+            
+            # [포맷 2] 구형 yfinance 버전 (루트 레벨 딕셔너리)
+            if not title and "title" in item:
+                title = item.get("title")
+                pub_ts = item.get("providerPublishTime")
+                
+            if title:
+                # 7일 이내 검증 (타임스탬프가 없으면 최신 뉴스로 간주하고 포함)
+                if pub_ts is None or (current_time - pub_ts) <= max_seconds:
+                    clean_title = title.strip().replace("\n", " ")
+                    if clean_title and clean_title not in news_list:
+                        news_list.append(clean_title)
+                        if len(news_list) >= max_count:
+                            break
+                            
+    except Exception:
+        pass
+        
+    return " | ".join(news_list) if news_list else "최근 7일 내 특이 뉴스 없음 (평이한 주가 흐름)"
+
 run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
 
 print("🌐 [1/4] S&P 500 종목 리스트 수집 중...")
@@ -162,8 +208,6 @@ except Exception:
     data_date_str = "최근 영업일 종가"
 
 candidates = []
-current_ts = time.time()
-SEVEN_DAYS_SEC = 7 * 24 * 60 * 60
 
 print(f"🔍 [3/4] 캔들 정량화, 10대 필터($10B+) 및 최근 7일 뉴스 수집 중...")
 for ticker in all_tickers:
@@ -224,20 +268,8 @@ for ticker in all_tickers:
                 is_perfect = (ema20 > sma50 > sma200)
                 meta = company_meta.get(ticker, {"Security": ticker, "GICS Sub-Industry": "N/A"})
                 
-                news_headlines = []
-                try:
-                    raw_news = ticker_obj.news
-                    if raw_news:
-                        for n in raw_news:
-                            pub_time = n.get("providerPublishTime", 0)
-                            if (current_ts - pub_time) <= SEVEN_DAYS_SEC and "title" in n:
-                                news_headlines.append(n["title"])
-                                if len(news_headlines) >= 3:
-                                    break
-                except Exception:
-                    pass
-                
-                news_str = " | ".join(news_headlines) if news_headlines else "최근 7일 내 주요 단독 뉴스 없음 (안정적 흐름)"
+                # 📰 하이브리드 실시간 7일 뉴스 추출
+                news_str = extract_recent_news(ticker_obj, max_count=3, max_days=7)
                 
                 candidates.append({
                     "Symbol": ticker,
@@ -261,7 +293,7 @@ for ticker in all_tickers:
         continue
 
 candidate_df = pd.DataFrame(candidates)
-print(f"✨ [완료] 조건 충족 종목 {len(candidate_df)}개 발견")
+print(f"✨ [완료] 조건 충족 종목 {len(candidate_df)}개 발견 (7일 뉴스 추출 성공)")
 
 # ==============================================================================
 # 4. AI 리포트 생성 (지능형 재시도 및 폴백)
@@ -275,10 +307,10 @@ else:
 • 실행 일시: {run_date_str}
 • 시장 데이터 기준일: {data_date_str}
 
-아래는 파이썬에서 기업 정보, 52주 최고가 및 [최근 7일 이내 뉴스]까지 연산 완료된 $10B+ 스윙 셋업 종목 데이터입니다:
+아래는 파이썬에서 기업 정보, 52주 최고가 및 [최근 7일 이내 뉴스(Recent7DaysNews)]까지 연산 완료된 $10B+ 스윙 셋업 종목 데이터입니다:
 {candidate_df.to_string(index=False)}
 
-위 데이터를 바탕으로 시스템 프롬프트 지침에 따라 모바일 줄바꿈이 없도록 34자 이내 초경량 테이블로 SECTION 1부터 SECTION 5까지 빠짐없이 작성해 주세요."""
+위 데이터를 바탕으로 시스템 프롬프트의 [A/B/C/D 등급 기준]과 34자 모바일 최적화 규칙에 따라 SECTION 1부터 SECTION 5까지 빠짐없이 작성해 주세요."""
 
     print(f"🚀 [4/4] AI 퀀트 정밀 리포트 생성 중...")
     clean_api_key = str(GEMINI_API_KEY).strip().encode("ascii", "ignore").decode("ascii")
