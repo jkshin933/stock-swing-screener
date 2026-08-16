@@ -24,19 +24,19 @@ DISCORD_WEBHOOK_URL = os.environ.get(
 # 🎯 미국 동부 표준시 (ET - New York) 타임존
 ET_TZ = ZoneInfo("America/New_York")
 
+# 🎯 구글 공식 REST API 표준 모델 엔드포인트 목록
 MODEL_CANDIDATES = [
-    "gemini-2.5-flash",       # 1순위: 2.5 Flash (최신 고성능 추론)
-    "gemini-2.0-flash",       # 2순위: 2.0 Flash (초고속 실시간)
-    "gemini-1.5-flash",       # 3순위: 1.5 Flash (안정망 백업)
-    "gemini-3.7-flash",       # 4순위: 3.7 Flash
-    "gemini-1.5-pro"          # 5순위: 1.5 Pro
+    "gemini-2.0-flash",       # 1순위: 초고속 최신 안정 모델
+    "gemini-1.5-flash",       # 2순위: 표준 Flash 모델
+    "gemini-1.5-pro",         # 3순위: 심층 퀀트 분석 Pro 모델
+    "gemini-2.0-flash-lite"   # 4순위: 초경량 안전망
 ]
 
-MAX_RETRIES_PER_MODEL = 3
-RETRY_DELAYS = [5, 10, 15]
+MAX_RETRIES_PER_MODEL = 2
+RETRY_DELAYS = [3, 6]
 
 # ==============================================================================
-# 2. AI 시스템 프롬프트 (실제 데이터 100% 그라운딩 및 모바일 서식 고정)
+# 2. AI 시스템 프롬프트 (실제 데이터 100% 그라운딩 및 서식 완벽 고정)
 # ==============================================================================
 SYSTEM_PROMPT = """# Role & Core Mission
 너는 미국 대형주($10B+) 추세추종 · 20EMA 눌림목 스윙 트레이딩(보유 기간 2일~2주) 전문 퀀트 분석가다.
@@ -262,9 +262,10 @@ candidate_df = pd.DataFrame(candidates)
 print(f"✨ [완료] 조건 충족 종목 {len(candidate_df)}개 발견")
 
 # ==============================================================================
-# 4. AI 리포트 생성 (헤더 인증 및 모델 폴백)
+# 4. AI 리포트 생성 (헤더 인증 및 모델 폴백 + 상세 에러 추적)
 # ==============================================================================
 used_model_info = "Unknown Model"
+error_logs = []
 
 if candidate_df.empty:
     report_text = "📊 [데일리 20EMA 스윙 리포트]\n현재 10대 엄격 조건($10B+, RSI 45~65, 저항룸 0~15%, RelVol < 0.9)을 충족하는 종목이 없습니다.\n👉 무리한 진입을 지양하고 현금 관망(NO TRADE)을 권장합니다."
@@ -281,7 +282,6 @@ else:
     print(f"🚀 [4/4] AI 퀀트 정밀 리포트 생성 중...")
     clean_api_key = str(GEMINI_API_KEY).strip()
     
-    # 🎯 AQ. 인증키 완벽 호환: x-goog-api-key 헤더 탑재
     req_headers = {
         "Content-Type": "application/json",
         "x-goog-api-key": clean_api_key
@@ -305,12 +305,18 @@ else:
                     report_text = res_json["candidates"][0]["content"]["parts"][0]["text"]
                     used_model_info = model_name
                     break
-                elif response.status_code in [503, 429]:
-                    if attempt < MAX_RETRIES_PER_MODEL:
-                        time.sleep(RETRY_DELAYS[attempt])
                 else:
-                    break
-            except Exception:
+                    err_msg = f"[{model_name}] HTTP {response.status_code}: {response.text[:120]}"
+                    error_logs.append(err_msg)
+                    print(f"  ⚠️ {err_msg}")
+                    if response.status_code in [503, 429] and attempt < MAX_RETRIES_PER_MODEL:
+                        time.sleep(RETRY_DELAYS[attempt])
+                    else:
+                        break
+            except Exception as e:
+                err_msg = f"[{model_name}] Exception: {str(e)[:100]}"
+                error_logs.append(err_msg)
+                print(f"  ⚠️ {err_msg}")
                 if attempt < MAX_RETRIES_PER_MODEL:
                     time.sleep(RETRY_DELAYS[attempt])
                 else:
@@ -320,7 +326,8 @@ else:
             break
 
     if not report_text:
-        report_text = "⚠️ 모든 Gemini 모델 호출에 실패했습니다."
+        latest_err = error_logs[-1] if error_logs else "원인 불명"
+        report_text = f"⚠️ 모든 Gemini 모델 호출에 실패했습니다.\n[원인 진단]: {latest_err}"
 
 # ==============================================================================
 # 5. 디스코드 안전 분할 발송
