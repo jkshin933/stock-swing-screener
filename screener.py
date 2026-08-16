@@ -1,7 +1,18 @@
+import sys
+import subprocess
+
+# 🛡️ [GitHub Actions 환경 필수 패키지 자동 설치 안전망]
+required_packages = ["yfinance", "requests", "pandas", "numpy", "lxml", "google-generativeai"]
+for pkg in required_packages:
+    try:
+        __import__(pkg.replace("-", "_") if pkg == "google-generativeai" else pkg)
+    except ImportError:
+        print(f"📦 [{pkg}] 패키지 자동 설치 중...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", pkg])
+
 import io
 import os
 import re
-import sys
 import time
 import requests
 from datetime import datetime
