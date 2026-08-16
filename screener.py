@@ -9,7 +9,7 @@ import pandas as pd
 import yfinance as yf
 
 # ==============================================================================
-# 1. 사용자 설정 (API Key & Webhook URL 기본값 탑재)
+# 1. 환경변수 로드 (GitHub Secrets 우선 + Fallback 기본값)
 # ==============================================================================
 GEMINI_API_KEY = os.environ.get(
     "GEMINI_API_KEY", 
@@ -20,7 +20,7 @@ DISCORD_WEBHOOK_URL = os.environ.get(
     "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
 )
 
-# 🎯 미국 동부 표준시 (ET - New York) 타임존 설정
+# 🎯 미국 동부 표준시 (ET - New York) 타임존
 ET_TZ = ZoneInfo("America/New_York")
 
 MODEL_CANDIDATES = [
@@ -35,7 +35,7 @@ MAX_RETRIES_PER_MODEL = 3
 RETRY_DELAYS = [5, 10, 15]
 
 # ==============================================================================
-# 2. AI 시스템 프롬프트 (0.5점 단위 별점 및 모바일 <34자 엄격 준수)
+# 2. AI 시스템 프롬프트 (0.5점 단위 별점 및 모바일 <34자 최적화)
 # ==============================================================================
 SYSTEM_PROMPT = """# Role & Core Mission
 너는 미국 대형주($10B+) 추세추종 · 20EMA 눌림목 스윙 트레이딩(보유 기간 2일~2주) 전문 퀀트 분석가다.
@@ -343,7 +343,7 @@ else:
         current_payload = payload.copy()
         is_thinking = False
         if "3.7" in model_name:
-            current_payload["generationConfig"] = {"thinking_budget": 2048}}
+            current_payload["generationConfig"] = {"thinking_config": {"thinking_budget": 2048}}
             is_thinking = True
             
         for attempt in range(MAX_RETRIES_PER_MODEL + 1):
