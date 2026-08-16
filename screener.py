@@ -9,7 +9,7 @@ import pandas as pd
 import yfinance as yf
 
 # ==============================================================================
-# 1. 환경변수 로드 (GitHub Secrets 우선 + 기본값 Fallback)
+# 1. 사용자 설정 (API Key & Webhook URL 기본값 탑재)
 # ==============================================================================
 GEMINI_API_KEY = os.environ.get(
     "GEMINI_API_KEY", 
@@ -17,30 +17,32 @@ GEMINI_API_KEY = os.environ.get(
 )
 DISCORD_WEBHOOK_URL = os.environ.get(
     "DISCORD_WEBHOOK_URL", 
-    "[https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB](https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB)"
+    "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
 )
 
+# 🎯 미국 동부 표준시 (ET - New York) 타임존 설정
 ET_TZ = ZoneInfo("America/New_York")
 
 MODEL_CANDIDATES = [
-    "gemini-3.7-flash",
-    "gemini-3.1-pro",
-    "gemini-3.5-flash-lite",
-    "gemini-2.0-flash",
-    "gemini-1.5-flash"
+    "gemini-3.7-flash",       # 1순위: 3.7 Flash (Extended Thinking)
+    "gemini-3.1-pro",         # 2순위: 3.1 Pro (Advanced reasoning)
+    "gemini-3.5-flash-lite",   # 3순위: 3.5 Flash-Lite (Fastest)
+    "gemini-2.0-flash",       # 4순위: 2.0 Flash (안전망)
+    "gemini-1.5-flash"        # 5순위: 1.5 Flash (최종 백업)
 ]
 
 MAX_RETRIES_PER_MODEL = 3
 RETRY_DELAYS = [5, 10, 15]
 
 # ==============================================================================
-# 2. AI 시스템 프롬프트
+# 2. AI 시스템 프롬프트 (0.5점 단위 별점 및 모바일 <34자 엄격 준수)
 # ==============================================================================
 SYSTEM_PROMPT = """# Role & Core Mission
 너는 미국 대형주($10B+) 추세추종 · 20EMA 눌림목 스윙 트레이딩(보유 기간 2일~2주) 전문 퀀트 분석가다.
 입력된 정량 데이터와 [최근 7일 이내 뉴스]를 바탕으로 디스코드 모바일 환경에 최적화된 리포트를 작성하라.
 
-[⭐ STAGE 1 기술 점수(5★ 만점) 52W 저항 룸 핵심 채점 룰]
+[⭐ STAGE 1 기술 점수(5.0★ 만점) 0.5점 단위 정밀 채점 룰]
+반올림하지 말고 각 항목별 배점을 정확히 합산하여 0.5점 단위(예: 5.0★, 4.5★, 4.0★, 3.5★, 3.0★)로 표기하라.
 1. 52W 룸 (상방 여력):
    - 5.0% ~ 10.0% : 1.0점 만점 (1차 목표가 2.0R을 전고점 밑에서 안전하게 익절 가능한 스위트스팟)
    - 3.0% ~ 5.0% 또는 10.0% ~ 15.0% : 0.5점 (전고점 근접 저항 또는 다소 깊은 눌림목)
@@ -50,17 +52,17 @@ SYSTEM_PROMPT = """# Role & Core Mission
 4. 정배열 추세 (EMA20>SMA50>SMA200: 1.0점 / 기타: 0.5점)
 5. 캔들 지지력 (강력 반등 캔들: 1.0점 / 기본 지지: 0.5점)
 
-[⚠️ 리스크 등급(A/B/C/D) 절대 판정 기준]
-• Grade A (+1★): 2주 내 어닝 없음 + 최근 7일 내 강력한 호재 뉴스 + Strong Buy 컨센서스
-• Grade B ( 0★): 2주 내 어닝 없음 + 최근 7일 내 특이 악재 없는 중립 뉴스 + Buy/Hold
-• Grade C (-1★): 2주 이내 실적발표(어닝 변동성 위험) 또는 최근 7일 내 단기 악재/노이즈
-• Grade D (-2★): 3일 내 실적발표 임박 또는 치명적 규제/조사 악재 (Stage 3 추천 제외)
+[⚠️ 리스크 등급(A/B/C/D) 절대 판정 및 촉매 점수 보정]
+• Grade A (+1.0★): 2주 내 어닝 없음 + 최근 7일 내 강력한 호재 뉴스 + Strong Buy 컨센서스
+• Grade B ( 0.0★): 2주 내 어닝 없음 + 최근 7일 내 특이 악재 없는 중립 뉴스 + Buy/Hold
+• Grade C (-1.0★): 2주 이내 실적발표(어닝 변동성 위험) 또는 최근 7일 내 단기 악재/노이즈
+• Grade D (-2.0★): 3일 내 실적발표 임박 또는 치명적 규제/조사 악재 (Stage 3 추천 제외)
 
 [서식 및 출력 절대 규칙]
 1. 모든 테이블은 1줄당 공백 포함 최대 34자(Characters)를 절대 초과하지 마라.
-2. STAGE 1에서는 현재가를 제외하고 작성하라. (52W 룸이 5~10%인 종목이 상위에 오르도록 랭킹 산출)
+2. STAGE 1에서는 현재가를 제외하고 0.5점 단위 별점(예: 4.5★, 4.0★)으로 출력하라.
 3. STAGE 2-A에서는 '순번. 티커 - 정식회사명 (시총)' 표기 후 [최근 7일 뉴스]를 반영하여 작성하라.
-4. STAGE 2-B는 최종 점수(6★>5★>4★) 내림차순으로 정렬하라.
+4. STAGE 2-B는 '4.5->5.5★', '4.0->4.0★' 형태로 표기하고 최종 점수 내림차순으로 정렬하라.
 5. STAGE 3-A는 1차목표(2.0R)와 2차목표(52주 고가) 가격 중심으로 작성하라.
 6. 각 섹션은 반드시 '### [SECTION 1]', '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
@@ -68,49 +70,49 @@ SYSTEM_PROMPT = """# Role & Core Mission
 
 ### [SECTION 1]
 🏆 [STAGE 1: 기술적 1차 셋업 TOP 10]
-순위 종목  시총   이격  52W룸 RelV 점수
-01  AWK  $27B  +1.6% 5.7% 0.71 5★
-02  APH  $206B +2.1% 6.8% 0.67 5★
-03  GE   $382B +1.3% 5.6% 0.89 5★
-04  HWM  $115B +2.4% 7.2% 0.90 4★
-05  MA   $499B +2.0% 5.1% 0.84 4★
-06  WFC  $269B +2.0% 8.3% 0.67 4★
-07  KO   $377B +2.0% 3.7% 0.58 4★
-08  DDOG $92B  +0.3% 14.6 0.83 4★
-09  APD  $69B  +2.8% 1.9% 0.46 4★
-10  BA   $183B +2.1% 9.8% 0.43 4★
+순위 종목 시총   이격  52W룸 RelV 점수
+01 APH  $206B +2.1% 6.8% 0.67 4.5★
+02 GE   $382B +1.3% 5.6% 0.89 4.5★
+03 AWK  $27B  +1.6% 5.7% 0.71 4.5★
+04 HWM  $115B +2.4% 7.2% 0.90 4.0★
+05 MA   $499B +2.0% 5.1% 0.84 4.0★
+06 WFC  $269B +2.0% 8.3% 0.67 4.0★
+07 KO   $377B +2.0% 3.7% 0.58 3.5★
+08 DDOG $92B  +0.3% 14.6 0.83 3.5★
+09 APD  $69B  +2.8% 1.9% 0.46 3.5★
+10 BA   $183B +2.1% 9.8% 0.43 3.0★
 
 ### [SECTION 2]
 🏢 [STAGE 2-A: TOP 10 심층 펀더멘털 & 센티먼트 분석]
 (※ 01번부터 10번까지 회사명과 최근 7일 뉴스를 반영하여 상세 작성)
 
-01. AWK - American Water Works ($27B)
- • 사업/해자: 미국 최대 규제 기반 상하수도 유틸리티 독점망
- • 7일내 뉴스: 수도요금 인상 승인 및 배당 안정성 부각
- • 리스크: 금리 변동에 따른 배당주 매력도 변화
- • 센티먼트: Buy (실적 안정성 우수) | 등급: B (0★)
-
-02. APH - Amphenol Corp ($206B)
+01. APH - Amphenol Corp ($206B)
  • 사업/해자: AI 데이터센터 및 방산용 고성능 커넥터 글로벌 1위
  • 7일내 뉴스: AI 서버용 초고속 백플레인 수주 확대
  • 리스크: IT 하드웨어 전반 공급망 병목 현상
- • 센티먼트: Strong Buy (AI 인프라 수혜) | 등급: A (+1★)
+ • 센티먼트: Strong Buy (AI 인프라 수혜) | 등급: A (+1.0★)
+
+02. GE - GE Aerospace ($382B)
+ • 사업/해자: 민간/군용 항공기 제트 엔진 글로벌 독점 제조
+ • 7일내 뉴스: 상업용 제트엔진 유지보수(MRO) 수주 증가
+ • 리스크: 항공기 부품 공급망 지연 이슈
+ • 센티먼트: Strong Buy (항공 수요 견조) | 등급: A (+1.0★)
 
 ... (03번부터 10번까지 10개 기업 상세 작성)
 
 ### [SECTION 3]
 ⚖️ [STAGE 2-B: 촉매 보정 및 최종 재랭킹 (FINAL TOP 10)]
-최종 종목 기존  점수변동 등급 핵심사유
-01  APH (02) 5★->6★   A  AI커넥터 수요폭증
-02  GE  (03) 5★->6★   A  항공엔진 MRO 호조
-03  AWK (01) 5★->5★   B  수도유틸 방어우수
-04  MA  (05) 4★->4★   B  결제망 견조/중립
-05  HWM (04) 4★->4★   B  항공우주 밸류중립
-06  WFC (06) 4★->4★   B  대형은행 마진안정
-07  KO  (07) 4★->4★   B  필수소비재 배당형
-08  DDOG(08) 4★->4★   B  클라우드/52W룸大
-09  APD (09) 4★->4★   B  독점가스/52W룸좁음
-10  BA  (10) 4★->3★   C  인도지연/품질이슈
+최종 종목 기존   점수변동  등급 핵심사유
+01 APH (01) 4.5->5.5★ A  AI커넥터 수요폭증
+02 GE  (02) 4.5->5.5★ A  항공엔진 MRO 호조
+03 AWK (03) 4.5->4.5★ B  수도유틸 방어우수
+04 MA  (05) 4.0->4.0★ B  결제망 견조/중립
+05 HWM (04) 4.0->4.0★ B  항공우주 밸류중립
+06 WFC (06) 4.0->4.0★ B  대형은행 마진안정
+07 KO  (07) 3.5->3.5★ B  필수소비재 배당형
+08 DDOG(08) 3.5->3.5★ B  클라우드/52W룸大
+09 APD (09) 3.5->3.5★ B  독점가스/52W룸좁음
+10 BA  (10) 3.0->2.0★ C  인도지연/품질이슈
 
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 5 실전 매매 실행표]
@@ -204,7 +206,7 @@ def extract_recent_news(ticker_obj, max_count=3, max_days=7):
 run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
 
 print("🌐 [1/4] S&P 500 종목 리스트 수집 중...")
-sp500_url = "[https://en.wikipedia.org/wiki/List_of_S%26P_500_companies](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies)"
+sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(sp500_url, headers=headers)
 sp500_table = pd.read_html(io.StringIO(response.text))[0]
@@ -322,7 +324,7 @@ else:
 아래는 파이썬에서 기업 정보, 52주 최고가 및 Room52W(%) 데이터가 포함된 $10B+ 스윙 셋업 종목 데이터입니다:
 {candidate_df.to_string(index=False)}
 
-위 데이터를 바탕으로 [52W 룸 배점 기준: 5~10% 만점, 3~5% 0.5점, <3% 0점]과 [A/B/C/D 리스크 등급 기준]에 따라 SECTION 1부터 SECTION 5까지 34자 모바일 최적화 규격으로 작성해 주세요."""
+위 데이터를 바탕으로 [52W 룸 배점 기준: 5~10% 만점, 3~5% 0.5점, <3% 0점]과 [A/B/C/D 리스크 등급 기준]에 따라 0.5점 단위 별점으로 SECTION 1부터 SECTION 5까지 34자 모바일 최적화 규격으로 작성해 주세요."""
 
     print(f"🚀 [4/4] AI 퀀트 정밀 리포트 생성 중...")
     clean_api_key = str(GEMINI_API_KEY).strip().encode("ascii", "ignore").decode("ascii")
@@ -336,12 +338,12 @@ else:
     report_text = None
     
     for model_name in MODEL_CANDIDATES:
-        api_url = f"[https://generativelanguage.googleapis.com/v1beta/models/](https://generativelanguage.googleapis.com/v1beta/models/){model_name}:generateContent?key={clean_api_key}"
+        api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={clean_api_key}"
         
         current_payload = payload.copy()
         is_thinking = False
         if "3.7" in model_name:
-            current_payload["generationConfig"] = {"thinking_config": {"thinking_budget": 2048}}
+            current_payload["generationConfig"] = {"thinking_budget": 2048}}
             is_thinking = True
             
         for attempt in range(MAX_RETRIES_PER_MODEL + 1):
@@ -428,4 +430,4 @@ def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date
                 time.sleep(0.6)
 
 send_discord_clean_report(DISCORD_WEBHOOK_URL, report_text, used_model_info, run_date_str, data_date_str)
-print("🎯 [GitHub Actions] 디스코드 리포트 전송 성공!")
+print("🎯 디스코드 리포트 전송 성공!")
