@@ -242,7 +242,7 @@ def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date
                 time.sleep(0.6)
 
 # ==============================================================================
-# 4. [STAGE 1: 파이썬 정량 채점] 기술평가 9.0점 만점
+# 4. [STAGE 1: 파이썬 정량 채점] 기술평가 9.0점 (동적 거래량 탑재)
 # ==============================================================================
 is_connected, confirmed_model, validated_queue = verify_gemini_connection(GEMINI_API_KEY, TARGET_MODELS)
 if not is_connected:
@@ -271,7 +271,7 @@ except Exception:
     data_date_str = "최근 영업일 종가"
 
 candidates = []
-print(f"🔍 [3/4] 어닝 블랙아웃 필터 & 프라이스 액션(9.0점 만점) 채점 중...")
+print(f"🔍 [3/4] 동적 거래량 & 프라이스 액션(9.0점 만점) 채점 중...")
 
 for ticker in all_tickers:
     try:
@@ -328,16 +328,21 @@ for ticker in all_tickers:
         recent_50 = df.tail(50)
         purity_pct = (recent_50["Close"] >= recent_50["EMA20"]).mean() * 100
         
+        # 반등 여부 판정
+        is_strong_bounce = (is_bullish and daily_return >= 1.5 and cls_pct >= 60.0) or (lower_shadow_pct >= 45.0 and is_bullish)
+        
         # 떨어지는 칼날 차단
         if (daily_return <= -1.8 and cls_pct < 35.0) or (cls_pct < 25.0):
             continue
             
+        # 동적 거래량 하드필터
+        cond_rel_vol = (rel_vol <= 1.20) if is_strong_bounce else (rel_vol < 0.90)
+        
         cond_trend = (current_price > sma200) and (current_price > sma50) and (current_price > ema20)
         cond_ema_rising = (ema20 > ema20_5d_ago)
         cond_ema_touch = (0.0 <= ema_diff <= 3.0)
         cond_room = (0.0 <= room_52w <= 15.0)
         cond_rsi = (45.0 <= rsi14 <= 65.0)
-        cond_rel_vol = (rel_vol < 0.90)
         cond_avg_vol = (vol_avg90 >= 1_000_000)
         
         if cond_trend and cond_ema_rising and cond_ema_touch and cond_room and cond_rsi and cond_rel_vol and cond_avg_vol:
@@ -368,7 +373,23 @@ for ticker in all_tickers:
                     s_room = 0.0
                 
                 s_purity = 1.8 if purity_pct >= 85.0 else (0.9 if purity_pct >= 70.0 else 0.0)
-                s_vol = 1.6 if rel_vol < 0.60 else 0.8
+                
+                # 동적 거래량 채점
+                if is_strong_bounce:
+                    if 0.70 <= rel_vol <= 1.20:
+                        s_vol = 1.6
+                    elif rel_vol < 0.70:
+                        s_vol = 1.2
+                    else:
+                        s_vol = 0.8
+                else:
+                    if rel_vol < 0.60:
+                        s_vol = 1.6
+                    elif rel_vol < 0.85:
+                        s_vol = 0.8
+                    else:
+                        s_vol = 0.4
+                
                 s_ema = 1.6 if ema_diff <= 1.5 else 0.8
                 
                 total_tech_score = round(s_trigger + s_room + s_purity + s_vol + s_ema, 1)
@@ -569,4 +590,4 @@ send_discord_clean_report(
     DISCORD_WEBHOOK_URL, final_full_report, confirmed_model, 
     run_date_str, data_date_str, regime_status, regime_guide, regime_detail
 )
-print("🎯 [Colab 완료] 9:1 하이브리드 리포트가 디스코드에 성공적으로 발송되었습니다!")
+print("🎯 [완료] 동적 거래량이 적용된 9:1 리포트가 디스코드에 발송되었습니다!")
