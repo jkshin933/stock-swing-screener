@@ -30,7 +30,6 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # 1. 헬퍼 함수 (URL 자동 세니타이징)
 # ==============================================================================
 def sanitize_url(raw_url_str):
-    """마크다운 링크 문법 및 특수문자로 인한 InvalidSchema 에러를 원천 차단합니다."""
     match = re.search(r"https?://[^\s\)\]\"']+", str(raw_url_str))
     if match:
         return match.group(0)
@@ -42,23 +41,21 @@ def sanitize_url(raw_url_str):
 ET_TZ = ZoneInfo("America/New_York")
 run_date_str = datetime.now(ET_TZ).strftime("%Y-%m-%d %H:%M ET")
 
-# GitHub Secrets 우선 로드 (Fallback 기본값 포함)
 GEMINI_API_KEY = os.environ.get(
     "GEMINI_API_KEY", 
     "AQ.Ab8RN6KVNJKlJpNgNmoY2m4zsRrcjXbOpd0utS5tFK-u9TmcuQ"
 )
 DISCORD_WEBHOOK_URL = sanitize_url(os.environ.get(
     "DISCORD_WEBHOOK_URL", 
-    "https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB"
+    "[https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB](https://discord.com/api/webhooks/1538571023287324843/oF9h8EkOpNvaZHHoFo-Y_CRNymsCca5TzFF1oLKacvVGiwj-e54e-gb7rvfjixYKcujB)"
 ))
 
-# 🎯 429 TPM 방어를 위해 처리 용량이 넉넉하고 빠른 3.6-flash를 1순위로 배치
 TARGET_MODELS = [
-    "gemini-3.6-flash",           # 1순위: 대용량 텍스트 안정성 최상 (429 없음)
-    "gemini-3.7-flash",           # 2순위: 최신 추론 모델
-    "gemini-2.5-flash",           # 3순위: 고속 안전망
-    "gemini-3.1-pro-preview",     # 4순위: Pro급 심층 추론
-    "gemini-3.5-flash"            # 5순위: 표준 Flash
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-2.5-flash",
+    "gemini-3.1-pro-preview",
+    "gemini-3.5-flash"
 ]
 
 # ==============================================================================
@@ -186,7 +183,7 @@ if not is_connected:
     sys.exit(1)
 
 print(f"\n🌐 [1/4] S&P 500 종목 데이터 수집 중... ({run_date_str})")
-sp500_url = sanitize_url("[https://en.wikipedia.org/wiki/List_of_S%26P_500_companies](https://en.wikipedia.org/wiki/List_of_S%26P_500_companies)")
+sp500_url = sanitize_url("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(sp500_url, headers=headers)
 sp500_table = pd.read_html(io.StringIO(response.text))[0]
@@ -214,7 +211,6 @@ for ticker in all_tickers:
         if len(df) < 200:
             continue
         
-        # 이동평균 및 RSI 지표 계산
         df["EMA20"] = df["Close"].ewm(span=20, adjust=False).mean()
         df["SMA50"] = df["Close"].rolling(window=50).mean()
         df["SMA200"] = df["Close"].rolling(window=200).mean()
@@ -246,13 +242,11 @@ for ticker in all_tickers:
         ema_diff = (current_price - ema20) / ema20 * 100
         room_52w = (high_52w - current_price) / current_price * 100
         
-        # 캔들 분석
         c_range = high_price - low_price
         lower_shadow_pct = ((min(open_price, current_price) - low_price) / c_range * 100) if c_range > 0 else 0
         close_loc_pct = ((current_price - low_price) / c_range * 100) if c_range > 0 else 0
         candle_support_pass = (lower_shadow_pct >= 35.0) or (close_loc_pct >= 60.0)
         
-        # 8대 교과서적 하드필터
         cond_trend = (current_price > sma200) and (current_price > sma50) and (current_price > ema20)
         cond_ema_rising = (ema20 > ema20_5d_ago)
         cond_ema_touch = (0.0 <= ema_diff <= 3.0)
@@ -270,7 +264,6 @@ for ticker in all_tickers:
                 meta = company_meta.get(ticker, {"Security": ticker, "GICS Sub-Industry": "N/A"})
                 news_str = extract_recent_news(ticker_obj, max_count=3, max_days=7)
                 
-                # 기술평가 8.0점 만점 수학적 정밀 채점
                 if 5.0 <= room_52w <= 10.0:
                     s_room = 2.0
                 elif (3.0 <= room_52w < 5.0) or (10.0 < room_52w <= 15.0):
@@ -307,33 +300,33 @@ df_result = pd.DataFrame(candidates)
 
 if df_result.empty:
     print("❌ 조건을 충족하는 종목이 없습니다. 관망 리포트를 발송합니다.")
-    no_trade_msg = "📊 [데일리 20EMA 스윙 리포트]\n현재 교과서적 엄격 조건($10B+, 20EMA 우상향, RSI 45~65, 저항룸 0~15%, RelVol < 0.9)을 충족하는 종목이 없습니다.\n👉 무리한 진입을 지양하고 현금 관망(NO TRADE)을 권장합니다."
+    no_trade_msg = "📊 [데일리 20EMA 스윙 리포트]\n현재 교과서적 엄격 조건을 충족하는 종목이 없습니다.\n👉 현금 관망(NO TRADE)을 권장합니다."
     send_discord_clean_report(DISCORD_WEBHOOK_URL, no_trade_msg, confirmed_model, run_date_str, data_date_str)
     sys.exit(0)
 
-# 다중 정렬 (기술총점 -> 52W룸 최적거리 7.5% -> RelVol -> 시총)
+# 다중 정렬
 df_result["Room_Dist"] = abs(df_result["Room52W(%)"] - 7.5)
 df_sorted = df_result.sort_values(
     by=["Tech_Score", "Room_Dist", "RelVol", "MktCap($B)"],
     ascending=[False, True, True, False]
 ).reset_index(drop=True)
 
-# 20개 확정
+# 상위 20개 확정
 top20_df = df_sorted.head(20).copy()
 top20_df.index = top20_df.index + 1
 
 # ==============================================================================
-# 6. STAGE 1 파이썬 직접 생성 (32자 폭 완전 일직선 칼럼 정렬)
+# 6. STAGE 1 파이썬 직접 생성 (100% 일직선 정렬)
 # ==============================================================================
 stage1_lines = [
     "### [SECTION 1]",
     "🏆 [STAGE 1: 기술적 1차 셋업 TOP 20]",
-    "순위 종목  시총   이격  52W룸 RelV 기술"
+    "No 종목   시총   이격  52W룸 RVol 기술"
 ]
 
 for rank, row in top20_df.iterrows():
     r_str = f"{rank:02d}"
-    s_str = f"{row['Symbol']:<5}"
+    s_str = f"{row['Symbol']:<4}"[:4]
     
     m_val = row['MktCap($B)']
     if m_val >= 1000:
@@ -342,28 +335,21 @@ for rank, row in top20_df.iterrows():
         m_str = f"${int(m_val)}B"
     else:
         m_str = f"${m_val:.0f}B"
-    m_str = f"{m_str:<5}"
+    m_str = f"{m_str:>5}"
     
-    e_str = f"{row['EMA_Diff(%)']:.1f}%"
-    e_str = f"{e_str:>5}"
+    e_str = f"{row['EMA_Diff(%)']:>4.1f}%"
+    room_str = f"{row['Room52W(%)']:>4.1f}%"
+    vol_str = f"{row['RelVol']:>4.2f}"
+    tech_str = f"{row['Tech_Score']:>4.1f}"
     
-    room_str = f"{row['Room52W(%)']:.1f}%"
-    room_str = f"{room_str:>5}"
-    
-    vol_str = f"{row['RelVol']:.2f}"
-    vol_str = f"{vol_str:>4}"
-    
-    tech_str = f"{row['Tech_Score']:.1f}"
-    tech_str = f"{tech_str:>4}"
-    
-    line = f"{r_str}  {s_str} {m_str} {e_str} {room_str} {vol_str} {tech_str}"
-    stage1_lines.append(line[:34])
+    line = f"{r_str} {s_str} {m_str} {e_str} {room_str} {vol_str} {tech_str}"
+    stage1_lines.append(line)
 
 stage1_text = "\n".join(stage1_lines)
 print(f"✨ [STAGE 1 완료] 기술평가 8.0점 만점 상위 20개 종목 확정")
 
 # ==============================================================================
-# 7. [AI 전담: 정성 2.0점 채점 -> 2A 순위표 -> 2B 심층분석 -> 3A 실행표 -> 3B 매트릭스]
+# 7. [AI 전담: 정성 2.0점 채점 -> 2A 순위표(기술제외) -> 2B 심층분석 -> 3A/B]
 # ==============================================================================
 AI_PROMPT = """# Role & Core Mission
 너는 미국 대형주 20EMA 눌림목 스윙 트레이딩 전문 퀀트 분석가다.
@@ -378,28 +364,28 @@ AI_PROMPT = """# Role & Core Mission
 👉 최종 종합 점수: 기술 점수(8.0점 만점) + 정성 점수(2.0점 만점) = 총 10.0점 만점
 
 [서식 및 줄맞춤 절대 규칙]
-1. 모든 테이블은 1줄당 공백 포함 최대 34자(Characters)를 절대 초과하지 마라.
-2. 테이블의 컬럼 헤더와 데이터 행의 자릿수 및 공백을 완벽히 일치시켜 일직선으로 출력하라.
-3. STAGE 2-A (SECTION 2): 20개 종목의 총점(10.0점 만점) 내림차순으로 재정렬하여 **최종 TOP 10 테이블(01~10번)**을 가장 먼저 출력하라.
-4. STAGE 2-B (SECTION 3): STAGE 2-A에서 최종 선정된 TOP 10 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 리스크, 4대 정성평가 분석(지뢰/촉매/섹터/월가), 최종 점수를 상세 작성하라.
-5. STAGE 3-A (SECTION 4): 최종 TOP 10 종목 전체에 대해 실전 매매 실행표(01~10번)를 34자 테이블로 작성하라. (1차: 2.0R 50% 분할익절 / 2차: 52주 고가)
-6. STAGE 3-B (SECTION 5): 최종 TOP 10 종목 전체에 대해 시초가 매트릭스(01~10번)를 34자 테이블로 작성하라. (정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
-7. 각 섹션은 반드시 '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
+1. 테이블 헤더와 데이터 행의 공백을 정확히 일치시켜 일직선으로 출력하라.
+2. STAGE 2-A (SECTION 2): 기술점수 컬럼은 제외하고 `No 종목  정성 총점 핵심사유` 형식으로 **총점(10.0점 만점) 내림차순 최종 TOP 10 테이블(01~10번)**을 가장 먼저 출력하라.
+3. STAGE 2-B (SECTION 3): STAGE 2-A에서 최종 선정된 TOP 10 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 4대 정성평가(지뢰/촉매/섹터/월가), 최종 점수를 상세 작성하라.
+4. STAGE 3-A (SECTION 4): 최종 TOP 10 종목 전체에 대해 실전 매매 실행표(01~10번)를 출력하라. (1차: 2.0R 50% 분할익절 / 2차: 52주 고가)
+5. STAGE 3-B (SECTION 5): 최종 TOP 10 종목 전체에 대해 시초가 매트릭스(01~10번)를 출력하라. (정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
+6. 각 섹션은 반드시 '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
 [출력 양식 템플릿]
 
 ### [SECTION 2]
 ⚖️ [STAGE 2-A: 촉매 보정 최종 TOP 10]
-최종 종목 기존 기술 정성 총점 핵심사유
-01  AAA (01)  8.0  1.8  9.8 AWS수요급증
-02  BBB (02)  8.0  1.7  9.7 AI서버수주
+No 종목  정성 총점 핵심사유
+01 TT    1.8  9.8 AI냉각수요
+02 GM    1.7  9.7 환급이익증
+03 AMZN  2.0  9.3 AI투자결실
 ... (01번부터 10번까지 총 10개 종목 순위표 출력)
 
 ### [SECTION 3]
 🏢 [STAGE 2-B: 최종 TOP 10 심층 펀더멘털 & 센티먼트 분석]
-01. AAA - Company Name ($2800B)
- • 사업/해자: 핵심 사업 영역 및 해자 요약
- • 7일내 뉴스: 최근 7일 뉴스 기반 모멘텀
+01. TT - Trane Technologies ($105B)
+ • 사업/해자: 데이터센터 고효율 냉각 시스템 글로벌 독점 해자
+ • 7일내 뉴스: AI 데이터센터 액체 냉각 솔루션 신규 수주 확대
  • 4대 정성평가: 지뢰(0.5) 촉매(0.5) 섹터(0.5) 월가(0.3) -> 정성 1.8점
  • 최종 점수: 기술 8.0 + 정성 1.8 = 9.8점 (S-Tier)
 ... (01번부터 10번까지 총 10개 종목 상세 작성)
@@ -407,15 +393,19 @@ AI_PROMPT = """# Role & Core Mission
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 10 실전 매매 실행표]
 (※ 1차: 2.0R 50% 분할익절 / 2차: 52주 고가 라인)
-순위 종목  매수가 손절가 1차(2R) 2차(52W)
-01  AAA  $262.7 $257.5 $273.1 $287.2
+No 종목  매수가  손절가 1차(2R) 2차(52W)
+01 TT   $480.2 $472.5 $495.6 $505.8
+02 GM    $86.8  $84.5  $91.4  $92.0
+03 AMZN $262.7 $257.5 $273.1 $287.2
 ... (01번부터 10번까지 총 10개 종목 출력)
 
 ### [SECTION 5]
 🚦 [STAGE 3-B: 최종 TOP 10 시초가 매트릭스]
 (※ 정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
-순위 종목  정상진입  갭상주의  이탈취소
-01  AAA  ~$264.0  ~$266.6  <$258.7
+No 종목 정상진입 갭상주의 이탈취소
+01 TT   ~$482.6 ~$487.4 <$473.0
+02 GM    ~$87.2  ~$88.1  <$85.5
+03 AMZN ~$264.0 ~$266.6 <$258.7
 ... (01번부터 10번까지 총 10개 종목 출력)
 """
 
@@ -429,13 +419,13 @@ prompt_payload = f"""[분석 기준 정보 (미국 동부시각 ET)]
 {top20_payload}
 
 위 20개 종목 전체에 대해 4대 정성평가(2.0점 만점)를 채점하고:
-- SECTION 2 (STAGE 2-A): 총점(10.0점 만점) 내림차순 최종 TOP 10 재랭킹 테이블 (가장 먼저 출력)
+- SECTION 2 (STAGE 2-A): 총점(10.0점 만점) 내림차순 최종 TOP 10 재랭킹 테이블 (기술점수 제외)
 - SECTION 3 (STAGE 2-B): 최종 TOP 10 종목에 대한 심층 뉴스 및 4대 정성평가 분석
 - SECTION 4 (STAGE 3-A): 최종 TOP 10 실전 매매 실행표
 - SECTION 5 (STAGE 3-B): 최종 TOP 10 시초가 매트릭스
-를 34자 모바일 규격 및 완벽한 컬럼 정렬로 작성해 주세요."""
+를 템플릿의 칼럼 정렬을 엄격히 준수하여 작성해 주세요."""
 
-print(f"🚀 [4/4] Gemini AI가 STAGE 2(정성 2.0점 평가 및 재랭킹) & STAGE 3 생성 중...")
+print(f"🚀 [4/4] Gemini AI가 STAGE 2(재랭킹 및 심층분석) & STAGE 3 생성 중...")
 ai_sections_text = None
 
 for model_name in validated_queue:
@@ -463,4 +453,4 @@ if not ai_sections_text:
 # ==============================================================================
 final_full_report = f"{stage1_text}\n\n{ai_sections_text}"
 send_discord_clean_report(DISCORD_WEBHOOK_URL, final_full_report, confirmed_model, run_date_str, data_date_str)
-print("🎯 [완료] 8:2 배점 및 정렬이 완료된 리포트가 디스코드에 발송되었습니다!")
+print("🎯 [완료] STAGE 2-A가 간소화된 최종 리포트가 디스코드에 발송되었습니다!")
