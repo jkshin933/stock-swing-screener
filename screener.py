@@ -23,11 +23,10 @@ import pandas as pd
 import yfinance as yf
 import google.generativeai as genai
 
-# 라이브러리 경고 억제
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 # ==============================================================================
-# 1. 헬퍼 함수 (URL 자동 세니타이징)
+# 1. 헬퍼 함수
 # ==============================================================================
 def sanitize_url(raw_url_str):
     match = re.search(r"https?://[^\s\)\]\"']+", str(raw_url_str))
@@ -59,7 +58,7 @@ TARGET_MODELS = [
 ]
 
 # ==============================================================================
-# 3. Gemini API 연결 사전 검증 (Pre-flight Check)
+# 3. Gemini 연결 검증 및 매크로 / 어닝 보조 함수
 # ==============================================================================
 def verify_gemini_connection(api_key, target_models):
     print("🔑 [0/4] Gemini API 접속 사전 검증 중...")
@@ -83,15 +82,80 @@ def verify_gemini_connection(api_key, target_models):
                     return True, m_name, model_queue
             except Exception:
                 continue
-                
         return False, None, model_queue
     except Exception as e:
         print(f"  ❌ Gemini 접속 실패: {str(e)}")
         return False, None, []
 
-# ==============================================================================
-# 4. 뉴스 추출 및 디스코드 분할 발송 보조 함수
-# ==============================================================================
+def get_market_regime():
+    try:
+        m_df = yf.download(["SPY", "QQQ"], period="6mo", progress=False, auto_adjust=False)
+        spy_c = m_df["Close"]["SPY"].dropna()
+        qqq_c = m_df["Close"]["QQQ"].dropna()
+        
+        spy_price = spy_c.iloc[-1]
+        spy_ema20 = spy_c.ewm(span=20, adjust=False).mean().iloc[-1]
+        spy_sma50 = spy_c.rolling(50).mean().iloc[-1]
+        
+        qqq_price = qqq_c.iloc[-1]
+        qqq_ema20 = qqq_c.ewm(span=20, adjust=False).mean().iloc[-1]
+        qqq_sma50 = qqq_c.rolling(50).mean().iloc[-1]
+        
+        spy_bull = spy_price >= spy_ema20
+        qqq_bull = qqq_price >= qqq_ema20
+        spy_mid = spy_price >= spy_sma50
+        qqq_mid = qqq_price >= qqq_sma50
+        
+        if spy_bull and qqq_bull:
+            status = "🟢 BULL (정상 비중 100%)"
+            guide = "시장 상승 추세 우세 -> 계획된 비중 100% 정상 진입"
+        elif spy_mid and qqq_mid:
+            status = "🟡 CAUTION (비중 50% 축소)"
+            guide = "지수 20EMA 하회 단기 조정장 -> 1차 매수 비중 50% 축소 진입"
+        else:
+            status = "🔴 DEFENSIVE (신규 매수 보류)"
+            guide = "시장 주요 지지선 붕괴 -> 신규 진입 보류 및 현금 관망"
+            
+        detail = f"SPY: ${spy_price:.1f}(20E:${spy_ema20:.1f}) | QQQ: ${qqq_price:.1f}(20E:${qqq_ema20:.1f})"
+        return status, guide, detail
+    except Exception:
+        return "⚪ NEUTRAL (지수 중립)", "시장 지수 데이터 미집계 -> 개별 종목 셋업 기준 매매", ""
+
+def check_earnings_blackout(ticker_obj, days_limit=14):
+    try:
+        cal = ticker_obj.calendar
+        if cal is None:
+            return False, None
+        dates = []
+        if isinstance(cal, dict):
+            ed = cal.get("Earnings Date") or cal.get("Earnings Date ")
+            if ed:
+                if isinstance(ed, list):
+                    dates.extend(ed)
+                else:
+                    dates.append(ed)
+        elif isinstance(cal, pd.DataFrame):
+            if "Earnings Date" in cal.index:
+                dates.extend(cal.loc["Earnings Date"].tolist())
+            elif "Earnings Date" in cal.columns:
+                dates.extend(cal["Earnings Date"].tolist())
+        
+        now = datetime.now()
+        for d in dates:
+            try:
+                if hasattr(d, "date"):
+                    dt = datetime.combine(d.date(), datetime.min.time())
+                else:
+                    dt = pd.to_datetime(d).to_pydatetime()
+                diff = (dt - now).days
+                if 0 <= diff <= days_limit:
+                    return True, dt.strftime("%m/%d")
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return False, None
+
 def extract_recent_news(ticker_obj, max_count=3, max_days=7):
     news_list = []
     current_time = time.time()
@@ -128,7 +192,7 @@ def extract_recent_news(ticker_obj, max_count=3, max_days=7):
         pass
     return " | ".join(news_list) if news_list else "최근 7일 내 특이 뉴스 없음 (평이한 주가 흐름)"
 
-def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date):
+def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date, regime_status, regime_guide, regime_detail):
     url_clean = sanitize_url(webhook_url)
     raw_clean_text = text.replace("```text", "").replace("```", "").strip()
     sections = raw_clean_text.split("### [SECTION")
@@ -146,6 +210,9 @@ def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date
             header = (
                 f"📅 리포트 생성 : {run_date}\n"
                 f"📊 데이터 기준 : {data_date}\n"
+                f"🌐 시장 레짐   : {regime_status}\n"
+                f"   • {regime_guide}\n"
+                f"   • {regime_detail}\n"
                 f"🤖 AI Engine  : {model_info}\n"
                 f"{'=' * 34}\n"
             )
@@ -175,14 +242,17 @@ def send_discord_clean_report(webhook_url, text, model_info, run_date, data_date
                 time.sleep(0.6)
 
 # ==============================================================================
-# 5. [STAGE 1: 파이썬 100% 정량 채점] 기술평가 8.0점 만점
+# 4. [STAGE 1: 파이썬 정량 채점] 기술평가 9.0점 만점
 # ==============================================================================
 is_connected, confirmed_model, validated_queue = verify_gemini_connection(GEMINI_API_KEY, TARGET_MODELS)
 if not is_connected:
     print("⛔ [실행 중단] Gemini API 접속 실패로 프로세스를 종료합니다.")
     sys.exit(1)
 
-print(f"\n🌐 [1/4] S&P 500 종목 데이터 수집 중... ({run_date_str})")
+regime_status, regime_guide, regime_detail = get_market_regime()
+print(f"\n🌐 [1/4] 시장 레짐 판정: {regime_status}")
+
+print(f"🌐 [2/4] S&P 500 종목 데이터 수집 중... ({run_date_str})")
 sp500_url = sanitize_url("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")
 headers = {"User-Agent": "Mozilla/5.0"}
 response = requests.get(sp500_url, headers=headers)
@@ -192,7 +262,7 @@ sp500_table["Clean_Symbol"] = sp500_table["Symbol"].str.replace(".", "-", regex=
 company_meta = sp500_table.set_index("Clean_Symbol")[["Security", "GICS Sub-Industry"]].to_dict("index")
 all_tickers = sp500_table["Clean_Symbol"].tolist()
 
-print(f"⚡ [2/4] 전체 {len(all_tickers)}개 종목 주가 다운로드 중...")
+print(f"⚡ 전체 {len(all_tickers)}개 종목 주가 다운로드 중...")
 raw_data = yf.download(all_tickers, period="1y", group_by="ticker", threads=True, progress=False, auto_adjust=False)
 
 try:
@@ -201,7 +271,7 @@ except Exception:
     data_date_str = "최근 영업일 종가"
 
 candidates = []
-print(f"🔍 [3/4] 기술평가 8.0점 만점 퀀트 연산 및 뉴스 수집 중...")
+print(f"🔍 [3/4] 어닝 블랙아웃 필터 & 프라이스 액션(9.0점 만점) 채점 중...")
 
 for ticker in all_tickers:
     try:
@@ -223,10 +293,17 @@ for ticker in all_tickers:
         rs = avg_gain / avg_loss
         df["RSI14"] = 100 - (100 / (1 + rs))
         
+        tr1 = df["High"] - df["Low"]
+        tr2 = (df["High"] - df["Close"].shift(1)).abs()
+        tr3 = (df["Low"] - df["Close"].shift(1)).abs()
+        df["TR"] = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        df["ATR14"] = df["TR"].rolling(window=14).mean()
+        
         current_price = df["Close"].iloc[-1]
         open_price = df["Open"].iloc[-1]
         high_price = df["High"].iloc[-1]
         low_price = df["Low"].iloc[-1]
+        atr14 = df["ATR14"].iloc[-1]
         
         ema20 = df["EMA20"].iloc[-1]
         ema20_5d_ago = df["EMA20"].iloc[-6]
@@ -241,12 +318,20 @@ for ticker in all_tickers:
         
         ema_diff = (current_price - ema20) / ema20 * 100
         room_52w = (high_52w - current_price) / current_price * 100
+        daily_return = (current_price - open_price) / open_price * 100
+        is_bullish = current_price >= open_price
         
         c_range = high_price - low_price
+        cls_pct = ((current_price - low_price) / c_range * 100) if c_range > 0 else 50.0
         lower_shadow_pct = ((min(open_price, current_price) - low_price) / c_range * 100) if c_range > 0 else 0
-        close_loc_pct = ((current_price - low_price) / c_range * 100) if c_range > 0 else 0
-        candle_support_pass = (lower_shadow_pct >= 35.0) or (close_loc_pct >= 60.0)
         
+        recent_50 = df.tail(50)
+        purity_pct = (recent_50["Close"] >= recent_50["EMA20"]).mean() * 100
+        
+        # 떨어지는 칼날 차단
+        if (daily_return <= -1.8 and cls_pct < 35.0) or (cls_pct < 25.0):
+            continue
+            
         cond_trend = (current_price > sma200) and (current_price > sma50) and (current_price > ema20)
         cond_ema_rising = (ema20 > ema20_5d_ago)
         cond_ema_touch = (0.0 <= ema_diff <= 3.0)
@@ -257,12 +342,23 @@ for ticker in all_tickers:
         
         if cond_trend and cond_ema_rising and cond_ema_touch and cond_room and cond_rsi and cond_rel_vol and cond_avg_vol:
             ticker_obj = yf.Ticker(ticker)
-            market_cap = ticker_obj.fast_info.get("marketCap", 0)
             
+            is_blackout, earnings_date_str = check_earnings_blackout(ticker_obj, days_limit=14)
+            if is_blackout:
+                continue
+                
+            market_cap = ticker_obj.fast_info.get("marketCap", 0)
             if market_cap >= 10_000_000_000:
-                is_perfect_trend = (ema20 > sma50 > sma200)
                 meta = company_meta.get(ticker, {"Security": ticker, "GICS Sub-Industry": "N/A"})
                 news_str = extract_recent_news(ticker_obj, max_count=3, max_days=7)
+                
+                # 기술 9.0점 채점
+                if (is_bullish and cls_pct >= 60.0) or (lower_shadow_pct >= 40.0):
+                    s_trigger = 2.0
+                elif is_bullish or cls_pct >= 45.0:
+                    s_trigger = 1.0
+                else:
+                    s_trigger = 0.5
                 
                 if 5.0 <= room_52w <= 10.0:
                     s_room = 2.0
@@ -271,12 +367,17 @@ for ticker in all_tickers:
                 else:
                     s_room = 0.0
                 
-                s_ema = 1.5 if ema_diff <= 1.5 else 0.8
-                s_vol = 1.5 if rel_vol < 0.60 else 0.8
-                s_trend = 1.5 if is_perfect_trend else 0.8
-                s_candle = 1.5 if candle_support_pass else 0.8
+                s_purity = 1.8 if purity_pct >= 85.0 else (0.9 if purity_pct >= 70.0 else 0.0)
+                s_vol = 1.6 if rel_vol < 0.60 else 0.8
+                s_ema = 1.6 if ema_diff <= 1.5 else 0.8
                 
-                total_tech_score = round(s_room + s_ema + s_vol + s_trend + s_candle, 1)
+                total_tech_score = round(s_trigger + s_room + s_purity + s_vol + s_ema, 1)
+                
+                # ATR 동적 매매가 계산
+                risk_1r = round(atr14 * 1.2, 2)
+                stop_loss = round(current_price - risk_1r, 2)
+                tp1_2r = round(current_price + (2.0 * risk_1r), 2)
+                tp2_52w = round(high_52w, 2)
                 
                 candidates.append({
                     "Symbol": ticker,
@@ -288,8 +389,13 @@ for ticker in all_tickers:
                     "EMA_Diff(%)": round(ema_diff, 2),
                     "High52W": round(high_52w, 2),
                     "Room52W(%)": round(room_52w, 2),
-                    "RSI14": round(rsi14, 1),
                     "RelVol": round(rel_vol, 2),
+                    "CLS(%)": round(cls_pct, 1),
+                    "Purity(%)": round(purity_pct, 1),
+                    "ATR14": round(atr14, 2),
+                    "StopLoss": stop_loss,
+                    "TP1_2R": tp1_2r,
+                    "TP2_52W": tp2_52w,
                     "Tech_Score": total_tech_score,
                     "Recent7DaysNews": news_str
                 })
@@ -300,8 +406,8 @@ df_result = pd.DataFrame(candidates)
 
 if df_result.empty:
     print("❌ 조건을 충족하는 종목이 없습니다. 관망 리포트를 발송합니다.")
-    no_trade_msg = "📊 [데일리 20EMA 스윙 리포트]\n현재 교과서적 엄격 조건을 충족하는 종목이 없습니다.\n👉 현금 관망(NO TRADE)을 권장합니다."
-    send_discord_clean_report(DISCORD_WEBHOOK_URL, no_trade_msg, confirmed_model, run_date_str, data_date_str)
+    no_trade_msg = "📊 [데일리 20EMA 스윙 리포트]\n현재 어닝 안전 및 프라이스 액션 조건을 충족하는 종목이 없습니다.\n👉 현금 관망(NO TRADE)을 권장합니다."
+    send_discord_clean_report(DISCORD_WEBHOOK_URL, no_trade_msg, confirmed_model, run_date_str, data_date_str, regime_status, regime_guide, regime_detail)
     sys.exit(0)
 
 # 다중 정렬
@@ -316,7 +422,7 @@ top20_df = df_sorted.head(20).copy()
 top20_df.index = top20_df.index + 1
 
 # ==============================================================================
-# 6. STAGE 1 파이썬 직접 생성 (100% 일직선 정렬)
+# 5. STAGE 1 파이썬 직접 생성 (100% 일직선 칼럼 정렬)
 # ==============================================================================
 stage1_lines = [
     "### [SECTION 1]",
@@ -346,28 +452,31 @@ for rank, row in top20_df.iterrows():
     stage1_lines.append(line)
 
 stage1_text = "\n".join(stage1_lines)
-print(f"✨ [STAGE 1 완료] 기술평가 8.0점 만점 상위 20개 종목 확정")
+print(f"✨ [STAGE 1 완료] 기술평가 9.0점 만점 상위 20개 종목 확정")
 
 # ==============================================================================
-# 7. [AI 전담: 정성 2.0점 채점 -> 2A 순위표(기술제외) -> 2B 심층분석 -> 3A/B]
+# 6. [AI 전담: 지뢰 Pass/Fail + 정성 1.0점 채점 -> 2A/B -> 3A/B]
 # ==============================================================================
 AI_PROMPT = """# Role & Core Mission
 너는 미국 대형주 20EMA 눌림목 스윙 트레이딩 전문 퀀트 분석가다.
-입력된 STAGE 1 20개 종목의 기술점수(8.0점 만점)와 [최근 7일 뉴스]를 종합 분석하여 정성점수(2.0점 만점)를 채점하고, 총점(10.0점 만점)을 계산하여 SECTION 2부터 SECTION 5까지 작성하라.
+입력된 STAGE 1 20개 종목의 기술점수(9.0점 만점), 사전 계산된 ATR 가격표, [최근 7일 뉴스]를 종합 분석하여 지뢰 여부를 검증(Pass/Fail)하고 정성점수(1.0점 만점)를 채점하여 SECTION 2부터 SECTION 5까지 작성하라.
 
-[⭐ STAGE 2 정성평가 4대 축 정밀 배점 룰 (2.0점 만점)]
-1. 🚨 지뢰 회피 (0.5점): 2주 내 실적발표 없음 + 소송/규제 악재 클린 (만점 0.5 / 2~3주내 0.2 / 2주이내 0.0)
-2. 🚀 단기 촉매 (0.5점): 최근 7일 내 대형 수주 / PEAD / 목표가 대폭 상향 (만점 0.5 / 일반호재 0.2 / 없음 0.0)
-3. 🌊 주도 섹터 (0.5점): AI 인프라, 전력/에너지, 반도체 등 시장 주도 테마 대장주 (만점 0.5 / 중립 0.2 / 소외 0.0)
-4. 🏛️ 월가 센티 (0.5점): Strong Buy 우위 & 목표주가 상방 룸 +15% 이상 (만점 0.5 / Buy 0.2 / Hold/과열 0.0)
-👉 정성 점수 합산: 0.0점 ~ 2.0점
-👉 최종 종합 점수: 기술 점수(8.0점 만점) + 정성 점수(2.0점 만점) = 총 10.0점 만점
+[🚨 0단계: 지뢰 회피 (Pass / Fail 게이트키퍼)]
+• FAIL 조건: 최근 7일 내 미 법무부/SEC 조사, 중대 소송 피소, 대규모 유상증자, 분식회계 의혹 등 치명적 악재 발생 시 즉시 'FAIL' 판정 및 STAGE 3 추천에서 강제 제외하라.
+• PASS 조건: 상기 치명적 악재가 없는 정상 종목.
 
-[서식 및 줄맞춤 절대 규칙]
+[⭐ 1단계: 순수 모멘텀 3대 축 정성 채점 (1.0점 만점 - PASS 종목 한정)]
+1. 🚀 단기 촉매 (0.4점): 최근 7일 내 대형 수주 / PEAD / 목표가 대폭 상향 (만점 0.4 / 일반 0.2 / 없음 0.0)
+2. 🌊 주도 섹터 (0.3점): AI 인프라, 전력/에너지, 반도체, 방산 등 시장 주도 테마 대장주 (만점 0.3 / 중립 0.15 / 소외 0.0)
+3. 🏛️ 월가 센티 (0.3점): Strong Buy 우위 & 목표주가 상방 룸 +15% 이상 (만점 0.3 / Buy 0.15 / Hold/과열 0.0)
+👉 정성 점수 합산: 0.0점 ~ 1.0점
+👉 최종 종합 점수: 기술 점수(9.0점 만점) + 정성 점수(1.0점 만점) = 총 10.0점 만점
+
+[서식 및 출력 절대 규칙]
 1. 테이블 헤더와 데이터 행의 공백을 정확히 일치시켜 일직선으로 출력하라.
 2. STAGE 2-A (SECTION 2): 기술점수 컬럼은 제외하고 `No 종목  정성 총점 핵심사유` 형식으로 **총점(10.0점 만점) 내림차순 최종 TOP 10 테이블(01~10번)**을 가장 먼저 출력하라.
-3. STAGE 2-B (SECTION 3): STAGE 2-A에서 최종 선정된 TOP 10 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 4대 정성평가(지뢰/촉매/섹터/월가), 최종 점수를 상세 작성하라.
-4. STAGE 3-A (SECTION 4): 최종 TOP 10 종목 전체에 대해 실전 매매 실행표(01~10번)를 출력하라. (1차: 2.0R 50% 분할익절 / 2차: 52주 고가)
+3. STAGE 2-B (SECTION 3): STAGE 2-A에서 최종 선정된 TOP 10 종목에 대해 '순번. 티커 - 정식회사명 (시총)' 표기 후 사업/해자, 7일 뉴스, 지뢰검증(PASS), 3대 정성평가(촉매/섹터/월가), 최종 점수를 상세 작성하라.
+4. STAGE 3-A (SECTION 4): **입력 데이터에 제공된 사전 계산 가격(Price, StopLoss, TP1_2R, TP2_52W)을 그대로 사용하여** 실전 매매 실행표(01~10번)를 출력하라. (가격 임의 변경 금지)
 5. STAGE 3-B (SECTION 5): 최종 TOP 10 종목 전체에 대해 시초가 매트릭스(01~10번)를 출력하라. (정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
 6. 각 섹션은 반드시 '### [SECTION 2]', '### [SECTION 3]', '### [SECTION 4]', '### [SECTION 5]' 로 명확히 분리하여 출력하라.
 
@@ -376,56 +485,60 @@ AI_PROMPT = """# Role & Core Mission
 ### [SECTION 2]
 ⚖️ [STAGE 2-A: 촉매 보정 최종 TOP 10]
 No 종목  정성 총점 핵심사유
-01 TT    1.8  9.8 AI냉각수요
-02 GM    1.7  9.7 환급이익증
-03 AMZN  2.0  9.3 AI투자결실
+01 GE    0.9  9.9 항공방산호조
+02 GM    0.8  9.8 환급이익증
+03 TT    0.9  9.1 AI냉각수요
 ... (01번부터 10번까지 총 10개 종목 순위표 출력)
 
 ### [SECTION 3]
 🏢 [STAGE 2-B: 최종 TOP 10 심층 펀더멘털 & 센티먼트 분석]
-01. TT - Trane Technologies ($105B)
- • 사업/해자: 데이터센터 고효율 냉각 시스템 글로벌 독점 해자
- • 7일내 뉴스: AI 데이터센터 액체 냉각 솔루션 신규 수주 확대
- • 4대 정성평가: 지뢰(0.5) 촉매(0.5) 섹터(0.5) 월가(0.3) -> 정성 1.8점
- • 최종 점수: 기술 8.0 + 정성 1.8 = 9.8점 (S-Tier)
+01. GE - GE Aerospace ($382B)
+ • 사업/해자: 상업/군용 항공기 엔진 글로벌 독점 해자
+ • 7일내 뉴스: 차세대 방산 엔진 수주 및 부품 서비스 마진 확대
+ • 지뢰검증: PASS (소송/규제 악재 없음)
+ • 3대 정성평가: 촉매(0.4) 섹터(0.3) 월가(0.2) -> 정성 0.9점
+ • 최종 점수: 기술 9.0 + 정성 0.9 = 9.9점 (S-Tier)
 ... (01번부터 10번까지 총 10개 종목 상세 작성)
 
 ### [SECTION 4]
 🎯 [STAGE 3-A: 최종 TOP 10 실전 매매 실행표]
-(※ 1차: 2.0R 50% 분할익절 / 2차: 52주 고가 라인)
+(※ 손절: 1.2 ATR / 1차: 2.0R 50% / 2차: 52W)
 No 종목  매수가  손절가 1차(2R) 2차(52W)
-01 TT   $480.2 $472.5 $495.6 $505.8
-02 GM    $86.8  $84.5  $91.4  $92.0
-03 AMZN $262.7 $257.5 $273.1 $287.2
+01 GE   $368.4 $361.2 $382.8 $389.0
+02 GM    $86.8  $84.3  $91.8  $92.0
 ... (01번부터 10번까지 총 10개 종목 출력)
 
 ### [SECTION 5]
 🚦 [STAGE 3-B: 최종 TOP 10 시초가 매트릭스]
 (※ 정상:+0.5% | 갭상:+1.5% | 이탈:-1.5%)
 No 종목 정상진입 갭상주의 이탈취소
-01 TT   ~$482.6 ~$487.4 <$473.0
+01 GE   ~$370.2 ~$373.9 <$362.8
 02 GM    ~$87.2  ~$88.1  <$85.5
-03 AMZN ~$264.0 ~$266.6 <$258.7
 ... (01번부터 10번까지 총 10개 종목 출력)
 """
 
-top20_payload = top20_df[["Symbol", "CompanyName", "MktCap($B)", "Price", "EMA20", "EMA_Diff(%)", "High52W", "Room52W(%)", "RelVol", "Tech_Score", "Recent7DaysNews"]].to_string(index=False)
+top20_payload = top20_df[[
+    "Symbol", "CompanyName", "MktCap($B)", "Price", "EMA20", "EMA_Diff(%)", 
+    "High52W", "Room52W(%)", "RelVol", "CLS(%)", "Purity(%)", "ATR14", 
+    "StopLoss", "TP1_2R", "TP2_52W", "Tech_Score", "Recent7DaysNews"
+]].to_string(index=False)
 
 prompt_payload = f"""[분석 기준 정보 (미국 동부시각 ET)]
 • 실행 일시: {run_date_str}
 • 시장 데이터 기준일: {data_date_str}
+• 시장 레짐 상태: {regime_status} ({regime_guide})
 
-아래는 파이썬에서 확정한 STAGE 1 TOP 20 종목의 기술점수(8.0점 만점) 및 최근 7일 뉴스입니다:
+아래는 파이썬에서 확정한 STAGE 1 TOP 20 종목의 기술점수(9.0점 만점), 사전 계산된 ATR 매매가, 최근 7일 뉴스입니다:
 {top20_payload}
 
-위 20개 종목 전체에 대해 4대 정성평가(2.0점 만점)를 채점하고:
+위 20개 종목에 대해 지뢰 검증(Pass/Fail) 및 순수 모멘텀(1.0점 만점)을 채점하여:
 - SECTION 2 (STAGE 2-A): 총점(10.0점 만점) 내림차순 최종 TOP 10 재랭킹 테이블 (기술점수 제외)
-- SECTION 3 (STAGE 2-B): 최종 TOP 10 종목에 대한 심층 뉴스 및 4대 정성평가 분석
-- SECTION 4 (STAGE 3-A): 최종 TOP 10 실전 매매 실행표
+- SECTION 3 (STAGE 2-B): 최종 TOP 10 종목에 대한 심층 뉴스 및 정성평가 분석
+- SECTION 4 (STAGE 3-A): 제공된 사전 계산 가격(StopLoss, TP1_2R, TP2_52W)을 사용한 최종 TOP 10 실전 매매 실행표
 - SECTION 5 (STAGE 3-B): 최종 TOP 10 시초가 매트릭스
 를 템플릿의 칼럼 정렬을 엄격히 준수하여 작성해 주세요."""
 
-print(f"🚀 [4/4] Gemini AI가 STAGE 2(재랭킹 및 심층분석) & STAGE 3 생성 중...")
+print(f"🚀 [4/4] Gemini AI가 STAGE 2-A(재랭킹), 2-B(심층분석), 3-A/B 리포트 생성 중...")
 ai_sections_text = None
 
 for model_name in validated_queue:
@@ -449,8 +562,11 @@ if not ai_sections_text:
     ai_sections_text = "⚠️ AI 리포트 생성에 실패했습니다."
 
 # ==============================================================================
-# 8. STAGE 1(파이썬 20개) + STAGE 2~3(AI 10개) 통합 및 디스코드 발송
+# 7. STAGE 1(파이썬 20개) + STAGE 2~3(AI 10개) 통합 및 디스코드 발송
 # ==============================================================================
 final_full_report = f"{stage1_text}\n\n{ai_sections_text}"
-send_discord_clean_report(DISCORD_WEBHOOK_URL, final_full_report, confirmed_model, run_date_str, data_date_str)
-print("🎯 [완료] STAGE 2-A가 간소화된 최종 리포트가 디스코드에 발송되었습니다!")
+send_discord_clean_report(
+    DISCORD_WEBHOOK_URL, final_full_report, confirmed_model, 
+    run_date_str, data_date_str, regime_status, regime_guide, regime_detail
+)
+print("🎯 [Colab 완료] 9:1 하이브리드 리포트가 디스코드에 성공적으로 발송되었습니다!")
