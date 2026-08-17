@@ -1,32 +1,32 @@
-name: Daily 20EMA Swing Screener
+name: Daily S&P 500 Swing Screener
 
 on:
   schedule:
-    # 월~금 UTC 22:00 (미국 동부시각 18:00 ET)
+    # 🇺🇸 미국 동부시각(ET) 월~금 저녁 6:00 PM (서머타임 기준 UTC 22:00)
+    # 🇰🇷 한국시각(KST) 화~토 아침 7:00 AM
     - cron: '0 22 * * 1-5'
-  workflow_dispatch: # 수동 즉시 실행 지원
+  workflow_dispatch: # Actions 탭에서 수동 즉시 실행 버튼
 
 jobs:
   run-screener:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: 저장소 코드 체크아웃
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 파이썬 3.10 환경 설정
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: 필수 라이브러리 직접 설치
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install yfinance requests pandas numpy lxml
+          pip install -r requirements.txt
 
-      - name: 스크리너 실행 및 디스코드 전송
+      - name: Execute Screener Engine
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          python screener.py
+        run: python screener.py
