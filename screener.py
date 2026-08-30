@@ -57,34 +57,58 @@ def score_high(value, worst, best, max_points):
     return float(max_points) * (value - worst) / (best - worst)
 
 def calculate_continuous_score(rvol3, rs_change_20d, setup_type, **kwargs):
+    """Calculate a 0-100 setup-quality score.
+
+    RS Rating is deliberately excluded. It is an eligibility gate, not a
+    grading input. Score ranges are calibrated to each strategy's gate so a
+    strong, realistic candidate can reach S grade without requiring every
+    component to be mathematically perfect.
+    """
     score = 0
-    
+
     # 1. Volume Contraction Score (Max 25)
-    score += score_low(rvol3, best=0.30, worst=1.00, max_points=25)
-    
+    rvol_ceiling = {
+        "20EMA": 1.00,
+        "VCP": 0.80,
+        "B&R": 0.65,
+        "MTF": 1.10,
+    }[setup_type]
+    score += score_low(rvol3, best=0.55, worst=rvol_ceiling, max_points=25)
+
     # 2. RS Line Improvement Score (Max 15)
-    score += score_high(rs_change_20d, worst=0.00, best=0.08, max_points=15)
-    
+    score += score_high(rs_change_20d, worst=-0.03, best=0.04, max_points=15)
+
     # 3. Structure & Precision Score (Max 60)
     if setup_type == "20EMA":
         close_loc = kwargs.get('close_loc', 0.5)
         ema_dist = kwargs.get('ema_dist', 0.01)
-        score += score_high(close_loc, worst=0.20, best=0.80, max_points=30)
-        score += score_low(abs(ema_dist), best=0.00, worst=0.03, max_points=30)
+        score += score_high(close_loc, worst=0.30, best=0.75, max_points=30)
+        score += score_low(abs(ema_dist), best=0.005, worst=0.03, max_points=30)
         
     elif setup_type == "VCP":
         range_5d = kwargs.get('range_5d', 0.05)
         pivot_dist = kwargs.get('pivot_dist', 0.05)
-        score += score_low(range_5d, best=0.02, worst=0.075, max_points=35)
-        score += score_low(pivot_dist, best=0.00, worst=0.07, max_points=25)
+        score += score_low(range_5d, best=0.035, worst=0.075, max_points=35)
+        score += score_low(pivot_dist, best=0.02, worst=0.10, max_points=25)
         
     elif setup_type == "B&R":
         retest_dist = kwargs.get('retest_dist', 0.02)
-        score += score_low(retest_dist, best=0.00, worst=0.04, max_points=60)
+        score += score_low(retest_dist, best=0.008, worst=0.04, max_points=60)
         
     elif setup_type == "MTF":
         flag_range = kwargs.get('flag_range', 0.08)
-        score += score_low(flag_range, best=0.03, worst=0.15, max_points=60)
+        drawdown = kwargs.get('drawdown_from_high', 0.15)
+        max_runup = kwargs.get('max_runup', 0.18)
+        ema20_gap = kwargs.get('ema20_gap', 0.0)
+        ema50_gap = kwargs.get('ema50_gap', 0.0)
+
+        # MTF structure is multi-dimensional: tightness alone must not decide
+        # the entire 60-point structure score.
+        score += score_low(flag_range, best=0.06, worst=0.18, max_points=25)
+        score += score_low(drawdown, best=0.04, worst=0.15, max_points=15)
+        score += score_high(max_runup, worst=0.18, best=0.35, max_points=10)
+        score += score_high(ema20_gap, worst=0.00, best=0.04, max_points=5)
+        score += score_high(ema50_gap, worst=0.00, best=0.06, max_points=5)
         
     return min(100, int(round(score)))
 
@@ -280,6 +304,8 @@ def run_lifecycle_screener():
                 low_10 = float(df["Low"].tail(10).min())
                 flag_range = (high_10 - low_10) / high_10 if high_10 > 0 else 1.0
                 momentum_trend = price > float(c["EMA20"]) > float(c["SMA50"])
+                ema20_gap = price / float(c["EMA20"]) - 1.0
+                ema50_gap = float(c["EMA20"]) / float(c["SMA50"]) - 1.0
                 
                 is_mtf_eligible = (
                     rs_rating > 80
@@ -291,7 +317,16 @@ def run_lifecycle_screener():
                 )
 
                 if is_mtf_eligible:
-                    score = calculate_continuous_score(rvol3, rs_change_20d, "MTF", flag_range=flag_range)
+                    score = calculate_continuous_score(
+                        rvol3,
+                        rs_change_20d,
+                        "MTF",
+                        flag_range=flag_range,
+                        drawdown_from_high=drawdown_from_high,
+                        max_runup=max_runup,
+                        ema20_gap=ema20_gap,
+                        ema50_gap=ema50_gap,
+                    )
                     setups["MTF"] = score
                     setup_meta["MTF"] = {
                         "max_runup_40d_pct": round(max_runup * 100, 1),
@@ -361,11 +396,22 @@ def run_lifecycle_screener():
             print(f"❌ {ticker} 처리 중 에러 발생: {type(e).__name__}: {e}")
             continue
 
+    grade_counts = {
+        grade: sum(item.get("grade") == grade for item in dashboard_output)
+        for grade in ("S", "A", "B")
+    }
+    strategy_counts = {
+        strategy: sum(item.get("strategy") == strategy for item in dashboard_output)
+        for strategy in ("20EMA", "VCP", "B&R", "MTF")
+    }
+
     with open(STATE_FILE, 'w', encoding='utf-8') as f:
         json.dump(new_state, f, indent=4, ensure_ascii=False)
     with open(DASHBOARD_FILE, 'w', encoding='utf-8') as f:
         json.dump(dashboard_output, f, indent=4, ensure_ascii=False)
-    print(f"✅ 최종 3단 퀀트 스크리닝 완료.")
+    print(f"📊 등급 분포: {grade_counts}")
+    print(f"📊 대표 전략 분포: {strategy_counts}")
+    print("✅ 최종 3단 퀀트 스크리닝 완료.")
 
 if __name__ == "__main__":
     run_lifecycle_screener()
