@@ -1,223 +1,2981 @@
 <!doctype html>
+
 <html lang="ko" data-theme="dark">
+
 <head>
+
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>모바일 스윙 스캐너</title>
-<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+
+<meta
+  name="viewport"
+  content="width=device-width,
+           initial-scale=1.0,
+           maximum-scale=1.0,
+           user-scalable=no"
+/>
+
+<title>4-Core Swing Screener</title>
+
+
+<link
+  rel="stylesheet"
+  href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap"
+/>
+
+
 <style>
-  :root { --color-bg: #0a0e14; --color-surface: #11161f; --color-surface-2: #151b26; --color-border: #232b39; --color-text: #e4e9f0; --color-primary: #22d3ee; --color-success: #34d399; --color-warning: #fbbf24; --color-error: #f87171; }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Satoshi', sans-serif; background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; }
-  
-  /* 모바일 상단 바 */
-  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(17, 22, 31, 0.95); backdrop-filter: blur(10px); padding: 16px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
-  .brand-group { display: flex; flex-direction: column; gap: 4px; }
-  .brand { font-size: 1.1rem; font-weight: 700; }
-  .update-time { font-size: 0.75rem; color: #8a94a6; font-weight: 400; }
-  
-  .manual-update-btn { background: var(--color-surface-2); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--color-text); text-decoration: none; }
 
-  /* 모바일 필터 영역 */
-  .filter-container { padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
-  .select-group { width: 100%; margin-bottom: 12px; }
-  .mcap-select { width: 100%; padding: 10px; border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); font-size: 0.9rem; outline: none; }
-  .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
-  .pill-scroll::-webkit-scrollbar { display: none; }
-  .pill-btn { padding: 8px 14px; border-radius: 20px; background: var(--color-surface-2); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: 0.2s; cursor: pointer; }
-  .pill-btn.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
+:root {
 
-  /* 카드 피드 영역 */
-  .feed-container { padding: 16px; }
-  .section-title { font-size: 1rem; font-weight: 700; margin: 24px 0 12px; display: flex; justify-content: space-between; align-items: center; }
-  
-  .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-  .card-header { padding: 16px; border-bottom: 1px solid var(--color-border); }
-  .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .ticker-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-  .ticker { font-size: 1.2rem; font-weight: 700; }
-  .price { font-size: 1.1rem; font-weight: 700; }
-  
-  .badge-S { background: linear-gradient(135deg, #d4af37, #f3e5ab); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
-  .badge-A { background: #10b981; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
-  .tag-strat { font-size: 0.75rem; color: #8a94a6; border: 1px solid #232b39; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-  .score-badge { font-size: 0.85rem; font-weight: 800; color: var(--color-primary); }
-  
-  .overlap-text { font-size: 0.75rem; color: #a1a1aa; margin-top: 2px; }
-  .msg { font-size: 0.9rem; color: #a1a1aa; margin: 10px 0; line-height: 1.4; }
-  
-  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
-  .metric-item { background: var(--color-surface-2); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid var(--color-border); }
-  .m-label { font-size: 0.7rem; color: #8a94a6; margin-bottom: 2px; }
-  .m-val { font-size: 0.85rem; font-weight: 700; }
-  .sl-red { color: var(--color-error); }
+  --color-bg: #0a0e14;
 
-  .card-img-wrap { width: 100%; background: #fff; padding: 10px; border-bottom: 1px solid var(--color-border); }
-  .card-img-wrap img { width: 100%; display: block; filter: invert(0.9) hue-rotate(180deg); }
-  
-  .card-actions { padding: 12px; }
-  .btn-full { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; color: #fff; text-decoration: none; background: #720e9e; }
+  --color-surface: #11161f;
+
+  --color-surface-2: #151b26;
+
+  --color-border: #232b39;
+
+  --color-text: #e4e9f0;
+
+  --color-muted: #8a94a6;
+
+  --color-primary: #22d3ee;
+
+  --color-success: #34d399;
+
+  --color-warning: #fbbf24;
+
+  --color-error: #f87171;
+
+}
+
+
+*,
+*::before,
+*::after {
+
+  box-sizing: border-box;
+
+  margin: 0;
+
+  padding: 0;
+
+}
+
+
+body {
+
+  font-family:
+    'Satoshi',
+    sans-serif;
+
+  background:
+    var(--color-bg);
+
+  color:
+    var(--color-text);
+
+  -webkit-font-smoothing:
+    antialiased;
+
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
+  background:
+    rgba(
+      17,
+      22,
+      31,
+      0.96
+    );
+
+  backdrop-filter:
+    blur(10px);
+
+  padding:
+    14px 16px;
+
+  border-bottom:
+    1px solid
+    var(--color-border);
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap: 12px;
+
+}
+
+
+.brand-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+}
+
+
+.brand {
+
+  font-size: 1.1rem;
+
+  font-weight: 700;
+
+}
+
+
+.engine-version {
+
+  color:
+    var(--color-primary);
+
+  font-size: 0.72rem;
+
+  margin-left: 4px;
+
+}
+
+
+.update-time {
+
+  font-size: 0.72rem;
+
+  color:
+    var(--color-muted);
+
+  line-height: 1.35;
+
+}
+
+
+.refresh-btn {
+
+  background:
+    var(--color-surface-2);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  padding:
+    7px 11px;
+
+  border-radius:
+    7px;
+
+  font-size:
+    0.78rem;
+
+  font-weight:
+    700;
+
+  color:
+    var(--color-text);
+
+  cursor:
+    pointer;
+
+}
+
+
+.refresh-btn:disabled {
+
+  opacity: 0.6;
+
+  cursor: wait;
+
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.notice {
+
+  margin:
+    12px 16px 0;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    var(--color-border);
+
+  background:
+    var(--color-surface);
+
+  border-radius:
+    9px;
+
+  color:
+    #aab4c3;
+
+  font-size:
+    0.76rem;
+
+  line-height:
+    1.5;
+
+}
+
+
+.notice strong {
+
+  color:
+    var(--color-primary);
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+.filter-container {
+
+  padding:
+    12px 16px;
+
+  border-bottom:
+    1px solid
+    var(--color-border);
+
+}
+
+
+.ticker-search-wrap {
+
+  width: 100%;
+
+  margin-bottom:
+    10px;
+
+}
+
+
+.ticker-search {
+
+  width: 100%;
+
+  padding:
+    11px 12px;
+
+  border-radius:
+    8px;
+
+  background:
+    var(--color-surface-2);
+
+  color:
+    var(--color-text);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  font-size:
+    0.9rem;
+
+  outline: none;
+
+}
+
+
+.ticker-search:focus {
+
+  border-color:
+    var(--color-primary);
+
+}
+
+
+.ticker-search::placeholder {
+
+  color:
+    var(--color-muted);
+
+}
+
+
+.select-group {
+
+  width: 100%;
+
+  margin-bottom:
+    12px;
+
+}
+
+
+.mcap-select {
+
+  width: 100%;
+
+  padding:
+    10px;
+
+  border-radius:
+    8px;
+
+  background:
+    var(--color-surface-2);
+
+  color:
+    var(--color-text);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  font-size:
+    0.9rem;
+
+  outline: none;
+
+}
+
+
+.pill-scroll {
+
+  display: flex;
+
+  gap: 8px;
+
+  overflow-x: auto;
+
+  padding-bottom:
+    4px;
+
+  scrollbar-width:
+    none;
+
+}
+
+
+.pill-scroll::-webkit-scrollbar {
+
+  display: none;
+
+}
+
+
+.pill-btn {
+
+  padding:
+    8px 14px;
+
+  border-radius:
+    20px;
+
+  background:
+    var(--color-surface-2);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  color:
+    var(--color-text);
+
+  font-size:
+    0.85rem;
+
+  font-weight:
+    600;
+
+  white-space:
+    nowrap;
+
+  cursor:
+    pointer;
+
+}
+
+
+.pill-btn.active {
+
+  background:
+    var(--color-text);
+
+  color:
+    var(--color-bg);
+
+  border-color:
+    var(--color-text);
+
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.summary-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      1fr
+    );
+
+  gap: 8px;
+
+  padding:
+    12px 16px 0;
+
+}
+
+
+.summary-item {
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    9px;
+
+  text-align: center;
+
+  padding:
+    10px 4px;
+
+}
+
+
+.summary-label {
+
+  font-size:
+    0.68rem;
+
+  color:
+    var(--color-muted);
+
+}
+
+
+.summary-value {
+
+  margin-top:
+    2px;
+
+  font-size:
+    1rem;
+
+  font-weight:
+    800;
+
+}
+
+
+.s-summary {
+
+  color:
+    #e8ca63;
+
+}
+
+
+.a-summary {
+
+  color:
+    var(--color-success);
+
+}
+
+
+.b-summary {
+
+  color:
+    #aab4c3;
+
+}
+
+
+/* =========================================================
+   FEED
+========================================================= */
+
+.feed-container {
+
+  padding:
+    16px;
+
+}
+
+
+.section-title {
+
+  font-size:
+    1rem;
+
+  font-weight:
+    700;
+
+  margin:
+    12px 0;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+}
+
+
+.empty-state {
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px dashed
+    var(--color-border);
+
+  border-radius:
+    10px;
+
+  padding:
+    22px 16px;
+
+  text-align:
+    center;
+
+  color:
+    var(--color-muted);
+
+  font-size:
+    0.85rem;
+
+  line-height:
+    1.6;
+
+}
+
+
+.card {
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    12px;
+
+  margin-bottom:
+    16px;
+
+  overflow:
+    hidden;
+
+}
+
+
+.card-header {
+
+  padding:
+    16px;
+
+  border-bottom:
+    1px solid
+    var(--color-border);
+
+}
+
+
+.card-top-row {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap: 10px;
+
+  margin-bottom:
+    6px;
+
+}
+
+
+.ticker-wrap {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 7px;
+
+}
+
+
+.ticker {
+
+  font-size:
+    1.2rem;
+
+  font-weight:
+    700;
+
+}
+
+
+.price {
+
+  font-size:
+    1.05rem;
+
+  font-weight:
+    700;
+
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge-S,
+.badge-A,
+.badge-B {
+
+  padding:
+    2px 7px;
+
+  border-radius:
+    4px;
+
+  font-weight:
+    700;
+
+  font-size:
+    0.75rem;
+
+}
+
+
+.badge-S {
+
+  background:
+    linear-gradient(
+      135deg,
+      #d4af37,
+      #f3e5ab
+    );
+
+  color:
+    #000;
+
+}
+
+
+.badge-A {
+
+  background:
+    #10b981;
+
+  color:
+    #fff;
+
+}
+
+
+.badge-B {
+
+  background:
+    #374151;
+
+  color:
+    #d1d5db;
+
+}
+
+
+.tag-strat {
+
+  font-size:
+    0.75rem;
+
+  color:
+    var(--color-muted);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  padding:
+    2px 6px;
+
+  border-radius:
+    4px;
+
+  font-weight:
+    700;
+
+}
+
+
+.score-badge {
+
+  font-size:
+    0.85rem;
+
+  font-weight:
+    800;
+
+  color:
+    var(--color-primary);
+
+}
+
+
+.overlap-text {
+
+  font-size:
+    0.75rem;
+
+  color:
+    #b0b8c5;
+
+  margin-top:
+    3px;
+
+}
+
+
+.msg {
+
+  font-size:
+    0.88rem;
+
+  color:
+    #a1a1aa;
+
+  margin:
+    10px 0 7px;
+
+}
+
+
+.structure-line {
+
+  font-size:
+    0.74rem;
+
+  color:
+    #aab4c3;
+
+  line-height:
+    1.5;
+
+  margin-bottom:
+    10px;
+
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+.metrics-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 8px;
+
+  margin-top:
+    10px;
+
+}
+
+
+.metric-item {
+
+  background:
+    var(--color-surface-2);
+
+  padding:
+    8px;
+
+  border-radius:
+    6px;
+
+  text-align:
+    center;
+
+  border:
+    1px solid
+    var(--color-border);
+
+}
+
+
+.m-label {
+
+  font-size:
+    0.68rem;
+
+  color:
+    var(--color-muted);
+
+  margin-bottom:
+    2px;
+
+}
+
+
+.m-val {
+
+  font-size:
+    0.82rem;
+
+  font-weight:
+    700;
+
+}
+
+
+.positive {
+
+  color:
+    var(--color-success);
+
+}
+
+
+.negative {
+
+  color:
+    var(--color-error);
+
+}
+
+
+.date-row {
+
+  margin-top:
+    10px;
+
+  font-size:
+    0.7rem;
+
+  color:
+    var(--color-muted);
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap:
+    8px 12px;
+
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.card-img-wrap {
+
+  width: 100%;
+
+  background:
+    #fff;
+
+  padding:
+    10px;
+
+  border-bottom:
+    1px solid
+    var(--color-border);
+
+}
+
+
+.card-img-wrap img {
+
+  width: 100%;
+
+  display: block;
+
+  filter:
+    invert(0.9)
+    hue-rotate(180deg);
+
+}
+
+
+/* =========================================================
+   ACTION
+========================================================= */
+
+.card-actions {
+
+  padding:
+    12px;
+
+}
+
+
+.btn-full {
+
+  display: block;
+
+  width: 100%;
+
+  text-align:
+    center;
+
+  padding:
+    12px;
+
+  border-radius:
+    8px;
+
+  font-size:
+    0.9rem;
+
+  font-weight:
+    700;
+
+  color:
+    #fff;
+
+  text-decoration:
+    none;
+
+  background:
+    #720e9e;
+
+}
+
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media (
+  min-width: 760px
+) {
+
+  .feed-container,
+  .filter-container,
+  .notice,
+  .summary-grid {
+
+    max-width:
+      980px;
+
+    margin-left:
+      auto;
+
+    margin-right:
+      auto;
+
+  }
+
+
+  .filter-container {
+
+    border-bottom:
+      0;
+
+  }
+
+
+  .metrics-grid {
+
+    grid-template-columns:
+      repeat(
+        4,
+        minmax(
+          0,
+          1fr
+        )
+      );
+
+  }
+
+}
+
 </style>
+
 </head>
+
+
 <body>
 
-  <header class="topbar">
-    <div class="brand-group">
-      <div class="brand">🎯 4-Core 스캐너</div>
-      <div class="update-time" id="updateTimeText">데이터 로딩 중...</div>
-    </div>
-    <!-- 깃허브 액션 수동 업데이트 링크 -->
-    <a href="https://github.com/jkshin933/stock-swing-screener/actions/workflows/scan.yml" target="_blank" class="manual-update-btn">
-      🔄 수동 갱신
-    </a>
-  </header>
 
-  <div class="filter-container">
-    <div class="select-group">
-      <select class="mcap-select" id="mcapFilter">
-        <option value="ALL" selected>전체 시가총액</option> <!-- 기본값 해제 해제 -->
-        <option value="OVER10B">대형주 집중 ($10B 이상)</option>
-        <option value="MEGA">초대형주 ($200B 이상)</option>
-        <option value="MID">중소형주 ($10B 미만)</option>
-      </select>
+<header class="topbar">
+
+  <div class="brand-group">
+
+    <div class="brand">
+
+      🎯 4-Core 스캐너
+
+      <span
+        class="engine-version"
+        id="engineVersion">
+        v2.3
+      </span>
+
     </div>
-    <div class="pill-scroll">
-      <button class="pill-btn active" data-filter="ALL">전체</button>
-      <button class="pill-btn" data-filter="20EMA">📉 20EMA</button>
-      <button class="pill-btn" data-filter="VCP">🎯 VCP</button>
-      <button class="pill-btn" data-filter="B&R">🔄 B&R</button>
-      <button class="pill-btn" data-filter="MTF">🔥 MTF</button>
+
+
+    <div
+      class="update-time"
+      id="updateTimeText">
+
+      데이터 로딩 중...
+
     </div>
+
   </div>
 
-  <main class="feed-container">
-    <div class="section-title"><span style="color:var(--color-success)">🟢 당장 매수 (Action)</span><span id="cnt-action">0</span></div>
-    <div id="feed-action"></div>
 
-    <div class="section-title" style="margin-top: 32px;"><span style="color:var(--color-warning)">🟡 구조 대기 (Setup)</span><span id="cnt-setup">0</span></div>
-    <div id="feed-setup"></div>
-  </main>
+  <button
+    id="refreshBtn"
+    class="refresh-btn"
+    type="button">
+
+    🔄 데이터 새로고침
+
+  </button>
+
+</header>
+
+
+<div class="notice">
+
+  <strong>등급 기준:</strong>
+
+  RS 70은 후보군 진입 기준입니다.
+
+  S/A/B 등급은
+  RS 단독 기준이 아니라
+
+  <strong>
+    거래량 + RS Line + 패턴 구조를 합산한
+    Setup Quality Score
+  </strong>
+
+  로 결정합니다.
+
+</div>
+
+
+<div class="filter-container">
+
+
+  <!-- =====================================================
+       TICKER SEARCH
+  ====================================================== -->
+
+  <div class="ticker-search-wrap">
+
+    <input
+
+      type="text"
+
+      id="tickerSearch"
+
+      class="ticker-search"
+
+      placeholder="🔎 Ticker 검색 (예: NVDA, MSFT)"
+
+      autocomplete="off"
+
+      spellcheck="false"
+
+    />
+
+  </div>
+
+
+  <!-- =====================================================
+       MARKET CAP
+  ====================================================== -->
+
+  <div class="select-group">
+
+    <select
+      class="mcap-select"
+      id="mcapFilter">
+
+      <option
+        value="ALL"
+        selected>
+
+        전체 시가총액
+
+      </option>
+
+
+      <option value="OVER10B">
+
+        대형주 ($10B 이상)
+
+      </option>
+
+
+      <option value="MEGA">
+
+        초대형주 ($200B 이상)
+
+      </option>
+
+
+      <option value="MID">
+
+        $10B 미만
+
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- =====================================================
+       STRATEGY
+  ====================================================== -->
+
+  <div class="pill-scroll">
+
+
+    <button
+      class="pill-btn active"
+      data-filter="ALL">
+
+      전체
+
+    </button>
+
+
+    <button
+      class="pill-btn"
+      data-filter="20EMA">
+
+      📉 20EMA
+
+    </button>
+
+
+    <button
+      class="pill-btn"
+      data-filter="VCP">
+
+      🎯 VCP
+
+    </button>
+
+
+    <button
+      class="pill-btn"
+      data-filter="B&R">
+
+      🔄 B&R
+
+    </button>
+
+
+    <button
+      class="pill-btn"
+      data-filter="MTF">
+
+      🔥 MTF
+
+    </button>
+
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     SUMMARY
+======================================================== -->
+
+<div class="summary-grid">
+
+
+  <div class="summary-item">
+
+    <div class="summary-label">
+      S급
+    </div>
+
+    <div
+      class="summary-value s-summary"
+      id="sumS">
+
+      0
+
+    </div>
+
+  </div>
+
+
+  <div class="summary-item">
+
+    <div class="summary-label">
+      A급
+    </div>
+
+    <div
+      class="summary-value a-summary"
+      id="sumA">
+
+      0
+
+    </div>
+
+  </div>
+
+
+  <div class="summary-item">
+
+    <div class="summary-label">
+      B Watch
+    </div>
+
+    <div
+      class="summary-value b-summary"
+      id="sumB">
+
+      0
+
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<main class="feed-container">
+
+
+  <!-- =====================================================
+       S / A
+  ====================================================== -->
+
+  <div class="section-title">
+
+    <span
+      style="
+        color:
+        var(--color-warning)
+      ">
+
+      🟡 S/A 고품질 Setup
+
+    </span>
+
+
+    <span id="cnt-high">
+      0
+    </span>
+
+  </div>
+
+
+  <div id="feed-high"></div>
+
+
+  <div
+    id="emptyHigh"
+    class="empty-state"
+    style="display:none;">
+
+    현재 필터에 맞는
+    S/A급 Setup이 없습니다.
+
+  </div>
+
+
+  <!-- =====================================================
+       B WATCH
+  ====================================================== -->
+
+  <div
+    class="section-title"
+    style="
+      margin-top:
+      30px
+    ">
+
+    <span
+      style="
+        color:
+        #9ca3af
+      ">
+
+      ⚪ B 관찰 후보
+
+    </span>
+
+
+    <span id="cnt-watch">
+      0
+    </span>
+
+  </div>
+
+
+  <div id="feed-watch"></div>
+
+
+  <div
+    id="emptyWatch"
+    class="empty-state"
+    style="display:none;">
+
+    현재 필터에 맞는
+    B급 관찰 후보가 없습니다.
+
+  </div>
+
+
+</main>
+
 
 <script>
-  let globalData = [];
-  let stratFilter = 'ALL';
 
-  function renderFeed() {
-    document.getElementById('feed-action').innerHTML = '';
-    document.getElementById('feed-setup').innerHTML = '';
-    const mcapFilter = document.getElementById('mcapFilter').value;
-    let counts = { action: 0, setup: 0 };
 
-    globalData.filter(item => {
-      // 1. Working, Failed 제외 (Action, Setup만 표시)
-      if (item.state !== 'action' && item.state !== 'setup') return false;
-      
-      // 2. S급, A급만 통과 (B, C급 제외)
-      if (item.grade !== 'S' && item.grade !== 'A') return false;
+let globalData = [];
 
-      // 3. 전략 및 시가총액 필터 적용
-      let passStrat = (stratFilter === 'ALL' || item.strategy === stratFilter);
-      let passMcap = true;
-      if(mcapFilter === 'OVER10B') passMcap = item.mcap >= 10;
-      else if(mcapFilter === 'MEGA') passMcap = item.mcap >= 200;
-      else if(mcapFilter === 'MID') passMcap = item.mcap < 10;
-      
-      return passStrat && passMcap;
-    }).sort((a, b) => {
-      // Setup 및 Action 내부 정렬: 점수(Score) 내림차순 최우선
-      if (a.state === 'setup') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
-      if (a.state === 'action') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
-      return 0;
-    }).forEach(item => {
-      const container = document.getElementById(`feed-${item.state}`);
-      if(container) { 
-        container.insertAdjacentHTML('beforeend', createFeedCard(item)); 
-        counts[item.state]++; 
-      }
-    });
+let stratFilter = 'ALL';
 
-    document.getElementById('cnt-action').textContent = counts.action;
-    document.getElementById('cnt-setup').textContent = counts.setup;
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function safeNumber(
+  value,
+  fallback = null
+) {
+
+  const n =
+    Number(value);
+
+
+  return (
+    Number.isFinite(n)
+    ? n
+    : fallback
+  );
+
+}
+
+
+function formatMcap(
+  value
+) {
+
+  const n =
+    safeNumber(
+      value
+    );
+
+
+  if (
+    n === null
+  ) {
+
+    return 'N/A';
+
   }
 
-  function createFeedCard(item) {
-    const badgeHtml = `<span class="badge-${item.grade}">${item.grade}급</span>`;
-    const mcapText = item.mcap >= 1000 ? `$${(item.mcap/1000).toFixed(1)}T` : `$${item.mcap.toFixed(1)}B`;
-    const scoreHtml = item.score ? `<span class="score-badge">[${item.score}점]</span>` : '';
 
-    // 다중 셋업(Overlap) 렌더링
-    let overlapHtml = '';
-    if (item.setups && Object.keys(item.setups).length > 1) {
-      let otherSetups = [];
-      for (const [strat, score] of Object.entries(item.setups)) {
-        if (strat !== item.strategy) otherSetups.push(`${strat} ${score}`);
-      }
-      if(otherSetups.length > 0) {
-        overlapHtml = `<div class="overlap-text">+ Also: ${otherSetups.join(', ')}</div>`;
-      }
-    }
+  if (
+    n >= 1000
+  ) {
 
-    let slHtml = item.state === 'action' ? `<div class="metric-item"><div class="m-label">구조손절가</div><div class="m-val sl-red">$${item.sl}</div></div>` : '';
+    return (
+      `$${(
+        n / 1000
+      ).toFixed(1)}T`
+    );
+
+  }
+
+
+  return (
+    `$${n.toFixed(1)}B`
+  );
+
+}
+
+
+function formatPct(
+  value,
+  digits = 2
+) {
+
+  const n =
+    safeNumber(
+      value
+    );
+
+
+  if (
+    n === null
+  ) {
+
+    return 'N/A';
+
+  }
+
+
+  return (
+    `${n >= 0 ? '+' : ''}${n.toFixed(digits)}%`
+  );
+
+}
+
+
+/* =========================================================
+   MARKET CAP FILTER
+========================================================= */
+
+function passesMcap(
+  item,
+  filter
+) {
+
+  if (
+    filter === 'ALL'
+  ) {
+
+    return true;
+
+  }
+
+
+  const mcap =
+    safeNumber(
+      item.mcap
+    );
+
+
+  if (
+    mcap === null
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    filter === 'OVER10B'
+  ) {
+
+    return (
+      mcap >= 10
+    );
+
+  }
+
+
+  if (
+    filter === 'MEGA'
+  ) {
+
+    return (
+      mcap >= 200
+    );
+
+  }
+
+
+  if (
+    filter === 'MID'
+  ) {
+
+    return (
+      mcap < 10
+    );
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   STRATEGY FILTER
+
+   Secondary setup score >= 60 also qualifies.
+========================================================= */
+
+function passesStrategy(
+  item
+) {
+
+  if (
+    stratFilter === 'ALL'
+  ) {
+
+    return true;
+
+  }
+
+
+  if (
+    item.strategy
+    === stratFilter
+  ) {
+
+    return true;
+
+  }
+
+
+  return !!(
+
+    item.setups
+
+    &&
+
+    safeNumber(
+      item.setups[
+        stratFilter
+      ],
+      0
+    ) >= 60
+  );
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function getTickerQuery() {
+
+  return (
+
+    document
+
+      .getElementById(
+        'tickerSearch'
+      )
+
+      .value
+
+      .trim()
+
+      .toUpperCase()
+  );
+
+}
+
+
+/* =========================================================
+   FILTER DATA
+========================================================= */
+
+function getFilteredData() {
+
+
+  const mcapFilter =
+
+    document
+
+      .getElementById(
+        'mcapFilter'
+      )
+
+      .value;
+
+
+  const tickerQuery =
+    getTickerQuery();
+
+
+  return globalData
+
+    .filter(
+      item => {
+
+
+        if (
+          item.state !== 'setup'
+        ) {
+
+          return false;
+
+        }
+
+
+        if (
+          ![
+            'S',
+            'A',
+            'B'
+          ].includes(
+            item.grade
+          )
+        ) {
+
+          return false;
+
+        }
+
+
+        /*
+          Ticker search.
+
+          Partial search supported.
+          Example:
+          NV -> NVDA
+        */
+
+        if (
+          tickerQuery
+        ) {
+
+
+          const symbol =
+            String(
+              item.symbol || ''
+            )
+            .toUpperCase();
+
+
+          if (
+            !symbol.includes(
+              tickerQuery
+            )
+          ) {
+
+            return false;
+
+          }
+
+        }
+
+
+        if (
+          !passesMcap(
+            item,
+            mcapFilter
+          )
+        ) {
+
+          return false;
+
+        }
+
+
+        /*
+          If user is searching a ticker,
+          ignore strategy filter.
+
+          This lets the user find MSFT
+          even if VCP button is currently active.
+        */
+
+        if (
+          tickerQuery
+        ) {
+
+          return true;
+
+        }
+
+
+        return (
+          passesStrategy(
+            item
+          )
+        );
+
+      }
+    )
+
+    .sort(
+      (a, b) => {
+
+
+        const scoreDiff =
+
+          safeNumber(
+            b.score,
+            0
+          )
+
+          -
+
+          safeNumber(
+            a.score,
+            0
+          );
+
+
+        if (
+          scoreDiff !== 0
+        ) {
+
+          return scoreDiff;
+
+        }
+
+
+        return (
+
+          safeNumber(
+            b.rs_rating,
+            0
+          )
+
+          -
+
+          safeNumber(
+            a.rs_rating,
+            0
+          )
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   OVERLAP / CONFLUENCE
+========================================================= */
+
+function buildOverlapHtml(
+  item
+) {
+
+
+  if (
+    !item.setups
+  ) {
+
+    return '';
+
+  }
+
+
+  const others =
+
+    Object.entries(
+      item.setups
+    )
+
+    .filter(
+      ([strategy, score]) => {
+
+        return (
+
+          strategy
+          !== item.strategy
+
+          &&
+
+          safeNumber(
+            score,
+            0
+          ) >= 60
+        );
+
+      }
+    )
+
+    .sort(
+      (a, b) => {
+
+        return (
+
+          safeNumber(
+            b[1],
+            0
+          )
+
+          -
+
+          safeNumber(
+            a[1],
+            0
+          )
+        );
+
+      }
+    )
+
+    .map(
+      ([strategy, score]) => {
+
+        return (
+          `${strategy} ${score}`
+        );
+
+      }
+    );
+
+
+  if (
+    others.length === 0
+  ) {
+
+    return '';
+
+  }
+
+
+  return `
+
+    <div class="overlap-text">
+
+      + Confluence:
+      ${others.join(', ')}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   STRUCTURE DETAILS
+========================================================= */
+
+function buildStructureLine(
+  item
+) {
+
+
+  const meta =
+
+    item.setup_meta
+
+    &&
+
+    item.setup_meta[
+      item.strategy
+    ];
+
+
+  if (
+    !meta
+  ) {
+
+    return '';
+
+  }
+
+
+  if (
+    item.strategy === '20EMA'
+  ) {
+
 
     return `
-      <div class="card">
-        <div class="card-header">
-          <div class="card-top-row">
-            <div class="ticker-wrap">
-              ${badgeHtml}
-              <span class="ticker">${item.symbol}</span>
-              <span class="tag-strat">${item.strategy}</span>
-              ${scoreHtml}
-            </div>
-            <span class="price">$${item.price.toFixed(2)}</span>
-          </div>
-          ${overlapHtml}
-          <div class="msg">${item.msg}</div>
-          <div class="metrics-grid">
-            <div class="metric-item"><div class="m-label">RS 점수</div><div class="m-val">${item.rs_rating}</div></div>
-            <div class="metric-item"><div class="m-label">상대거래량</div><div class="m-val">${item.rvol}</div></div>
-            <div class="metric-item"><div class="m-label">시가총액</div><div class="m-val">${mcapText}</div></div>
-            ${slHtml}
-          </div>
-        </div>
-        <div class="card-img-wrap">
-          <img src="https://charts2.finviz.com/chart.ashx?t=${item.symbol}" alt="chart">
-        </div>
-        <div class="card-actions">
-          <a href="https://finance.yahoo.com/chart/${item.symbol}" target="_blank" class="btn-full">Yahoo 차트 열기</a>
-        </div>
-      </div>
+
+      EMA20
+      $${safeNumber(
+        meta.ema20,
+        0
+      ).toFixed(2)}
+
+      · Low↔EMA
+      ${formatPct(
+        meta.ema_low_distance_pct,
+        2
+      )}
+
+      · Close 위치
+      ${safeNumber(
+        meta.close_location_pct,
+        0
+      ).toFixed(0)}%
+
     `;
+
   }
 
-  // 필터 버튼 이벤트
-  document.querySelectorAll('.pill-btn').forEach(btn => btn.addEventListener('click', (e) => {
-    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    stratFilter = e.target.dataset.filter;
-    renderFeed();
-  }));
 
-  // 시가총액 드롭다운 이벤트
-  document.getElementById('mcapFilter').addEventListener('change', renderFeed);
+  if (
+    item.strategy === 'VCP'
+  ) {
 
-  // 데이터 로드 (실제 갱신 시간 추적 포함)
-  fetch('dashboard_data.json').then(response => {
-    const lastModified = response.headers.get('Last-Modified');
-    if (lastModified) {
-      const updateDate = new Date(lastModified);
-      document.getElementById('updateTimeText').textContent = 
-        updateDate.toLocaleString('ko-KR', {timeZone: 'America/New_York', month: '2-digit', day: '2-digit', hour:'2-digit', minute:'2-digit'}) + ' ET 업데이트';
-    } else {
-      document.getElementById('updateTimeText').textContent = "업데이트 완료";
+
+    return `
+
+      Pivot
+      $${safeNumber(
+        meta.pivot,
+        0
+      ).toFixed(2)}
+
+      · Pivot 거리
+      ${safeNumber(
+        meta.pivot_distance_pct,
+        0
+      ).toFixed(2)}%
+
+      · 5D Range
+      ${safeNumber(
+        meta.range_5d_pct,
+        0
+      ).toFixed(2)}%
+
+      · TR
+      ${safeNumber(
+        meta.tr_old_pct,
+        0
+      ).toFixed(2)}
+
+      →
+
+      ${safeNumber(
+        meta.tr_mid_pct,
+        0
+      ).toFixed(2)}
+
+      →
+
+      ${safeNumber(
+        meta.tr_new_pct,
+        0
+      ).toFixed(2)}%
+
+    `;
+
+  }
+
+
+  if (
+    item.strategy === 'B&R'
+  ) {
+
+
+    return `
+
+      Frozen Pivot
+      $${safeNumber(
+        meta.pivot,
+        0
+      ).toFixed(2)}
+
+      ·
+      ${safeNumber(
+        meta.breakout_days_ago,
+        0
+      )}일 전 돌파
+
+      · Breakout RVOL
+      ${safeNumber(
+        meta.breakout_rvol,
+        0
+      ).toFixed(2)}
+
+      · Retest 오차
+      ${safeNumber(
+        meta.retest_distance_pct,
+        0
+      ).toFixed(2)}%
+
+    `;
+
+  }
+
+
+  if (
+    item.strategy === 'MTF'
+  ) {
+
+
+    return `
+
+      40D Run-up
+      ${safeNumber(
+        meta.max_runup_40d_pct,
+        0
+      ).toFixed(1)}%
+
+      · 10D Flag
+      ${safeNumber(
+        meta.flag_range_10d_pct,
+        0
+      ).toFixed(2)}%
+
+      · 고점 대비
+      ${safeNumber(
+        meta.drawdown_from_40d_high_pct,
+        0
+      ).toFixed(2)}%
+
+    `;
+
+  }
+
+
+  return '';
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+function createFeedCard(
+  item
+) {
+
+
+  const price =
+    safeNumber(
+      item.price,
+      0
+    );
+
+
+  const score =
+    safeNumber(
+      item.score,
+      0
+    );
+
+
+  const rs =
+    safeNumber(
+      item.rs_rating,
+      0
+    );
+
+
+  const rvol =
+    safeNumber(
+      item.rvol,
+      0
+    );
+
+
+  const rsChange =
+    safeNumber(
+      item.rs_change_20d_pct,
+      0
+    );
+
+
+  const rsClass =
+
+    rsChange > 0
+
+    ? 'positive'
+
+    : (
+        rsChange < 0
+        ? 'negative'
+        : ''
+      );
+
+
+  const overlap =
+    buildOverlapHtml(
+      item
+    );
+
+
+  const structure =
+    buildStructureLine(
+      item
+    );
+
+
+  return `
+
+    <article class="card">
+
+
+      <div class="card-header">
+
+
+        <div class="card-top-row">
+
+
+          <div class="ticker-wrap">
+
+
+            <span
+              class="badge-${item.grade}">
+
+              ${item.grade}급
+
+            </span>
+
+
+            <span class="ticker">
+
+              ${item.symbol}
+
+            </span>
+
+
+            <span class="tag-strat">
+
+              ${item.strategy}
+
+            </span>
+
+
+            <span class="score-badge">
+
+              [${score}점]
+
+            </span>
+
+
+          </div>
+
+
+          <span class="price">
+
+            $${price.toFixed(2)}
+
+          </span>
+
+
+        </div>
+
+
+        ${overlap}
+
+
+        <div class="msg">
+
+          ${item.msg || ''}
+
+        </div>
+
+
+        ${
+          structure
+          ? `
+
+            <div class="structure-line">
+
+              ${structure}
+
+            </div>
+
+          `
+          : ''
+        }
+
+
+        <div class="metrics-grid">
+
+
+          <div class="metric-item">
+
+
+            <div class="m-label">
+
+              Universe RS
+
+            </div>
+
+
+            <div class="m-val">
+
+              ${rs.toFixed(1)}
+
+            </div>
+
+
+          </div>
+
+
+          <div class="metric-item">
+
+
+            <div class="m-label">
+
+              RS Line 20D
+
+            </div>
+
+
+            <div
+              class="m-val ${rsClass}">
+
+              ${formatPct(
+                rsChange,
+                2
+              )}
+
+            </div>
+
+
+          </div>
+
+
+          <div class="metric-item">
+
+
+            <div class="m-label">
+
+              RVOL3
+
+            </div>
+
+
+            <div class="m-val">
+
+              ${rvol.toFixed(2)}
+
+            </div>
+
+
+          </div>
+
+
+          <div class="metric-item">
+
+
+            <div class="m-label">
+
+              시가총액
+
+            </div>
+
+
+            <div class="m-val">
+
+              ${formatMcap(
+                item.mcap
+              )}
+
+            </div>
+
+
+          </div>
+
+
+        </div>
+
+
+        <div class="date-row">
+
+
+          <span>
+
+            Signal:
+            ${item.signal_date || 'N/A'}
+
+          </span>
+
+
+          <span>
+
+            Engine:
+            v${item.engine_version || '?'}
+
+          </span>
+
+
+        </div>
+
+
+      </div>
+
+
+      <div class="card-img-wrap">
+
+
+        <img
+
+          src="https://charts2.finviz.com/chart.ashx?t=${encodeURIComponent(
+            item.symbol
+          )}"
+
+          alt="${item.symbol} chart"
+
+          loading="lazy"
+
+        />
+
+
+      </div>
+
+
+      <div class="card-actions">
+
+
+        <a
+
+          href="https://finance.yahoo.com/chart/${encodeURIComponent(
+            item.symbol
+          )}"
+
+          target="_blank"
+
+          rel="noopener"
+
+          class="btn-full">
+
+          Yahoo 차트 열기
+
+        </a>
+
+
+      </div>
+
+
+    </article>
+
+  `;
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderFeed() {
+
+
+  const highFeed =
+    document.getElementById(
+      'feed-high'
+    );
+
+
+  const watchFeed =
+    document.getElementById(
+      'feed-watch'
+    );
+
+
+  highFeed.innerHTML = '';
+
+  watchFeed.innerHTML = '';
+
+
+  const data =
+    getFilteredData();
+
+
+  const high = data.filter(
+    item => (
+      item.grade === 'S'
+      ||
+      item.grade === 'A'
+    )
+  );
+
+
+  const watch = data.filter(
+    item => (
+      item.grade === 'B'
+    )
+  );
+
+
+  high.forEach(
+    item => {
+
+      highFeed.insertAdjacentHTML(
+
+        'beforeend',
+
+        createFeedCard(
+          item
+        )
+      );
+
     }
-    return response.json();
-  }).then(data => {
-    globalData = data;
+  );
+
+
+  watch.forEach(
+    item => {
+
+      watchFeed.insertAdjacentHTML(
+
+        'beforeend',
+
+        createFeedCard(
+          item
+        )
+      );
+
+    }
+  );
+
+
+  document
+    .getElementById(
+      'cnt-high'
+    )
+    .textContent =
+      high.length;
+
+
+  document
+    .getElementById(
+      'cnt-watch'
+    )
+    .textContent =
+      watch.length;
+
+
+  document
+    .getElementById(
+      'emptyHigh'
+    )
+    .style.display =
+
+      high.length
+      ? 'none'
+      : 'block';
+
+
+  document
+    .getElementById(
+      'emptyWatch'
+    )
+    .style.display =
+
+      watch.length
+      ? 'none'
+      : 'block';
+
+}
+
+
+/* =========================================================
+   SUMMARY COUNTS
+========================================================= */
+
+function updateSummary() {
+
+
+  const sCount =
+    globalData.filter(
+      x => x.grade === 'S'
+    ).length;
+
+
+  const aCount =
+    globalData.filter(
+      x => x.grade === 'A'
+    ).length;
+
+
+  const bCount =
+    globalData.filter(
+      x => x.grade === 'B'
+    ).length;
+
+
+  document
+    .getElementById(
+      'sumS'
+    )
+    .textContent =
+      sCount;
+
+
+  document
+    .getElementById(
+      'sumA'
+    )
+    .textContent =
+      aCount;
+
+
+  document
+    .getElementById(
+      'sumB'
+    )
+    .textContent =
+      bCount;
+
+}
+
+
+/* =========================================================
+   LOAD JSON
+========================================================= */
+
+async function loadData() {
+
+
+  const btn =
+    document.getElementById(
+      'refreshBtn'
+    );
+
+
+  btn.disabled = true;
+
+  btn.textContent =
+    '⏳ 불러오는 중';
+
+
+  document
+    .getElementById(
+      'updateTimeText'
+    )
+    .textContent =
+      '최신 데이터 확인 중...';
+
+
+  const cacheBust =
+    Date.now();
+
+
+  /*
+    First try:
+    Same GitHub Pages repository.
+
+    Second try:
+    Raw GitHub fallback.
+
+    This also helps when index.html
+    is opened locally.
+  */
+
+  const urls = [
+
+    `./dashboard_data.json?ts=${cacheBust}`,
+
+    `https://raw.githubusercontent.com/jkshin933/stock-swing-screener/main/dashboard_data.json?ts=${cacheBust}`
+
+  ];
+
+
+  let loaded = false;
+
+  let lastError = null;
+
+
+  for (
+    const url
+    of urls
+  ) {
+
+
+    try {
+
+
+      const response =
+        await fetch(
+
+          url,
+
+          {
+            cache:
+              'no-store'
+          }
+        );
+
+
+      if (
+        !response.ok
+      ) {
+
+        throw new Error(
+          `HTTP ${response.status}`
+        );
+
+      }
+
+
+      const data =
+        await response.json();
+
+
+      if (
+        !Array.isArray(
+          data
+        )
+      ) {
+
+        throw new Error(
+          'JSON format error'
+        );
+
+      }
+
+
+      globalData =
+        data;
+
+
+      loaded =
+        true;
+
+
+      break;
+
+
+    }
+
+    catch (err) {
+
+
+      lastError =
+        err;
+
+    }
+
+  }
+
+
+  if (
+    loaded
+  ) {
+
+
+    updateSummary();
+
+
     renderFeed();
-  }).catch(() => { 
-    document.getElementById('updateTimeText').textContent = "데이터 오류"; 
-  });
+
+
+    if (
+      globalData.length > 0
+    ) {
+
+
+      const first =
+        globalData[0];
+
+
+      if (
+        first.engine_version
+      ) {
+
+
+        document
+          .getElementById(
+            'engineVersion'
+          )
+          .textContent =
+
+          `v${first.engine_version}`;
+
+      }
+
+
+      if (
+        first.scan_ts_utc
+      ) {
+
+
+        const scanDate =
+          new Date(
+            first.scan_ts_utc
+          );
+
+
+        if (
+          !Number.isNaN(
+            scanDate.getTime()
+          )
+        ) {
+
+
+          const formatted =
+
+            scanDate.toLocaleString(
+
+              'ko-KR',
+
+              {
+
+                timeZone:
+                  'America/New_York',
+
+                month:
+                  '2-digit',
+
+                day:
+                  '2-digit',
+
+                hour:
+                  '2-digit',
+
+                minute:
+                  '2-digit'
+
+              }
+            );
+
+
+          document
+            .getElementById(
+              'updateTimeText'
+            )
+            .textContent =
+
+            `${formatted} ET 스캔 · Signal ${first.signal_date || ''}`;
+
+        }
+
+      }
+
+      else {
+
+
+        document
+          .getElementById(
+            'updateTimeText'
+          )
+          .textContent =
+
+          `데이터 로드 완료 · ${globalData.length}개 후보`;
+
+      }
+
+    }
+
+    else {
+
+
+      document
+        .getElementById(
+          'updateTimeText'
+        )
+        .textContent =
+
+        '스캔 완료 · 현재 60점 이상 후보 없음';
+
+    }
+
+
+  }
+
+  else {
+
+
+    console.error(
+      lastError
+    );
+
+
+    document
+      .getElementById(
+        'updateTimeText'
+      )
+      .textContent =
+
+      '⚠️ dashboard_data.json 로드 실패';
+
+
+    globalData =
+      [];
+
+
+    updateSummary();
+
+    renderFeed();
+
+  }
+
+
+  btn.disabled =
+    false;
+
+
+  btn.textContent =
+    '🔄 데이터 새로고침';
+
+}
+
+
+/* =========================================================
+   EVENT: TICKER SEARCH
+========================================================= */
+
+document
+
+  .getElementById(
+    'tickerSearch'
+  )
+
+  .addEventListener(
+
+    'input',
+
+    renderFeed
+  );
+
+
+/* =========================================================
+   EVENT: MARKET CAP
+========================================================= */
+
+document
+
+  .getElementById(
+    'mcapFilter'
+  )
+
+  .addEventListener(
+
+    'change',
+
+    renderFeed
+  );
+
+
+/* =========================================================
+   EVENT: STRATEGY BUTTON
+========================================================= */
+
+document
+
+  .querySelectorAll(
+    '.pill-btn'
+  )
+
+  .forEach(
+    btn => {
+
+
+      btn.addEventListener(
+
+        'click',
+
+        e => {
+
+
+          document
+
+            .querySelectorAll(
+              '.pill-btn'
+            )
+
+            .forEach(
+              b => {
+
+                b.classList.remove(
+                  'active'
+                );
+
+              }
+            );
+
+
+          e.currentTarget
+            .classList.add(
+              'active'
+            );
+
+
+          stratFilter =
+
+            e.currentTarget
+              .dataset
+              .filter;
+
+
+          renderFeed();
+
+        }
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   EVENT: REFRESH BUTTON
+========================================================= */
+
+document
+
+  .getElementById(
+    'refreshBtn'
+  )
+
+  .addEventListener(
+
+    'click',
+
+    loadData
+  );
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+loadData();
+
+
 </script>
+
+
 </body>
+
 </html>
