@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>4-Core 스윙 대시보드</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+<style>
+  :root { --color-bg: #0a0e14; --color-surface: #11161f; --color-surface-2: #151b26; --color-border: #232b39; --color-text: #e4e9f0; --color-primary: #22d3ee; --color-success: #34d399; --color-warning: #fbbf24; --color-error: #f87171; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Satoshi', sans-serif; background: var(--color-bg); color: var(--color-text); }
+  .topbar { display: flex; justify-content: space-between; padding: 16px 24px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+  .main { padding: 24px; max-width: 1600px; margin: 0 auto; }
+  
+  .controls { display: flex; gap: 16px; margin-bottom: 24px; align-items: center; flex-wrap: wrap; }
+  .filter-bar { display: flex; gap: 10px; }
+  .filter-btn { padding: 8px 16px; border-radius: 20px; background: var(--color-surface-2); border: 1px solid var(--color-border); color: var(--color-text); cursor: pointer; }
+  .filter-btn.active { background: var(--color-text); color: var(--color-bg); }
+  .mcap-select { padding: 8px 12px; border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); outline: none; }
+
+  .kanban-board { display: flex; gap: 20px; align-items: flex-start; }
+  .kanban-col { flex: 1; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: 12px; padding: 16px; min-height: 400px; min-width: 300px; }
+  .col-header { font-weight: bold; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;}
+  
+  details.alert-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; margin-bottom: 12px; }
+  summary { padding: 16px; list-style: none; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  
+  .grade-S { background: linear-gradient(135deg, #d4af37, #f3e5ab); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+  .grade-A { background: #10b981; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+  .grade-B { background: #3b82f6; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+  .grade-C { background: #6b7280; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
+
+  .card-top { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .ticker { font-weight: bold; font-size: 1.1rem; }
+  .card-msg { font-size: 0.85rem; color: #8a94a6; margin-bottom: 12px; }
+  .metrics { display: flex; gap: 8px; font-size: 0.8rem; flex-wrap: wrap; }
+  .metric-box { padding: 4px 8px; border-radius: 4px; background: var(--color-surface-2); border: 1px solid var(--color-border); }
+  
+  .card-details { padding: 12px; border-top: 1px solid var(--color-border); background: var(--color-bg); }
+  .card-details img { width: 100%; border-radius: 4px; }
+  .btn-group { display: flex; gap: 8px; margin-top: 12px; }
+  .link-btn { padding: 6px; border-radius: 4px; font-size: 0.8rem; text-align: center; flex: 1; color: white; text-decoration: none;}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div style="font-size:1.2rem; font-weight:bold;">📈 4-Core 멀티 스윙 칸반</div>
+    <div id="updateTimeText" style="font-size:0.9rem; color:#8a94a6;">데이터 로딩 중...</div>
+  </header>
+
+  <main class="main">
+    <div class="controls">
+      <!-- 🌟 시가총액 필터 -->
+      <select class="mcap-select" id="mcapFilter">
+        <option value="ALL">전체 시가총액</option>
+        <option value="MEGA">Mega Cap ($200B 이상)</option>
+        <option value="LARGE">Large Cap ($10B ~ $200B)</option>
+        <option value="MID">Mid/Small Cap ($10B 미만)</option>
+      </select>
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="ALL">전체 전략</button>
+        <button class="filter-btn" data-filter="20EMA">📉 20EMA</button>
+        <button class="filter-btn" data-filter="VCP">🎯 VCP</button>
+        <button class="filter-btn" data-filter="B&R">🔄 돌파-지지</button>
+        <button class="filter-btn" data-filter="MOMO">🔥 모멘텀</button>
+      </div>
+    </div>
+
+    <div class="kanban-board">
+      <div class="kanban-col"><div class="col-header"><span style="color:var(--color-success)">🟢 당장 매수</span><span id="cnt-action">0</span></div><div id="list-action"></div></div>
+      <div class="kanban-col"><div class="col-header"><span style="color:var(--color-warning)">🟡 구조 대기</span><span id="cnt-setup">0</span></div><div id="list-setup"></div></div>
+      <div class="kanban-col"><div class="col-header"><span style="color:var(--color-primary)">🔵 수익 순항</span><span id="cnt-working">0</span></div><div id="list-working"></div></div>
+      <div class="kanban-col"><div class="col-header"><span style="color:var(--color-error)">🔴 기계적 손절</span><span id="cnt-failed">0</span></div><div id="list-failed"></div></div>
+    </div>
+  </main>
+
+<script>
+  let globalData = [];
+  let stratFilter = 'ALL';
+
+  function renderBoard() {
+    ['action', 'setup', 'working', 'failed'].forEach(col => {
+      document.getElementById(`list-${col}`).innerHTML = '';
+      document.getElementById(`cnt-${col}`).textContent = '0';
+    });
+
+    const mcapFilter = document.getElementById('mcapFilter').value;
+    const counts = { action: 0, setup: 0, working: 0, failed: 0 };
+
+    globalData.filter(item => {
+      // 🌟 필터 로직 적용
+      let passStrat = (stratFilter === 'ALL' || item.strategy === stratFilter);
+      let passMcap = true;
+      if(mcapFilter === 'MEGA') passMcap = item.mcap >= 200;
+      else if(mcapFilter === 'LARGE') passMcap = item.mcap >= 10 && item.mcap < 200;
+      else if(mcapFilter === 'MID') passMcap = item.mcap < 10;
+      return passStrat && passMcap;
+    }).sort((a, b) => {
+      if (a.state === 'setup' || a.state === 'action') return (b.rs_rating || 0) - (a.rs_rating || 0);
+      return 0;
+    }).forEach(item => {
+      const container = document.getElementById(`list-${item.state}`);
+      if(container) { container.insertAdjacentHTML('beforeend', createCard(item)); counts[item.state]++; }
+    });
+
+    Object.keys(counts).forEach(key => document.getElementById(`cnt-${key}`).textContent = counts[key]);
+  }
+
+  function createCard(item) {
+    const tagHtml = item.strategy ? `<span style="font-size:11px; font-weight:bold; color:#8a94a6; border:1px solid #232b39; padding:2px 6px; border-radius:4px;">${item.strategy}</span>` : '';
+    const gradeHtml = `<span class="grade-${item.grade}">${item.grade}급</span>`;
+    
+    // 시가총액 달러/B 단위 포맷
+    const mcapText = item.mcap >= 1000 ? `$${(item.mcap/1000).toFixed(1)}T` : `$${item.mcap.toFixed(1)}B`;
+
+    let metricsHtml = `<div class="metrics">
+      <div class="metric-box">RS: ${item.rs_rating}</div>
+      <div class="metric-box">RVOL: ${item.rvol}</div>
+      <div class="metric-box">시총: ${mcapText}</div>`;
+      
+    if(item.state === 'action') metricsHtml += `<div class="metric-box" style="color:#f87171">손절가: $${item.sl}</div>`;
+    else if(item.state === 'working') metricsHtml += `<div class="metric-box" style="color:${item.current_return>0?'#34d399':'#f87171'}">수익: ${item.current_return}%</div>`;
+    metricsHtml += `</div>`;
+
+    return `
+      <details class="alert-card">
+        <summary>
+          <div class="card-top">
+            <div style="display:flex; gap:8px; align-items:center;">${gradeHtml}<span class="ticker">${item.symbol}</span></div>
+            <span style="font-weight:bold;">$${item.price.toFixed(2)}</span>
+          </div>
+          <div class="card-top" style="margin-bottom:12px;">
+            ${tagHtml}
+          </div>
+          <div class="card-msg">${item.msg}</div>
+          ${metricsHtml}
+        </summary>
+        <div class="card-details">
+          <img src="https://charts2.finviz.com/chart.ashx?t=${item.symbol}" alt="chart">
+          <div class="btn-group">
+            <a href="https://finance.yahoo.com/chart/${item.symbol}" target="_blank" class="link-btn" style="background:#720e9e;">Yahoo</a>
+            <a href="https://www.google.com/finance/quote/${item.symbol}:NASDAQ" target="_blank" class="link-btn" style="background:#4285F4;">Google</a>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    stratFilter = e.target.dataset.filter;
+    renderBoard();
+  }));
+
+  document.getElementById('mcapFilter').addEventListener('change', renderBoard);
+
+  fetch('dashboard_data.json').then(r => r.json()).then(data => {
+    globalData = data;
+    document.getElementById('updateTimeText').textContent = `업데이트: ${new Date().toLocaleString('ko-KR', {timeZone: 'America/New_York'})} ET`;
+    renderBoard();
+  });
+</script>
+</body>
+</html>
