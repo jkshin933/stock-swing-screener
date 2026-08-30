@@ -10,7 +10,7 @@ DASHBOARD_FILE = "dashboard_data.json"
 TODAY_STR = datetime.now().strftime("%Y-%m-%d")
 TODAY_DATE = datetime.strptime(TODAY_STR, "%Y-%m-%d")
 
-# 🌟 S&P 500 + NASDAQ 100 통합 함수
+# 🌟 S&P 500 + NASDAQ 100 통합 함수 (URL 및 파싱 오류 수정본)
 def get_combined_tickers():
     headers = {'User-Agent': 'Mozilla/5.0'}
     
@@ -19,11 +19,16 @@ def get_combined_tickers():
     sp_df = pd.read_html(sp_url, storage_options=headers)[0]
     sp_tickers = sp_df["Symbol"].str.replace(".", "-", regex=False).tolist()
     
-    # 2. NASDAQ 100
-    ndx_url = "https://en.wikipedia.org/wiki/Nasdaq-100"
+    # 2. NASDAQ 100 (주소 수정 및 안전장치 추가)
+    ndx_url = "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies"
     ndx_tables = pd.read_html(ndx_url, storage_options=headers)
-    ndx_df = next(df for df in ndx_tables if "Ticker" in df.columns)
-    ndx_tickers = ndx_df["Ticker"].str.replace(".", "-", regex=False).tolist()
+    
+    # 'Ticker' 또는 'Symbol' 컬럼이 있는 테이블을 유연하게 찾음
+    ndx_df = next(df for df in ndx_tables if "Ticker" in df.columns or "Symbol" in df.columns)
+    
+    # 실제 존재하는 컬럼 이름으로 데이터 추출
+    col_name = "Ticker" if "Ticker" in ndx_df.columns else "Symbol"
+    ndx_tickers = ndx_df[col_name].str.replace(".", "-", regex=False).tolist()
     
     # 중복 제거 후 통합
     combined_tickers = list(set(sp_tickers + ndx_tickers))
