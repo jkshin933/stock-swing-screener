@@ -56,11 +56,17 @@
 <body>
 
   <header class="topbar">
-    <div class="brand">
-      🎯 모바일 4-Core 스캐너
-      <span class="update-time" id="updateTimeText">로딩중..</span>
-    </div>
-  </header>
+      <div class="brand">
+        🎯 모바일 4-Core 스캐너
+        <span class="update-time" id="updateTimeText">로딩중..</span>
+      </div>
+      <!-- 수동 업데이트 바로가기 버튼 추가 -->
+      <a href="https://github.com/[본인깃허브아이디]/stock-swing-screener/actions/workflows/scan.yml" 
+         target="_blank" 
+         style="background: var(--color-surface-2); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--color-text); text-decoration: none;">
+        🔄 수동 갱신
+      </a>
+    </header>
 
   <div class="filter-container">
     <div class="select-group">
