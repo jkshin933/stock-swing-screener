@@ -1,34 +1,48 @@
-name: Daily Swing Screener
+name: Run stock screener
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '30 20 * * 1-5' # 매주 월~금 밤 8:30 UTC (미국 동부 마감 후 4:30 PM)
-  workflow_dispatch: # 수동 실행 버튼 활성화
+    # Weekdays after the US market close (23:00 UTC).
+    - cron: "0 23 * * 1-5"
 
 permissions:
-  contents: write # 코드가 state.json을 저장할 수 있는 권한
+  contents: write
+
+concurrency:
+  group: stock-screener
+  cancel-in-progress: false
 
 jobs:
-  build:
+  scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-        
-    - name: Install dependencies
-      run: pip install pandas numpy yfinance
-      
-    - name: Run Screener Engine
-      run: python screener.py
-      
-    - name: Commit and push changes
-      run: |
-        git config --global user.name 'GitHub Action'
-        git config --global user.email 'action@github.com'
-        git add state.json dashboard_data.json
-        git commit -m "Auto-update state machine" || echo "No changes to commit"
-        git push
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install pandas yfinance lxml html5lib beautifulsoup4
+
+      - name: Run screener
+        run: python screener.py
+
+      - name: Commit refreshed data
+        run: |
+          if git diff --quiet -- dashboard_data.json state.json; then
+            echo "No data changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dashboard_data.json state.json
+          git commit -m "Update screener data"
+          git push
