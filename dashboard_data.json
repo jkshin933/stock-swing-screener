@@ -1,1066 +1,790 @@
 [
-    {
-        "state": "setup",
-        "strategy": "B&R",
-        "msg": "과거 저항선 지지력 테스트",
-        "symbol": "WAT",
-        "price": 414.69000244140625,
-        "rvol": 0.61,
-        "rs_rating": 75.5,
-        "grade": "A",
-        "mcap": 40.72
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 195.89,
-        "tp": 213.8,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 201.86,
-        "trigger_date": "2026-08-30",
-        "symbol": "CVX",
-        "price": 201.86000061035156,
-        "rvol": 0.8,
-        "rs_rating": 72.2,
-        "grade": "B",
-        "mcap": 395.97
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 107.68,
-        "tp": 108.19,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 107.85,
-        "trigger_date": "2026-08-30",
-        "symbol": "SBUX",
-        "price": 107.8499984741211,
-        "rvol": 0.8,
-        "rs_rating": 75.3,
-        "grade": "A",
-        "mcap": 122.95
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "TMO",
-        "price": 622.1799926757812,
-        "rvol": 0.7,
-        "rs_rating": 86.9,
-        "grade": "A",
-        "mcap": 230.05
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 79,
-        "grade": "A",
-        "setups": {
-            "20EMA": 79
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "COR",
-        "price": 322.0299987792969,
-        "rvol": 0.57,
-        "rs_rating": 75.1,
-        "mcap": 61.45
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 84,
-        "grade": "A",
-        "setups": {
-            "20EMA": 84
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "TRV",
-        "price": 369.8999938964844,
-        "rvol": 0.63,
-        "rs_rating": 90.3,
-        "mcap": 77.15
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 72,
-        "grade": "A",
-        "setups": {
-            "20EMA": 72
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "BIIB",
-        "price": 218.5,
-        "rvol": 0.47,
-        "rs_rating": 86.5,
-        "mcap": 32.28
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 80,
-        "grade": "A",
-        "setups": {
-            "20EMA": 80
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "HAS",
-        "price": 94.2300033569336,
-        "rvol": 0.51,
-        "rs_rating": 74.0,
-        "mcap": 13.29
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 78,
-        "grade": "A",
-        "setups": {
-            "20EMA": 78
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "HSIC",
-        "price": 89.5199966430664,
-        "rvol": 0.59,
-        "rs_rating": 79.9,
-        "mcap": 9.98
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "PRU",
-        "price": 119.79000091552734,
-        "rvol": 0.75,
-        "rs_rating": 79.4,
-        "grade": "A",
-        "mcap": 41.33
-    },
-    {
-        "state": "setup",
-        "strategy": "B&R",
-        "msg": "과거 저항선 지지력 테스트",
-        "symbol": "OKE",
-        "price": 94.76000213623047,
-        "rvol": 0.76,
-        "rs_rating": 78.6,
-        "grade": "A",
-        "mcap": 59.73
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "IEX",
-        "price": 230.27999877929688,
-        "rvol": 0.75,
-        "rs_rating": 79.7,
-        "grade": "A",
-        "mcap": 16.98
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 76,
-        "grade": "A",
-        "setups": {
-            "20EMA": 76
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "BMY",
-        "price": 66.58000183105469,
-        "rvol": 0.5,
-        "rs_rating": 90.5,
-        "mcap": 136.0
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 88.2,
-        "tp": 96.96,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 91.12,
-        "trigger_date": "2026-08-30",
-        "symbol": "SOLV",
-        "price": 91.12000274658203,
-        "rvol": 0.66,
-        "rs_rating": 78.2,
-        "grade": "A",
-        "mcap": 15.51
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 93,
-        "grade": "S",
-        "setups": {
-            "20EMA": 93
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "TECH",
-        "price": 72.3499984741211,
-        "rvol": 0.3,
-        "rs_rating": 94.2,
-        "mcap": 11.35
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 124.02,
-        "tp": 143.0,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 130.35,
-        "trigger_date": "2026-08-30",
-        "symbol": "COP",
-        "price": 130.35000610351562,
-        "rvol": 0.8,
-        "rs_rating": 81.9,
-        "grade": "A",
-        "mcap": 158.8
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "HPE",
-        "price": 52.310001373291016,
-        "rvol": 0.72,
-        "rs_rating": 95.3,
-        "grade": "S",
-        "mcap": 69.27
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "GILD",
-        "price": 145.67999267578125,
-        "rvol": 0.67,
-        "rs_rating": 76.1,
-        "grade": "A",
-        "mcap": 180.64
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 89.1,
-        "tp": 90.78,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 89.66,
-        "trigger_date": "2026-08-30",
-        "symbol": "KO",
-        "price": 89.66000366210938,
-        "rvol": 0.77,
-        "rs_rating": 80.9,
-        "grade": "A",
-        "mcap": 385.77
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 159.37,
-        "tp": 151.38,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 156.71,
-        "trigger_date": "2026-08-30",
-        "symbol": "XOM",
-        "price": 156.7100067138672,
-        "rvol": 0.88,
-        "rs_rating": 73.0,
-        "grade": "B",
-        "mcap": 644.38
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 148.58,
-        "tp": 158.78,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 151.98,
-        "trigger_date": "2026-08-30",
-        "symbol": "J",
-        "price": 151.97999572753906,
-        "rvol": 0.67,
-        "rs_rating": 73.2,
-        "grade": "B",
-        "mcap": 17.79
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "WAB",
-        "price": 292.2300109863281,
-        "rvol": 0.62,
-        "rs_rating": 87.6,
-        "grade": "A",
-        "mcap": 49.36
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 87.53,
-        "tp": 88.78,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 87.95,
-        "trigger_date": "2026-08-30",
-        "symbol": "IFF",
-        "price": 87.94999694824219,
-        "rvol": 0.75,
-        "rs_rating": 85.3,
-        "grade": "A",
-        "mcap": 22.44
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 123.38,
-        "tp": 134.36,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 127.04,
-        "trigger_date": "2026-08-30",
-        "symbol": "PAYX",
-        "price": 127.04000091552734,
-        "rvol": 0.47,
-        "rs_rating": 72.6,
-        "grade": "B",
-        "mcap": 45.19
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 57.34,
-        "tp": 57.3,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 57.33,
-        "trigger_date": "2026-08-30",
-        "symbol": "SLB",
-        "price": 57.33000183105469,
-        "rvol": 1.03,
-        "rs_rating": 84.6,
-        "grade": "A",
-        "mcap": 85.09
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "SWK",
-        "price": 97.80000305175781,
-        "rvol": 0.72,
-        "rs_rating": 87.1,
-        "grade": "A",
-        "mcap": 14.77
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 338.61,
-        "tp": 354.03,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 343.75,
-        "trigger_date": "2026-08-30",
-        "symbol": "WTW",
-        "price": 343.75,
-        "rvol": 0.72,
-        "rs_rating": 83.8,
-        "grade": "A",
-        "mcap": 31.92
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 365.81,
-        "tp": 413.18,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 381.6,
-        "trigger_date": "2026-08-30",
-        "symbol": "V",
-        "price": 381.6000061035156,
-        "rvol": 0.71,
-        "rs_rating": 71.5,
-        "grade": "B",
-        "mcap": 712.47
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 86.78,
-        "tp": 91.28,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 88.28,
-        "trigger_date": "2026-08-30",
-        "symbol": "OMC",
-        "price": 88.27999877929688,
-        "rvol": 0.54,
-        "rs_rating": 73.8,
-        "grade": "B",
-        "mcap": 24.22
-    },
-    {
-        "state": "setup",
-        "strategy": "B&R",
-        "msg": "과거 저항선 지지력 테스트",
-        "symbol": "IBKR",
-        "price": 95.83999633789062,
-        "rvol": 0.77,
-        "rs_rating": 82.6,
-        "grade": "A",
-        "mcap": 43.42
-    },
-    {
-        "state": "setup",
-        "strategy": "B&R",
-        "msg": "과거 저항선 지지력 테스트",
-        "symbol": "DGX",
-        "price": 242.75999450683594,
-        "rvol": 0.8,
-        "rs_rating": 89.0,
-        "grade": "A",
-        "mcap": 26.79
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 631.11,
-        "tp": 628.77,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 630.33,
-        "trigger_date": "2026-08-30",
-        "symbol": "DE",
-        "price": 630.3300170898438,
-        "rvol": 0.64,
-        "rs_rating": 81.7,
-        "grade": "A",
-        "mcap": 169.95
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 75,
-        "grade": "A",
-        "setups": {
-            "20EMA": 75
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "MET",
-        "price": 96.51000213623047,
-        "rvol": 0.69,
-        "rs_rating": 78.4,
-        "mcap": 61.33
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 339.17,
-        "tp": 378.74,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 352.36,
-        "trigger_date": "2026-08-30",
-        "symbol": "VLO",
-        "price": 352.3599853515625,
-        "rvol": 0.7,
-        "rs_rating": 96.9,
-        "grade": "S",
-        "mcap": 101.45
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "ANET",
-        "price": 195.3800048828125,
-        "rvol": 0.66,
-        "rs_rating": 80.3,
-        "grade": "A",
-        "mcap": 246.42
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 82,
-        "grade": "A",
-        "setups": {
-            "20EMA": 82
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "WELL",
-        "price": 238.07000732421875,
-        "rvol": 0.73,
-        "rs_rating": 88.8,
-        "mcap": 171.55
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 230.2,
-        "tp": 271.64,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 244.01,
-        "trigger_date": "2026-08-30",
-        "symbol": "PSX",
-        "price": 244.00999450683594,
-        "rvol": 0.77,
-        "rs_rating": 96.1,
-        "grade": "S",
-        "mcap": 97.37
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 81,
-        "grade": "A",
-        "setups": {
-            "20EMA": 81
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "NTRS",
-        "price": 186.7899932861328,
-        "rvol": 0.72,
-        "rs_rating": 82.4,
-        "mcap": 34.17
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 71,
-        "grade": "A",
-        "setups": {
-            "20EMA": 71
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "EG",
-        "price": 377.6099853515625,
-        "rvol": 0.71,
-        "rs_rating": 70.7,
-        "mcap": 14.48
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "IVZ",
-        "price": 32.86000061035156,
-        "rvol": 0.61,
-        "rs_rating": 89.4,
-        "grade": "A",
-        "mcap": 14.51
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 40.46,
-        "tp": 46.69,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 42.54,
-        "trigger_date": "2026-08-30",
-        "symbol": "APA",
-        "price": 42.540000915527344,
-        "rvol": 0.7,
-        "rs_rating": 92.5,
-        "grade": "S",
-        "mcap": 14.9
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 561.11,
-        "tp": 555.74,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 559.32,
-        "trigger_date": "2026-08-30",
-        "symbol": "AMP",
-        "price": 559.3200073242188,
-        "rvol": 0.49,
-        "rs_rating": 80.7,
-        "grade": "A",
-        "mcap": 49.41
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 108.96,
-        "tp": 112.57,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 110.16,
-        "trigger_date": "2026-08-30",
-        "symbol": "SCHW",
-        "price": 110.16000366210938,
-        "rvol": 1.36,
-        "rs_rating": 83.2,
-        "grade": "A",
-        "mcap": 190.5
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "EXPD",
-        "price": 190.97000122070312,
-        "rvol": 0.59,
-        "rs_rating": 89.6,
-        "grade": "A",
-        "mcap": 24.82
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 81,
-        "grade": "A",
-        "setups": {
-            "20EMA": 81
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "AIZ",
-        "price": 285.6499938964844,
-        "rvol": 0.65,
-        "rs_rating": 82.8,
-        "mcap": 14.09
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 78,
-        "grade": "A",
-        "setups": {
-            "20EMA": 78,
-            "MTF": 58
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "REGN",
-        "price": 794.1900024414062,
-        "rvol": 0.73,
-        "rs_rating": 92.1,
-        "mcap": 81.77
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 76,
-        "grade": "A",
-        "setups": {
-            "20EMA": 76
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "BNY",
-        "price": 162.5,
-        "rvol": 0.64,
-        "rs_rating": 88.2,
-        "mcap": 110.26
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "NUE",
-        "price": 250.5,
-        "rvol": 0.62,
-        "rs_rating": 84.9,
-        "grade": "A",
-        "mcap": 56.83
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 326.11,
-        "tp": 336.11,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 329.44,
-        "trigger_date": "2026-08-30",
-        "symbol": "EXPE",
-        "price": 329.44000244140625,
-        "rvol": 0.81,
-        "rs_rating": 95.1,
-        "grade": "S",
-        "mcap": 39.54
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "VRTX",
-        "price": 541.6900024414062,
-        "rvol": 0.55,
-        "rs_rating": 88.0,
-        "grade": "A",
-        "mcap": 137.3
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "STT",
-        "price": 193.3300018310547,
-        "rvol": 0.41,
-        "rs_rating": 94.0,
-        "grade": "S",
-        "mcap": 53.11
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 78,
-        "grade": "A",
-        "setups": {
-            "20EMA": 78,
-            "B&R": 53
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "INCY",
-        "price": 124.37000274658203,
-        "rvol": 0.52,
-        "rs_rating": 93.0,
-        "mcap": 25.21
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 84,
-        "grade": "A",
-        "setups": {
-            "20EMA": 84
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "HUM",
-        "price": 385.5400085449219,
-        "rvol": 0.61,
-        "rs_rating": 86.1,
-        "mcap": 46.3
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 85,
-        "grade": "S",
-        "setups": {
-            "20EMA": 85
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "CAH",
-        "price": 234.5500030517578,
-        "rvol": 0.67,
-        "rs_rating": 91.7,
-        "mcap": 54.55
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "GRMN",
-        "price": 285.19000244140625,
-        "rvol": 0.68,
-        "rs_rating": 79.0,
-        "grade": "A",
-        "mcap": 55.0
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 359.17,
-        "tp": 354.52,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 357.62,
-        "trigger_date": "2026-08-30",
-        "symbol": "JPM",
-        "price": 357.6199951171875,
-        "rvol": 0.6,
-        "rs_rating": 77.2,
-        "grade": "A",
-        "mcap": 950.62
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 130.59,
-        "tp": 123.59,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 128.26,
-        "trigger_date": "2026-08-30",
-        "symbol": "DLTR",
-        "price": 128.25999450683594,
-        "rvol": 1.28,
-        "rs_rating": 79.5,
-        "grade": "A",
-        "mcap": 24.07
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "GPN",
-        "price": 91.81999969482422,
-        "rvol": 0.71,
-        "rs_rating": 74.3,
-        "grade": "B",
-        "mcap": 24.3
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "NTAP",
-        "price": 187.02000427246094,
-        "rvol": 0.67,
-        "rs_rating": 78.0,
-        "grade": "A",
-        "mcap": 36.7
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 274.98,
-        "tp": 312.48,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 287.48,
-        "trigger_date": "2026-08-30",
-        "symbol": "ADP",
-        "price": 287.4800109863281,
-        "rvol": 0.62,
-        "rs_rating": 71.1,
-        "grade": "B",
-        "mcap": 114.21
-    },
-    {
-        "state": "setup",
-        "strategy": "MOMO",
-        "msg": "High Tight Flag 돌파 대기",
-        "symbol": "CRL",
-        "price": 291.5,
-        "rvol": 1.0,
-        "rs_rating": 97.3,
-        "grade": "S",
-        "mcap": 13.92
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 351.93,
-        "tp": 402.62,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 368.83,
-        "trigger_date": "2026-08-30",
-        "symbol": "MPC",
-        "price": 368.8299865722656,
-        "rvol": 1.0,
-        "rs_rating": 96.7,
-        "grade": "S",
-        "mcap": 103.58
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "msg": "20 EMA 눌림목 대기",
-        "symbol": "AMCR",
-        "price": 46.66999816894531,
-        "rvol": 0.82,
-        "rs_rating": 77.8,
-        "grade": "A",
-        "mcap": 21.58
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 264.59,
-        "tp": 273.5,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 267.56,
-        "trigger_date": "2026-08-30",
-        "symbol": "AJG",
-        "price": 267.55999755859375,
-        "rvol": 0.76,
-        "rs_rating": 73.6,
-        "grade": "B",
-        "mcap": 68.59
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "ABBV",
-        "price": 255.47999572753906,
-        "rvol": 0.55,
-        "rs_rating": 78.8,
-        "grade": "A",
-        "mcap": 451.46
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 90.12,
-        "tp": 92.22,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 90.82,
-        "trigger_date": "2026-08-30",
-        "symbol": "DXCM",
-        "price": 90.81999969482422,
-        "rvol": 0.63,
-        "rs_rating": 77.4,
-        "grade": "A",
-        "mcap": 34.27
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 82,
-        "grade": "A",
-        "setups": {
-            "20EMA": 82
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "FDX",
-        "price": 330.8800048828125,
-        "rvol": 0.54,
-        "rs_rating": 85.9,
-        "mcap": 78.31
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 181.61,
-        "tp": 205.33,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 189.52,
-        "trigger_date": "2026-08-30",
-        "symbol": "BDX",
-        "price": 189.52000427246094,
-        "rvol": 0.68,
-        "rs_rating": 90.1,
-        "grade": "S",
-        "mcap": 51.62
-    },
-    {
-        "state": "setup",
-        "strategy": "B&R",
-        "msg": "과거 저항선 지지력 테스트",
-        "symbol": "UNP",
-        "price": 307.4100036621094,
-        "rvol": 0.75,
-        "rs_rating": 85.5,
-        "grade": "A",
-        "mcap": 182.62
-    },
-    {
-        "state": "setup",
-        "strategy": "VCP",
-        "msg": "VCP 극비수축 대기",
-        "symbol": "RTX",
-        "price": 211.7100067138672,
-        "rvol": 0.68,
-        "rs_rating": 86.3,
-        "grade": "A",
-        "mcap": 285.33
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 183.38,
-        "tp": 201.53,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 189.43,
-        "trigger_date": "2026-08-30",
-        "symbol": "ABNB",
-        "price": 189.42999267578125,
-        "rvol": 0.97,
-        "rs_rating": 94.6,
-        "grade": "S",
-        "mcap": 111.69
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 268.08,
-        "tp": 267.96,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 268.04,
-        "trigger_date": "2026-08-30",
-        "symbol": "JNJ",
-        "price": 268.0400085449219,
-        "rvol": 0.85,
-        "rs_rating": 90.7,
-        "grade": "S",
-        "mcap": 645.95
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 87,
-        "grade": "S",
-        "setups": {
-            "20EMA": 87,
-            "B&R": 77
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "CSX",
-        "price": 51.279998779296875,
-        "rvol": 0.59,
-        "rs_rating": 87.3,
-        "mcap": 94.99
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 86,
-        "grade": "S",
-        "setups": {
-            "20EMA": 86
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "BALL",
-        "price": 63.77000045776367,
-        "rvol": 0.6,
-        "rs_rating": 80.5,
-        "mcap": 16.88
-    },
-    {
-        "state": "action",
-        "strategy": "B&R",
-        "sl": 134.42,
-        "tp": 143.7,
-        "msg": "과거 저항선 Retest 반등!",
-        "entry_price": 137.51,
-        "trigger_date": "2026-08-30",
-        "symbol": "GPC",
-        "price": 137.50999450683594,
-        "rvol": 0.73,
-        "rs_rating": 88.6,
-        "grade": "A",
-        "mcap": 18.96
-    },
-    {
-        "state": "setup",
-        "strategy": "20EMA",
-        "score": 75,
-        "grade": "A",
-        "setups": {
-            "20EMA": 75
-        },
-        "msg": "[20EMA] 고순도 구조 형성완료",
-        "last_seen": "2026-08-30",
-        "symbol": "BEN",
-        "price": 34.650001525878906,
-        "rvol": 0.49,
-        "rs_rating": 84.7,
-        "mcap": 17.6
-    }
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "VCP",
+    "score": 81,
+    "grade": "A",
+    "setups": {
+      "VCP": 81
+    },
+    "setup_meta": {
+      "VCP": {
+        "pivot": 153.3,
+        "pivot_distance_pct": 0.86,
+        "range_5d_pct": 2.43,
+        "tr_old_pct": 2.97,
+        "tr_mid_pct": 2.19,
+        "tr_new_pct": 1.85
+      }
+    },
+    "msg": "[VCP] Setup Quality 81",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "J",
+    "price": 151.98,
+    "rvol": 0.67,
+    "rs_rating": 75.9,
+    "rs_change_20d_pct": 9.64,
+    "mcap": 17.79
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 80,
+    "grade": "A",
+    "setups": {
+      "B&R": 80
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 194.35,
+        "breakout_days_ago": 18,
+        "breakout_rvol": 2.43,
+        "retest_distance_pct": 0.13,
+        "pullback_from_peak_pct": 7.6
+      }
+    },
+    "msg": "[B&R] Setup Quality 80",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "ANET",
+    "price": 195.38,
+    "rvol": 0.66,
+    "rs_rating": 86.1,
+    "rs_change_20d_pct": 5.19,
+    "mcap": 246.42
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 79,
+    "grade": "A",
+    "setups": {
+      "20EMA": 79
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 403.11,
+        "ema_low_distance_pct": -0.4,
+        "close_location_pct": 82.2
+      }
+    },
+    "msg": "[20EMA] Setup Quality 79",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "CPAY",
+    "price": 407.88,
+    "rvol": 0.54,
+    "rs_rating": 76.3,
+    "rs_change_20d_pct": 3.65,
+    "mcap": 26.78
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 76,
+    "grade": "A",
+    "setups": {
+      "20EMA": 76,
+      "B&R": 63
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 318.18,
+        "ema_low_distance_pct": -0.6,
+        "close_location_pct": 97.9
+      },
+      "B&R": {
+        "pivot": 312.3,
+        "breakout_days_ago": 18,
+        "breakout_rvol": 1.9,
+        "retest_distance_pct": 1.27,
+        "pullback_from_peak_pct": 3.53
+      }
+    },
+    "msg": "[20EMA] Setup Quality 76",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "EXPE",
+    "price": 329.44,
+    "rvol": 0.81,
+    "rs_rating": 94.6,
+    "rs_change_20d_pct": 8.69,
+    "mcap": 39.54
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 76,
+    "grade": "A",
+    "setups": {
+      "20EMA": 76
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 619.1,
+        "ema_low_distance_pct": -0.31,
+        "close_location_pct": 88.6
+      }
+    },
+    "msg": "[20EMA] Setup Quality 76",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "DE",
+    "price": 630.33,
+    "rvol": 0.64,
+    "rs_rating": 82.3,
+    "rs_change_20d_pct": 3.27,
+    "mcap": 169.95
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "VCP",
+    "score": 76,
+    "grade": "A",
+    "setups": {
+      "VCP": 76
+    },
+    "setup_meta": {
+      "VCP": {
+        "pivot": 89.57,
+        "pivot_distance_pct": 1.44,
+        "range_5d_pct": 3.57,
+        "tr_old_pct": 3.25,
+        "tr_mid_pct": 2.56,
+        "tr_new_pct": 1.83
+      }
+    },
+    "msg": "[VCP] Setup Quality 76",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "OMC",
+    "price": 88.28,
+    "rvol": 0.54,
+    "rs_rating": 78.8,
+    "rs_change_20d_pct": 8.92,
+    "mcap": 24.22
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 76,
+    "grade": "A",
+    "setups": {
+      "20EMA": 76
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 110.95,
+        "ema_low_distance_pct": 0.15,
+        "close_location_pct": 82.9
+      }
+    },
+    "msg": "[20EMA] Setup Quality 76",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "ABT",
+    "price": 112.47,
+    "rvol": 0.68,
+    "rs_rating": 71.9,
+    "rs_change_20d_pct": 3.32,
+    "mcap": 194.62
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "MTF",
+    "score": 75,
+    "grade": "A",
+    "setups": {
+      "MTF": 75
+    },
+    "setup_meta": {
+      "MTF": {
+        "max_runup_40d_pct": 32.9,
+        "flag_range_10d_pct": 5.1,
+        "drawdown_from_40d_high_pct": 0.18
+      }
+    },
+    "msg": "[MTF] Setup Quality 75",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "VLO",
+    "price": 352.36,
+    "rvol": 0.7,
+    "rs_rating": 97.5,
+    "rs_change_20d_pct": 9.34,
+    "mcap": 101.45
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 72,
+    "grade": "A",
+    "setups": {
+      "B&R": 72
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 284.64,
+        "breakout_days_ago": 18,
+        "breakout_rvol": 1.81,
+        "retest_distance_pct": 0.01,
+        "pullback_from_peak_pct": 6.02
+      }
+    },
+    "msg": "[B&R] Setup Quality 72",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "AIZ",
+    "price": 285.65,
+    "rvol": 0.65,
+    "rs_rating": 82.1,
+    "rs_change_20d_pct": -0.65,
+    "mcap": 14.09
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 72,
+    "grade": "A",
+    "setups": {
+      "20EMA": 72
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 107.81,
+        "ema_low_distance_pct": 0.25,
+        "close_location_pct": 95.3
+      }
+    },
+    "msg": "[20EMA] Setup Quality 72",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "CCEP",
+    "price": 109.1,
+    "rvol": 0.6,
+    "rs_rating": 80.4,
+    "rs_change_20d_pct": -3.22,
+    "mcap": 48.15
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 71,
+    "grade": "A",
+    "setups": {
+      "20EMA": 71
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 133.69,
+        "ema_low_distance_pct": 1.27,
+        "close_location_pct": 98.6
+      }
+    },
+    "msg": "[20EMA] Setup Quality 71",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "GPC",
+    "price": 137.51,
+    "rvol": 0.73,
+    "rs_rating": 87.5,
+    "rs_change_20d_pct": 7.36,
+    "mcap": 18.96
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 71,
+    "grade": "A",
+    "setups": {
+      "20EMA": 71
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 554.03,
+        "ema_low_distance_pct": 0.17,
+        "close_location_pct": 69.8
+      }
+    },
+    "msg": "[20EMA] Setup Quality 71",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "AMP",
+    "price": 559.32,
+    "rvol": 0.49,
+    "rs_rating": 81.3,
+    "rs_change_20d_pct": -0.19,
+    "mcap": 49.41
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 70,
+    "grade": "A",
+    "setups": {
+      "20EMA": 70
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 90.05,
+        "ema_low_distance_pct": -0.12,
+        "close_location_pct": 79.6
+      }
+    },
+    "msg": "[20EMA] Setup Quality 70",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "MDT",
+    "price": 91.23,
+    "rvol": 0.87,
+    "rs_rating": 70.4,
+    "rs_change_20d_pct": 3.74,
+    "mcap": 116.77
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 68,
+    "grade": "B",
+    "setups": {
+      "20EMA": 68
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 264.49,
+        "ema_low_distance_pct": -0.08,
+        "close_location_pct": 91.7
+      }
+    },
+    "msg": "[20EMA] Setup Quality 68",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "JNJ",
+    "price": 268.04,
+    "rvol": 0.85,
+    "rs_rating": 90.0,
+    "rs_change_20d_pct": 2.03,
+    "mcap": 645.95
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 68,
+    "grade": "B",
+    "setups": {
+      "20EMA": 68
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 87.45,
+        "ema_low_distance_pct": 1.57,
+        "close_location_pct": 99.0
+      }
+    },
+    "msg": "[20EMA] Setup Quality 68",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "DXCM",
+    "price": 90.82,
+    "rvol": 0.63,
+    "rs_rating": 80.0,
+    "rs_change_20d_pct": 5.67,
+    "mcap": 34.27
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 68,
+    "grade": "B",
+    "setups": {
+      "20EMA": 68
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 258.29,
+        "ema_low_distance_pct": 0.85,
+        "close_location_pct": 83.9
+      }
+    },
+    "msg": "[20EMA] Setup Quality 68",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "AJG",
+    "price": 267.56,
+    "rvol": 0.76,
+    "rs_rating": 76.5,
+    "rs_change_20d_pct": 4.16,
+    "mcap": 68.59
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 68,
+    "grade": "B",
+    "setups": {
+      "20EMA": 68
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 355.64,
+        "ema_low_distance_pct": -0.4,
+        "close_location_pct": 75.4
+      }
+    },
+    "msg": "[20EMA] Setup Quality 68",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "JPM",
+    "price": 357.62,
+    "rvol": 0.6,
+    "rs_rating": 75.2,
+    "rs_change_20d_pct": -1.29,
+    "mcap": 950.62
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 68,
+    "grade": "B",
+    "setups": {
+      "20EMA": 68
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 46.43,
+        "ema_low_distance_pct": 0.47,
+        "close_location_pct": 71.4
+      }
+    },
+    "msg": "[20EMA] Setup Quality 68",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "DVN",
+    "price": 47.35,
+    "rvol": 0.62,
+    "rs_rating": 74.6,
+    "rs_change_20d_pct": 1.88,
+    "mcap": 52.08
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "MTF",
+    "score": 67,
+    "grade": "B",
+    "setups": {
+      "MTF": 67
+    },
+    "setup_meta": {
+      "MTF": {
+        "max_runup_40d_pct": 38.3,
+        "flag_range_10d_pct": 6.16,
+        "drawdown_from_40d_high_pct": 1.19
+      }
+    },
+    "msg": "[MTF] Setup Quality 67",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "PSX",
+    "price": 244.01,
+    "rvol": 0.77,
+    "rs_rating": 96.3,
+    "rs_change_20d_pct": 12.52,
+    "mcap": 97.37
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 67,
+    "grade": "B",
+    "setups": {
+      "B&R": 67
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 96.04,
+        "breakout_days_ago": 20,
+        "breakout_rvol": 1.23,
+        "retest_distance_pct": 0.27,
+        "pullback_from_peak_pct": 6.57
+      }
+    },
+    "msg": "[B&R] Setup Quality 67",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "SWK",
+    "price": 97.8,
+    "rvol": 0.72,
+    "rs_rating": 85.4,
+    "rs_change_20d_pct": 0.4,
+    "mcap": 14.77
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 66,
+    "grade": "B",
+    "setups": {
+      "B&R": 66
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 51.29,
+        "breakout_days_ago": 27,
+        "breakout_rvol": 2.3,
+        "retest_distance_pct": 0.6,
+        "pullback_from_peak_pct": 4.33
+      }
+    },
+    "msg": "[B&R] Setup Quality 66",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "CSX",
+    "price": 51.28,
+    "rvol": 0.59,
+    "rs_rating": 88.2,
+    "rs_change_20d_pct": -1.21,
+    "mcap": 94.99
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 64,
+    "grade": "B",
+    "setups": {
+      "B&R": 64
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 289.68,
+        "breakout_days_ago": 9,
+        "breakout_rvol": 2.07,
+        "retest_distance_pct": 0.76,
+        "pullback_from_peak_pct": 6.53
+      }
+    },
+    "msg": "[B&R] Setup Quality 64",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "TRGP",
+    "price": 287.82,
+    "rvol": 0.74,
+    "rs_rating": 92.1,
+    "rs_change_20d_pct": 3.37,
+    "mcap": 61.72
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "MTF",
+    "score": 64,
+    "grade": "B",
+    "setups": {
+      "MTF": 64
+    },
+    "setup_meta": {
+      "MTF": {
+        "max_runup_40d_pct": 50.1,
+        "flag_range_10d_pct": 7.34,
+        "drawdown_from_40d_high_pct": 7.71
+      }
+    },
+    "msg": "[MTF] Setup Quality 64",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "ZBRA",
+    "price": 356.45,
+    "rvol": 0.69,
+    "rs_rating": 91.7,
+    "rs_change_20d_pct": 17.8,
+    "mcap": 16.86
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "20EMA",
+    "score": 63,
+    "grade": "B",
+    "setups": {
+      "20EMA": 63
+    },
+    "setup_meta": {
+      "20EMA": {
+        "ema20": 259.3,
+        "ema_low_distance_pct": -0.91,
+        "close_location_pct": 84.7
+      }
+    },
+    "msg": "[20EMA] Setup Quality 63",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "ALL",
+    "price": 260.58,
+    "rvol": 0.65,
+    "rs_rating": 89.0,
+    "rs_change_20d_pct": -4.19,
+    "mcap": 65.89
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "B&R",
+    "score": 62,
+    "grade": "B",
+    "setups": {
+      "B&R": 62
+    },
+    "setup_meta": {
+      "B&R": {
+        "pivot": 119.21,
+        "breakout_days_ago": 25,
+        "breakout_rvol": 1.24,
+        "retest_distance_pct": 0.44,
+        "pullback_from_peak_pct": 5.13
+      }
+    },
+    "msg": "[B&R] Setup Quality 62",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "PRU",
+    "price": 119.79,
+    "rvol": 0.75,
+    "rs_rating": 76.7,
+    "rs_change_20d_pct": -3.62,
+    "mcap": 41.33
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "MTF",
+    "score": 61,
+    "grade": "B",
+    "setups": {
+      "MTF": 61
+    },
+    "setup_meta": {
+      "MTF": {
+        "max_runup_40d_pct": 38.9,
+        "flag_range_10d_pct": 5.81,
+        "drawdown_from_40d_high_pct": 0.08
+      }
+    },
+    "msg": "[MTF] Setup Quality 61",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "MPC",
+    "price": 368.83,
+    "rvol": 1.0,
+    "rs_rating": 96.9,
+    "rs_change_20d_pct": 13.47,
+    "mcap": 103.58
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "VCP",
+    "score": 61,
+    "grade": "B",
+    "setups": {
+      "VCP": 61
+    },
+    "setup_meta": {
+      "VCP": {
+        "pivot": 447.03,
+        "pivot_distance_pct": 3.27,
+        "range_5d_pct": 3.79,
+        "tr_old_pct": 3.14,
+        "tr_mid_pct": 2.69,
+        "tr_new_pct": 1.78
+      }
+    },
+    "msg": "[VCP] Setup Quality 61",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "AMGN",
+    "price": 432.42,
+    "rvol": 0.75,
+    "rs_rating": 93.4,
+    "rs_change_20d_pct": 9.65,
+    "mcap": 233.78
+  },
+  {
+    "engine_version": "2.3",
+    "state": "setup",
+    "strategy": "VCP",
+    "score": 61,
+    "grade": "B",
+    "setups": {
+      "VCP": 61
+    },
+    "setup_meta": {
+      "VCP": {
+        "pivot": 92.71,
+        "pivot_distance_pct": 1.72,
+        "range_5d_pct": 3.82,
+        "tr_old_pct": 3.84,
+        "tr_mid_pct": 2.29,
+        "tr_new_pct": 2.03
+      }
+    },
+    "msg": "[VCP] Setup Quality 61",
+    "last_seen": "2026-08-28",
+    "signal_date": "2026-08-28",
+    "scan_ts_utc": "2026-08-30T22:48:25+00:00",
+    "symbol": "SOLV",
+    "price": 91.12,
+    "rvol": 0.66,
+    "rs_rating": 80.9,
+    "rs_change_20d_pct": 3.55,
+    "mcap": 15.51
+  }
 ]
