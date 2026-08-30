@@ -7,7 +7,7 @@ import yfinance as yf
 
 STATE_FILE = "state.json"
 DASHBOARD_FILE = "dashboard_data.json"
-ENGINE_VERSION = "2.3"
+ENGINE_VERSION = "2.4"
 TODAY_DATE = datetime.now(timezone.utc)
 TODAY_STR = TODAY_DATE.strftime("%Y-%m-%d")
 SCAN_TS_UTC = TODAY_DATE.isoformat(timespec="seconds")
@@ -188,6 +188,8 @@ def run_lifecycle_screener():
             # 3일 평균 RVOL 계산
             vol_3_avg = df["Volume"].tail(3).mean()
             rvol3 = vol_3_avg / df["Vol50Avg"].iloc[-1] if df["Vol50Avg"].iloc[-1] > 0 else 1.0
+            prior_vol50_now = float(df["Volume"].shift(1).rolling(50).mean().iloc[-1])
+            daily_rvol = float(c["Volume"]) / prior_vol50_now if prior_vol50_now > 0 else 1.0
 
             # RS Line 상대 개선율 계산
             rs_change_20d = 0.0
@@ -199,6 +201,7 @@ def run_lifecycle_screener():
 
             setups = {}
             setup_meta = {}
+            trade_levels = {}
 
             # =================================================================
             # [Gate 2-1] 20EMA Pullback (Ceiling RVOL <= 0.80)
@@ -218,6 +221,11 @@ def run_lifecycle_screener():
                     "ema20": round(float(c["EMA20"]), 2),
                     "ema_low_distance_pct": round(float(ema_dist_low) * 100, 2),
                     "close_location_pct": round(float(close_loc) * 100, 1),
+                }
+                trade_levels["20EMA"] = {
+                    "entry_trigger": float(c["High"]) * 1.002,
+                    "stop_loss": min(float(c["Low"]), float(c["EMA20"]) * 0.97) * 0.995,
+                    "action_rvol_min": 0.90,
                 }
 
             # =================================================================
@@ -250,6 +258,11 @@ def run_lifecycle_screener():
                     "range_5d_pct": round(float(range_5d) * 100, 2),
                     "pivot": round(float(vcp_pivot), 2),
                     "pivot_distance_pct": round(float(pivot_dist) * 100, 2),
+                }
+                trade_levels["VCP"] = {
+                    "entry_trigger": float(vcp_pivot) * 1.005,
+                    "stop_loss": float(df["Low"].tail(5).min()) * 0.995,
+                    "action_rvol_min": 1.20,
                 }
 
             # =================================================================
@@ -288,6 +301,11 @@ def run_lifecycle_screener():
                 setup_meta["B&R"] = {
                     "pivot": round(float(best_br["pivot"]), 2),
                     "breakout_days_ago": int(best_br["days_ago"]),
+                }
+                trade_levels["B&R"] = {
+                    "entry_trigger": float(c["High"]) * 1.002,
+                    "stop_loss": float(best_br["pivot"]) * 0.965,
+                    "action_rvol_min": 0.90,
                 }
 
             # =================================================================
@@ -334,6 +352,12 @@ def run_lifecycle_screener():
                         "drawdown_from_40d_high_pct": round(drawdown_from_high * 100, 2),
                         "mtf_rs_threshold": 80,
                     }
+                    mtf_pivot = float(df["High"].shift(1).tail(10).max())
+                    trade_levels["MTF"] = {
+                        "entry_trigger": mtf_pivot * 1.005,
+                        "stop_loss": max(low_10 * 0.995, float(c["EMA20"]) * 0.97),
+                        "action_rvol_min": 1.20,
+                    }
 
             # =================================================================
             # [Gate 3] Lifecycle & TTL State Management
@@ -341,32 +365,18 @@ def run_lifecycle_screener():
             prev_info = old_state.get(ticker, {})
             prev_status = prev_info.get("state", "none")
             item_data = {}
-            
-            if prev_status == "failed":
-                if (TODAY_DATE.date() - datetime.strptime(prev_info["failed_date"], "%Y-%m-%d").date()).days <= 3:
-                    item_data = prev_info
-            elif prev_status in ["action", "working"]:
-                item_data = prev_info 
+            current_setup = {}
 
-            elif not setups and prev_status == "setup":
-                # [TTL 적용] 셋업이 사라졌을 때 2일 동안은 보존, 이후 말소
-                prev_date = datetime.strptime(prev_info.get("last_seen", TODAY_STR), "%Y-%m-%d")
-                age = (TODAY_DATE.date() - prev_date.date()).days
-                if age <= 2:
-                    item_data = prev_info
-                else:
-                    continue
-                
-            elif setups:
+            if setups:
                 primary_strategy = max(setups, key=setups.get)
                 primary_score = setups[primary_strategy]
-                
                 grade = grade_from_score(primary_score)
-                
+
                 if grade is not None:
-                    item_data = {
-                        "state": "setup", 
-                        "strategy": primary_strategy, 
+                    levels = trade_levels[primary_strategy]
+                    current_setup = {
+                        "state": "setup",
+                        "strategy": primary_strategy,
                         "score": primary_score,
                         "grade": grade,
                         "setups": setups,
@@ -374,8 +384,87 @@ def run_lifecycle_screener():
                         "msg": f"[{primary_strategy}] 셋업 구조 형성",
                         "last_seen": TODAY_STR,
                         "signal_date": pd.Timestamp(df.index[-1]).strftime("%Y-%m-%d"),
+                        "entry_trigger": round(levels["entry_trigger"], 2),
+                        "stop_loss": round(levels["stop_loss"], 2),
+                        "sl": round(levels["stop_loss"], 2),
+                        "action_rvol_min": levels["action_rvol_min"],
                         "engine_version": ENGINE_VERSION,
                     }
+
+            def state_age(date_key, default=999):
+                try:
+                    saved_date = datetime.strptime(
+                        prev_info.get(date_key, ""), "%Y-%m-%d"
+                    ).date()
+                    return (TODAY_DATE.date() - saved_date).days
+                except (TypeError, ValueError):
+                    return default
+
+            def failed_item(source, reason):
+                failed = dict(source)
+                failed.update({
+                    "state": "failed",
+                    "failed_date": TODAY_STR,
+                    "msg": reason,
+                })
+                return failed
+
+            # Existing Action/Working positions are monitored before looking
+            # for a fresh setup. An intraday stop breach invalidates the state.
+            if prev_status in ("action", "working"):
+                prev_stop = float(prev_info.get("stop_loss", prev_info.get("sl", 0)) or 0)
+                if prev_stop > 0 and float(c["Low"]) <= prev_stop:
+                    item_data = failed_item(prev_info, "구조 손절가 이탈")
+                elif prev_status == "action":
+                    trigger = float(prev_info.get("entry_trigger", price) or price)
+                    if state_age("action_date") > 2 or price > trigger * 1.05:
+                        item_data = dict(prev_info)
+                        item_data.update({
+                            "state": "working",
+                            "msg": f"[{prev_info.get('strategy', '')}] 진입 구간 통과 · 추세 진행",
+                        })
+                    else:
+                        item_data = dict(prev_info)
+                else:
+                    item_data = dict(prev_info)
+
+            elif prev_status == "failed":
+                if state_age("failed_date") <= 3:
+                    item_data = dict(prev_info)
+
+            else:
+                # A saved S/A setup becomes Action when price closes above its
+                # trigger with strategy-specific daily volume confirmation.
+                source_setup = prev_info if prev_status == "setup" else current_setup
+                source_grade = source_setup.get("grade")
+                trigger = float(source_setup.get("entry_trigger", 0) or 0)
+                stop = float(source_setup.get("stop_loss", source_setup.get("sl", 0)) or 0)
+                min_rvol = float(source_setup.get("action_rvol_min", 99) or 99)
+
+                if stop > 0 and float(c["Low"]) <= stop and prev_status == "setup":
+                    item_data = failed_item(source_setup, "셋업 구조 손절가 이탈")
+                elif (
+                    source_grade in ("S", "A")
+                    and trigger > 0
+                    and price >= trigger
+                    and daily_rvol >= min_rvol
+                ):
+                    item_data = dict(source_setup)
+                    item_data.update({
+                        "state": "action",
+                        "action_date": TODAY_STR,
+                        "triggered_price": round(price, 2),
+                        "daily_rvol": round(daily_rvol, 2),
+                        "sl": round(stop, 2),
+                        "msg": (
+                            f"[{source_setup.get('strategy', '')}] 진입 트리거 돌파 "
+                            f"· 일간 RVOL {daily_rvol:.2f}"
+                        ),
+                    })
+                elif current_setup:
+                    item_data = current_setup
+                elif prev_status == "setup" and state_age("last_seen") <= 2:
+                    item_data = dict(prev_info)
 
             if item_data:
                 try:
