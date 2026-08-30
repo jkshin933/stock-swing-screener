@@ -6,40 +6,46 @@
 <title>모바일 스윙 스캐너</title>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
 <style>
-  :root { --color-bg: #0a0e14; --color-surface: #11161f; --color-surface-2: #151b26; --color-border: #232b39; --color-text: #e4e9f0; --color-primary: #22d3ee; --color-success: #34d399; --color-warning: #fbbf24; }
+  :root { --color-bg: #0a0e14; --color-surface: #11161f; --color-surface-2: #151b26; --color-border: #232b39; --color-text: #e4e9f0; --color-primary: #22d3ee; --color-success: #34d399; --color-warning: #fbbf24; --color-error: #f87171; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Satoshi', sans-serif; background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; }
   
   /* 모바일 상단 바 */
-  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(17, 22, 31, 0.95); backdrop-filter: blur(10px); padding: 16px; border-bottom: 1px solid var(--color-border); }
-  .brand { font-size: 1.1rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(17, 22, 31, 0.95); backdrop-filter: blur(10px); padding: 16px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+  .brand-group { display: flex; flex-direction: column; gap: 4px; }
+  .brand { font-size: 1.1rem; font-weight: 700; }
   .update-time { font-size: 0.75rem; color: #8a94a6; font-weight: 400; }
+  
+  .manual-update-btn { background: var(--color-surface-2); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--color-text); text-decoration: none; }
 
-  /* 모바일 필터 영역 (좌우 스크롤) */
+  /* 모바일 필터 영역 */
   .filter-container { padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
   .select-group { width: 100%; margin-bottom: 12px; }
-  .mcap-select { width: 100%; padding: 10px; border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); font-size: 0.9rem; }
+  .mcap-select { width: 100%; padding: 10px; border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); font-size: 0.9rem; outline: none; }
   .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
   .pill-scroll::-webkit-scrollbar { display: none; }
-  .pill-btn { padding: 8px 14px; border-radius: 20px; background: var(--color-surface-2); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: 0.2s; }
+  .pill-btn { padding: 8px 14px; border-radius: 20px; background: var(--color-surface-2); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: 0.2s; cursor: pointer; }
   .pill-btn.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
 
   /* 카드 피드 영역 */
   .feed-container { padding: 16px; }
-  .section-title { font-size: 1rem; font-weight: 700; margin: 24px 0 12px; display: flex; justify-content: space-between; }
+  .section-title { font-size: 1rem; font-weight: 700; margin: 24px 0 12px; display: flex; justify-content: space-between; align-items: center; }
   
   .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
   .card-header { padding: 16px; border-bottom: 1px solid var(--color-border); }
   .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .ticker-wrap { display: flex; align-items: center; gap: 8px; }
+  .ticker-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
   .ticker { font-size: 1.2rem; font-weight: 700; }
   .price { font-size: 1.1rem; font-weight: 700; }
   
   .badge-S { background: linear-gradient(135deg, #d4af37, #f3e5ab); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
   .badge-A { background: #10b981; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
   .tag-strat { font-size: 0.75rem; color: #8a94a6; border: 1px solid #232b39; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+  .score-badge { font-size: 0.85rem; font-weight: 800; color: var(--color-primary); }
   
+  .overlap-text { font-size: 0.75rem; color: #a1a1aa; margin-top: 2px; }
   .msg { font-size: 0.9rem; color: #a1a1aa; margin: 10px 0; line-height: 1.4; }
+  
   .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
   .metric-item { background: var(--color-surface-2); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid var(--color-border); }
   .m-label { font-size: 0.7rem; color: #8a94a6; margin-bottom: 2px; }
@@ -47,32 +53,30 @@
   .sl-red { color: var(--color-error); }
 
   .card-img-wrap { width: 100%; background: #fff; padding: 10px; border-bottom: 1px solid var(--color-border); }
-  .card-img-wrap img { width: 100%; display: block; filter: invert(0.9) hue-rotate(180deg); /* 다크모드 차트 반전 */ }
+  .card-img-wrap img { width: 100%; display: block; filter: invert(0.9) hue-rotate(180deg); }
   
-  .card-actions { display: flex; padding: 12px; gap: 8px; }
-  .btn { flex: 1; text-align: center; padding: 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; color: #fff; text-decoration: none; }
+  .card-actions { padding: 12px; }
+  .btn-full { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; color: #fff; text-decoration: none; background: #720e9e; }
 </style>
 </head>
 <body>
 
   <header class="topbar">
-      <div class="brand">
-        🎯 모바일 4-Core 스캐너
-        <span class="update-time" id="updateTimeText">로딩중..</span>
-      </div>
-      <!-- 수동 업데이트 바로가기 버튼 추가 -->
-      <a href="https://github.com/[본인깃허브아이디]/stock-swing-screener/actions/workflows/scan.yml" 
-         target="_blank" 
-         style="background: var(--color-surface-2); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: var(--color-text); text-decoration: none;">
-        🔄 수동 갱신
-      </a>
-    </header>
+    <div class="brand-group">
+      <div class="brand">🎯 4-Core 스캐너</div>
+      <div class="update-time" id="updateTimeText">데이터 로딩 중...</div>
+    </div>
+    <!-- 깃허브 액션 수동 업데이트 링크 -->
+    <a href="https://github.com/jkshin933/stock-swing-screener/actions/workflows/scan.yml" target="_blank" class="manual-update-btn">
+      🔄 수동 갱신
+    </a>
+  </header>
 
   <div class="filter-container">
     <div class="select-group">
       <select class="mcap-select" id="mcapFilter">
         <option value="ALL">전체 시가총액</option>
-        <option value="OVER10B" selected>대형주 집중 ($10B 이상)</option> <!-- 기본값 10B 이상 -->
+        <option value="OVER10B" selected>대형주 집중 ($10B 이상)</option>
         <option value="MEGA">초대형주 ($200B 이상)</option>
         <option value="MID">중소형주 ($10B 미만)</option>
       </select>
@@ -82,7 +86,7 @@
       <button class="pill-btn" data-filter="20EMA">📉 20EMA</button>
       <button class="pill-btn" data-filter="VCP">🎯 VCP</button>
       <button class="pill-btn" data-filter="B&R">🔄 B&R</button>
-      <button class="pill-btn" data-filter="MOMO">🔥 모멘텀</button>
+      <button class="pill-btn" data-filter="MTF">🔥 MTF</button>
     </div>
   </div>
 
@@ -99,19 +103,19 @@
   let stratFilter = 'ALL';
 
   function renderFeed() {
-    document.getElementById(`feed-action`).innerHTML = '';
-    document.getElementById(`feed-setup`).innerHTML = '';
+    document.getElementById('feed-action').innerHTML = '';
+    document.getElementById('feed-setup').innerHTML = '';
     const mcapFilter = document.getElementById('mcapFilter').value;
     let counts = { action: 0, setup: 0 };
 
     globalData.filter(item => {
-      // 🌟 필터 1: Working, Failed 제거 / 상태가 Action, Setup 인 것만
+      // 1. Working, Failed 제외 (Action, Setup만 표시)
       if (item.state !== 'action' && item.state !== 'setup') return false;
       
-      // 🌟 필터 2: S급, A급만 통과 (B, C급 화면에서 제거)
+      // 2. S급, A급만 통과 (B, C급 제외)
       if (item.grade !== 'S' && item.grade !== 'A') return false;
 
-      // 필터 3: 전략 및 시가총액
+      // 3. 전략 및 시가총액 필터 적용
       let passStrat = (stratFilter === 'ALL' || item.strategy === stratFilter);
       let passMcap = true;
       if(mcapFilter === 'OVER10B') passMcap = item.mcap >= 10;
@@ -120,24 +124,39 @@
       
       return passStrat && passMcap;
     }).sort((a, b) => {
-      // 정렬: RS 등급 높은 순 -> 거래량(RVOL) 조건 맞춤 정렬
-      if (a.state === 'setup') return (b.rs_rating || 0) - (a.rs_rating || 0) || a.rvol - b.rvol;
-      if (a.state === 'action') return (b.rs_rating || 0) - (a.rs_rating || 0) || b.rvol - a.rvol;
+      // Setup 및 Action 내부 정렬: 점수(Score) 내림차순 최우선
+      if (a.state === 'setup') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
+      if (a.state === 'action') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
       return 0;
     }).forEach(item => {
       const container = document.getElementById(`feed-${item.state}`);
-      if(container) { container.insertAdjacentHTML('beforeend', createFeedCard(item)); counts[item.state]++; }
+      if(container) { 
+        container.insertAdjacentHTML('beforeend', createFeedCard(item)); 
+        counts[item.state]++; 
+      }
     });
 
-    document.getElementById(`cnt-action`).textContent = counts.action;
-    document.getElementById(`cnt-setup`).textContent = counts.setup;
+    document.getElementById('cnt-action').textContent = counts.action;
+    document.getElementById('cnt-setup').textContent = counts.setup;
   }
 
   function createFeedCard(item) {
     const badgeHtml = `<span class="badge-${item.grade}">${item.grade}급</span>`;
     const mcapText = item.mcap >= 1000 ? `$${(item.mcap/1000).toFixed(1)}T` : `$${item.mcap.toFixed(1)}B`;
-    
-    // 모바일 리스트용 메트릭 그리드
+    const scoreHtml = item.score ? `<span class="score-badge">[${item.score}점]</span>` : '';
+
+    // 다중 셋업(Overlap) 렌더링
+    let overlapHtml = '';
+    if (item.setups && Object.keys(item.setups).length > 1) {
+      let otherSetups = [];
+      for (const [strat, score] of Object.entries(item.setups)) {
+        if (strat !== item.strategy) otherSetups.push(`${strat} ${score}`);
+      }
+      if(otherSetups.length > 0) {
+        overlapHtml = `<div class="overlap-text">+ Also: ${otherSetups.join(', ')}</div>`;
+      }
+    }
+
     let slHtml = item.state === 'action' ? `<div class="metric-item"><div class="m-label">구조손절가</div><div class="m-val sl-red">$${item.sl}</div></div>` : '';
 
     return `
@@ -148,9 +167,11 @@
               ${badgeHtml}
               <span class="ticker">${item.symbol}</span>
               <span class="tag-strat">${item.strategy}</span>
+              ${scoreHtml}
             </div>
             <span class="price">$${item.price.toFixed(2)}</span>
           </div>
+          ${overlapHtml}
           <div class="msg">${item.msg}</div>
           <div class="metrics-grid">
             <div class="metric-item"><div class="m-label">RS 점수</div><div class="m-val">${item.rs_rating}</div></div>
@@ -163,14 +184,13 @@
           <img src="https://charts2.finviz.com/chart.ashx?t=${item.symbol}" alt="chart">
         </div>
         <div class="card-actions">
-          <a href="https://finance.yahoo.com/chart/${item.symbol}" target="_blank" class="btn" style="background:#720e9e;">Yahoo 차트</a>
-          <a href="https://www.google.com/finance/quote/${item.symbol}:NASDAQ" target="_blank" class="btn" style="background:#4285F4;">Google 금융</a>
+          <a href="https://finance.yahoo.com/chart/${item.symbol}" target="_blank" class="btn-full">Yahoo 차트 열기</a>
         </div>
       </div>
     `;
   }
 
-  // 필터 버튼 클릭 이벤트
+  // 필터 버튼 이벤트
   document.querySelectorAll('.pill-btn').forEach(btn => btn.addEventListener('click', (e) => {
     document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
@@ -181,23 +201,23 @@
   // 시가총액 드롭다운 이벤트
   document.getElementById('mcapFilter').addEventListener('change', renderFeed);
 
-  // 데이터 로드 및 실제 업데이트 시간(Last-Modified) 추적
-    fetch('dashboard_data.json').then(response => {
-      const lastModified = response.headers.get('Last-Modified');
-      if (lastModified) {
-        const updateDate = new Date(lastModified);
-        document.getElementById('updateTimeText').textContent = 
-          updateDate.toLocaleString('ko-KR', {timeZone: 'America/New_York', month: '2-digit', day: '2-digit', hour:'2-digit', minute:'2-digit'}) + ' ET';
-      } else {
-        document.getElementById('updateTimeText').textContent = "업데이트 완료";
-      }
-      return response.json();
-    }).then(data => {
-      globalData = data;
-      renderFeed();
-    }).catch(() => { 
-      document.getElementById('updateTimeText').textContent = "데이터 오류"; 
-    });
+  // 데이터 로드 (실제 갱신 시간 추적 포함)
+  fetch('dashboard_data.json').then(response => {
+    const lastModified = response.headers.get('Last-Modified');
+    if (lastModified) {
+      const updateDate = new Date(lastModified);
+      document.getElementById('updateTimeText').textContent = 
+        updateDate.toLocaleString('ko-KR', {timeZone: 'America/New_York', month: '2-digit', day: '2-digit', hour:'2-digit', minute:'2-digit'}) + ' ET 업데이트';
+    } else {
+      document.getElementById('updateTimeText').textContent = "업데이트 완료";
+    }
+    return response.json();
+  }).then(data => {
+    globalData = data;
+    renderFeed();
+  }).catch(() => { 
+    document.getElementById('updateTimeText').textContent = "데이터 오류"; 
+  });
 </script>
 </body>
 </html>
