@@ -1,11 +1,70 @@
 {
+    "ABNB": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 77,
+        "grade": "A",
+        "setups": {
+            "MTF": 77
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 38.5,
+                "flag_range_10d_pct": 7.55,
+                "drawdown_from_40d_high_pct": 2.08,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "ABNB",
+        "price": 189.42999267578125,
+        "rvol": 0.97,
+        "rs_rating": 94.6,
+        "mcap": 111.69,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "AIZ": {
+        "state": "setup",
+        "strategy": "VCP",
+        "score": 67,
+        "grade": "B",
+        "setups": {
+            "20EMA": 54,
+            "VCP": 67
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 283.61,
+                "ema_low_distance_pct": 0.38,
+                "close_location_pct": 27.4
+            },
+            "VCP": {
+                "range_5d_pct": 2.27,
+                "pivot": 303.94,
+                "pivot_distance_pct": 6.02
+            }
+        },
+        "msg": "[VCP] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "AIZ",
+        "price": 285.6499938964844,
+        "rvol": 0.65,
+        "rs_rating": 82.9,
+        "mcap": 14.09,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
     "AJG": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 68,
-        "grade": "B",
+        "score": 84,
+        "grade": "A",
         "setups": {
-            "20EMA": 68
+            "20EMA": 84
         },
         "setup_meta": {
             "20EMA": {
@@ -23,16 +82,16 @@
         "rvol": 0.76,
         "rs_rating": 73.4,
         "mcap": 68.59,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "ALL": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 63,
-        "grade": "B",
+        "score": 74,
+        "grade": "A",
         "setups": {
-            "20EMA": 63,
-            "VCP": 49
+            "20EMA": 74,
+            "VCP": 64
         },
         "setup_meta": {
             "20EMA": {
@@ -55,16 +114,16 @@
         "rvol": 0.65,
         "rs_rating": 88.4,
         "mcap": 65.89,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "AMGN": {
         "state": "setup",
-        "strategy": "VCP",
-        "score": 61,
-        "grade": "B",
+        "strategy": "MTF",
+        "score": 78,
+        "grade": "A",
         "setups": {
-            "VCP": 61,
-            "MTF": 55
+            "VCP": 74,
+            "MTF": 78
         },
         "setup_meta": {
             "VCP": {
@@ -79,7 +138,7 @@
                 "mtf_rs_threshold": 80
             }
         },
-        "msg": "[VCP] 셋업 구조 형성",
+        "msg": "[MTF] 셋업 구조 형성",
         "last_seen": "2026-08-30",
         "signal_date": "2026-08-28",
         "engine_version": "2.3",
@@ -88,15 +147,15 @@
         "rvol": 0.75,
         "rs_rating": 94.4,
         "mcap": 233.78,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "AMP": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 71,
-        "grade": "A",
+        "score": 88,
+        "grade": "S",
         "setups": {
-            "20EMA": 71
+            "20EMA": 88
         },
         "setup_meta": {
             "20EMA": {
@@ -114,17 +173,103 @@
         "rvol": 0.49,
         "rs_rating": 80.7,
         "mcap": 49.41,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "ANET": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 74,
+        "grade": "A",
+        "setups": {
+            "20EMA": 51,
+            "MTF": 74
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 191.55,
+                "ema_low_distance_pct": 1.6,
+                "close_location_pct": 14.0
+            },
+            "MTF": {
+                "max_runup_40d_pct": 33.3,
+                "flag_range_10d_pct": 11.3,
+                "drawdown_from_40d_high_pct": 9.08,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "ANET",
+        "price": 195.3800048828125,
+        "rvol": 0.66,
+        "rs_rating": 80.4,
+        "mcap": 246.42,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "APA": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 82,
+        "grade": "A",
+        "setups": {
+            "MTF": 82
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 37.7,
+                "flag_range_10d_pct": 10.3,
+                "drawdown_from_40d_high_pct": 5.57,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "APA",
+        "price": 42.540000915527344,
+        "rvol": 0.7,
+        "rs_rating": 92.5,
+        "mcap": 14.9,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "BALL": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 62,
+        "grade": "B",
+        "setups": {
+            "20EMA": 62
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 63.19,
+                "ema_low_distance_pct": 0.19,
+                "close_location_pct": 44.7
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "BALL",
+        "price": 63.77000045776367,
+        "rvol": 0.6,
+        "rs_rating": 80.5,
+        "mcap": 16.88,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "BAX": {
         "state": "setup",
-        "strategy": "MTF",
-        "score": 67,
+        "strategy": "20EMA",
+        "score": 63,
         "grade": "B",
         "setups": {
-            "20EMA": 52,
-            "VCP": 35,
-            "MTF": 67
+            "20EMA": 63,
+            "VCP": 51,
+            "MTF": 59
         },
         "setup_meta": {
             "20EMA": {
@@ -144,7 +289,7 @@
                 "mtf_rs_threshold": 80
             }
         },
-        "msg": "[MTF] 셋업 구조 형성",
+        "msg": "[20EMA] 셋업 구조 형성",
         "last_seen": "2026-08-30",
         "signal_date": "2026-08-28",
         "engine_version": "2.3",
@@ -153,15 +298,15 @@
         "rvol": 0.69,
         "rs_rating": 89.8,
         "mcap": 13.51,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "BDX": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 69,
-        "grade": "B",
+        "score": 89,
+        "grade": "S",
         "setups": {
-            "MTF": 69
+            "MTF": 89
         },
         "setup_meta": {
             "MTF": {
@@ -180,16 +325,101 @@
         "rvol": 0.68,
         "rs_rating": 90.2,
         "mcap": 51.62,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "BIIB": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 61,
+        "grade": "B",
+        "setups": {
+            "20EMA": 61
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 213.73,
+                "ema_low_distance_pct": 1.43,
+                "close_location_pct": 33.0
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "BIIB",
+        "price": 218.5,
+        "rvol": 0.47,
+        "rs_rating": 86.5,
+        "mcap": 32.28,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "BMY": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 74,
+        "grade": "A",
+        "setups": {
+            "20EMA": 72,
+            "MTF": 74
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 65.47,
+                "ema_low_distance_pct": 1.09,
+                "close_location_pct": 60.0
+            },
+            "MTF": {
+                "max_runup_40d_pct": 19.8,
+                "flag_range_10d_pct": 7.69,
+                "drawdown_from_40d_high_pct": 3.0,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "BMY",
+        "price": 66.58000183105469,
+        "rvol": 0.5,
+        "rs_rating": 90.5,
+        "mcap": 136.0,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "BNY": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 66,
+        "grade": "B",
+        "setups": {
+            "20EMA": 66
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 160.47,
+                "ema_low_distance_pct": 0.76,
+                "close_location_pct": 45.8
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "BNY",
+        "price": 162.5,
+        "rvol": 0.64,
+        "rs_rating": 88.2,
+        "mcap": 110.26,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "CCEP": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 72,
+        "score": 82,
         "grade": "A",
         "setups": {
-            "20EMA": 72,
-            "VCP": 58
+            "20EMA": 82,
+            "VCP": 79
         },
         "setup_meta": {
             "20EMA": {
@@ -212,16 +442,69 @@
         "rvol": 0.6,
         "rs_rating": 82.1,
         "mcap": 48.15,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "COP": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 81,
+        "grade": "A",
+        "setups": {
+            "MTF": 81
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 31.1,
+                "flag_range_10d_pct": 7.9,
+                "drawdown_from_40d_high_pct": 4.07,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "COP",
+        "price": 130.35000610351562,
+        "rvol": 0.8,
+        "rs_rating": 81.9,
+        "mcap": 158.8,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "COR": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 72,
+        "grade": "A",
+        "setups": {
+            "20EMA": 72
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 318.0,
+                "ema_low_distance_pct": 0.75,
+                "close_location_pct": 49.0
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "COR",
+        "price": 322.0299987792969,
+        "rvol": 0.57,
+        "rs_rating": 75.2,
+        "mcap": 61.45,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "CPAY": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 79,
-        "grade": "A",
+        "score": 99,
+        "grade": "S",
         "setups": {
-            "20EMA": 79,
-            "VCP": 51
+            "20EMA": 99,
+            "VCP": 82
         },
         "setup_meta": {
             "20EMA": {
@@ -244,16 +527,43 @@
         "rvol": 0.54,
         "rs_rating": 75.9,
         "mcap": 26.78,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "CRL": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 75,
+        "grade": "A",
+        "setups": {
+            "MTF": 75
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 36.5,
+                "flag_range_10d_pct": 8.01,
+                "drawdown_from_40d_high_pct": 3.89,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "CRL",
+        "price": 291.5,
+        "rvol": 1.0,
+        "rs_rating": 97.3,
+        "mcap": 13.92,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "CSX": {
         "state": "setup",
         "strategy": "B&R",
-        "score": 66,
-        "grade": "B",
+        "score": 80,
+        "grade": "A",
         "setups": {
-            "20EMA": 48,
-            "B&R": 66
+            "20EMA": 58,
+            "B&R": 80
         },
         "setup_meta": {
             "20EMA": {
@@ -275,15 +585,68 @@
         "rvol": 0.59,
         "rs_rating": 87.3,
         "mcap": 94.99,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "CVX": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 74,
+        "grade": "A",
+        "setups": {
+            "20EMA": 74
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 197.76,
+                "ema_low_distance_pct": 0.91,
+                "close_location_pct": 85.8
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "CVX",
+        "price": 201.86000061035156,
+        "rvol": 0.8,
+        "rs_rating": 72.1,
+        "mcap": 395.97,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "DASH": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 75,
+        "grade": "A",
+        "setups": {
+            "MTF": 75
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 39.6,
+                "flag_range_10d_pct": 11.22,
+                "drawdown_from_40d_high_pct": 0.87,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "DASH",
+        "price": 236.74000549316406,
+        "rvol": 0.86,
+        "rs_rating": 85.2,
+        "mcap": 102.58,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "DE": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 76,
-        "grade": "A",
+        "score": 93,
+        "grade": "S",
         "setups": {
-            "20EMA": 76
+            "20EMA": 93
         },
         "setup_meta": {
             "20EMA": {
@@ -301,16 +664,82 @@
         "rvol": 0.64,
         "rs_rating": 81.7,
         "mcap": 169.95,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "DELL": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 63,
+        "grade": "B",
+        "setups": {
+            "20EMA": 63,
+            "MTF": 61
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 451.1,
+                "ema_low_distance_pct": 0.4,
+                "close_location_pct": 15.3
+            },
+            "MTF": {
+                "max_runup_40d_pct": 33.8,
+                "flag_range_10d_pct": 14.66,
+                "drawdown_from_40d_high_pct": 11.24,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "DELL",
+        "price": 456.239990234375,
+        "rvol": 0.67,
+        "rs_rating": 97.8,
+        "mcap": 294.8,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "DGX": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 72,
+        "grade": "A",
+        "setups": {
+            "20EMA": 35,
+            "MTF": 72
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 238.12,
+                "ema_low_distance_pct": 1.74,
+                "close_location_pct": 16.3
+            },
+            "MTF": {
+                "max_runup_40d_pct": 21.4,
+                "flag_range_10d_pct": 5.74,
+                "drawdown_from_40d_high_pct": 1.79,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "DGX",
+        "price": 242.75999450683594,
+        "rvol": 0.8,
+        "rs_rating": 89.0,
+        "mcap": 26.79,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "DXCM": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 68,
-        "grade": "B",
+        "score": 83,
+        "grade": "A",
         "setups": {
-            "20EMA": 68,
-            "VCP": 53
+            "20EMA": 83,
+            "VCP": 72
         },
         "setup_meta": {
             "20EMA": {
@@ -333,16 +762,16 @@
         "rvol": 0.63,
         "rs_rating": 77.5,
         "mcap": 34.27,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "EXPE": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 76,
+        "score": 84,
         "grade": "A",
         "setups": {
-            "20EMA": 76,
-            "MTF": 59
+            "20EMA": 84,
+            "MTF": 82
         },
         "setup_meta": {
             "20EMA": {
@@ -366,15 +795,41 @@
         "rvol": 0.81,
         "rs_rating": 95.2,
         "mcap": 39.54,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "FDX": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 75,
+        "grade": "A",
+        "setups": {
+            "20EMA": 75
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 327.0,
+                "ema_low_distance_pct": 0.56,
+                "close_location_pct": 39.0
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "FDX",
+        "price": 330.8800048828125,
+        "rvol": 0.54,
+        "rs_rating": 85.9,
+        "mcap": 78.31,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "GPC": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 71,
+        "score": 81,
         "grade": "A",
         "setups": {
-            "20EMA": 71
+            "20EMA": 81
         },
         "setup_meta": {
             "20EMA": {
@@ -392,15 +847,158 @@
         "rvol": 0.73,
         "rs_rating": 88.6,
         "mcap": 18.96,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "GPN": {
+        "state": "setup",
+        "strategy": "VCP",
+        "score": 66,
+        "grade": "B",
+        "setups": {
+            "20EMA": 48,
+            "VCP": 66
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 90.08,
+                "ema_low_distance_pct": 1.63,
+                "close_location_pct": 12.7
+            },
+            "VCP": {
+                "range_5d_pct": 4.73,
+                "pivot": 95.88,
+                "pivot_distance_pct": 4.23
+            }
+        },
+        "msg": "[VCP] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "GPN",
+        "price": 91.81999969482422,
+        "rvol": 0.71,
+        "rs_rating": 74.2,
+        "mcap": 24.3,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "HUM": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 64,
+        "grade": "B",
+        "setups": {
+            "20EMA": 64
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 384.07,
+                "ema_low_distance_pct": 0.3,
+                "close_location_pct": 2.6
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "HUM",
+        "price": 385.5400085449219,
+        "rvol": 0.61,
+        "rs_rating": 86.1,
+        "mcap": 46.3,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "IFF": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 75,
+        "grade": "A",
+        "setups": {
+            "MTF": 75
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 19.4,
+                "flag_range_10d_pct": 8.77,
+                "drawdown_from_40d_high_pct": 1.53,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "IFF",
+        "price": 87.94999694824219,
+        "rvol": 0.75,
+        "rs_rating": 85.4,
+        "mcap": 22.45,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "INCY": {
+        "state": "setup",
+        "strategy": "B&R",
+        "score": 72,
+        "grade": "A",
+        "setups": {
+            "20EMA": 59,
+            "B&R": 72
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 124.23,
+                "ema_low_distance_pct": -0.92,
+                "close_location_pct": 27.7
+            },
+            "B&R": {
+                "pivot": 120.71,
+                "breakout_days_ago": 24
+            }
+        },
+        "msg": "[B&R] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "INCY",
+        "price": 124.37000274658203,
+        "rvol": 0.52,
+        "rs_rating": 93.0,
+        "mcap": 25.21,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "IQV": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 66,
+        "grade": "B",
+        "setups": {
+            "MTF": 66
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 32.2,
+                "flag_range_10d_pct": 11.87,
+                "drawdown_from_40d_high_pct": 1.32,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "IQV",
+        "price": 261.75,
+        "rvol": 0.99,
+        "rs_rating": 93.6,
+        "mcap": 43.08,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "IVZ": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 67,
-        "grade": "B",
+        "score": 87,
+        "grade": "S",
         "setups": {
-            "MTF": 67
+            "MTF": 87
         },
         "setup_meta": {
             "MTF": {
@@ -419,15 +1017,15 @@
         "rvol": 0.61,
         "rs_rating": 89.4,
         "mcap": 14.51,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "J": {
         "state": "setup",
         "strategy": "VCP",
-        "score": 81,
-        "grade": "A",
+        "score": 88,
+        "grade": "S",
         "setups": {
-            "VCP": 81
+            "VCP": 88
         },
         "setup_meta": {
             "VCP": {
@@ -444,16 +1042,16 @@
         "price": 151.97999572753906,
         "rvol": 0.67,
         "rs_rating": 73.0,
-        "mcap": 17.79,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "mcap": 17.95,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "JNJ": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 68,
-        "grade": "B",
+        "score": 79,
+        "grade": "A",
         "setups": {
-            "20EMA": 68
+            "20EMA": 79
         },
         "setup_meta": {
             "20EMA": {
@@ -471,15 +1069,15 @@
         "rvol": 0.85,
         "rs_rating": 90.7,
         "mcap": 645.95,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "JPM": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 68,
-        "grade": "B",
+        "score": 86,
+        "grade": "S",
         "setups": {
-            "20EMA": 68
+            "20EMA": 86
         },
         "setup_meta": {
             "20EMA": {
@@ -497,15 +1095,68 @@
         "rvol": 0.6,
         "rs_rating": 77.3,
         "mcap": 950.62,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "KO": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 68,
+        "grade": "B",
+        "setups": {
+            "20EMA": 68
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 88.61,
+                "ema_low_distance_pct": 0.52,
+                "close_location_pct": 60.8
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "KO",
+        "price": 89.66000366210938,
+        "rvol": 0.77,
+        "rs_rating": 80.9,
+        "mcap": 385.77,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "LH": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 76,
+        "grade": "A",
+        "setups": {
+            "MTF": 76
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 24.8,
+                "flag_range_10d_pct": 7.38,
+                "drawdown_from_40d_high_pct": 1.75,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "LH",
+        "price": 335.1099853515625,
+        "rvol": 0.87,
+        "rs_rating": 87.5,
+        "mcap": 27.18,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "MDT": {
         "state": "setup",
         "strategy": "20EMA",
-        "score": 70,
+        "score": 82,
         "grade": "A",
         "setups": {
-            "20EMA": 70
+            "20EMA": 82
         },
         "setup_meta": {
             "20EMA": {
@@ -523,15 +1174,15 @@
         "rvol": 0.87,
         "rs_rating": 70.0,
         "mcap": 116.77,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "MPC": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 61,
-        "grade": "B",
+        "score": 80,
+        "grade": "A",
         "setups": {
-            "MTF": 61
+            "MTF": 80
         },
         "setup_meta": {
             "MTF": {
@@ -549,16 +1200,95 @@
         "price": 368.8299865722656,
         "rvol": 1.0,
         "rs_rating": 96.7,
-        "mcap": 103.58,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "mcap": 107.67,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "MRK": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 67,
+        "grade": "B",
+        "setups": {
+            "MTF": 67
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 29.5,
+                "flag_range_10d_pct": 14.26,
+                "drawdown_from_40d_high_pct": 5.46,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "MRK",
+        "price": 148.35000610351562,
+        "rvol": 0.79,
+        "rs_rating": 95.7,
+        "mcap": 366.0,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "NSC": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 74,
+        "grade": "A",
+        "setups": {
+            "20EMA": 74
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 343.34,
+                "ema_low_distance_pct": 0.84,
+                "close_location_pct": 73.7
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "NSC",
+        "price": 348.67999267578125,
+        "rvol": 0.82,
+        "rs_rating": 75.7,
+        "mcap": 78.32,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "NTRS": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 64,
+        "grade": "B",
+        "setups": {
+            "20EMA": 64
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 186.1,
+                "ema_low_distance_pct": -0.23,
+                "close_location_pct": 49.3
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "NTRS",
+        "price": 186.7899932861328,
+        "rvol": 0.72,
+        "rs_rating": 82.5,
+        "mcap": 34.17,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "OMC": {
         "state": "setup",
         "strategy": "VCP",
-        "score": 76,
-        "grade": "A",
+        "score": 99,
+        "grade": "S",
         "setups": {
-            "VCP": 76
+            "VCP": 99
         },
         "setup_meta": {
             "VCP": {
@@ -575,8 +1305,8 @@
         "price": 88.27999877929688,
         "rvol": 0.54,
         "rs_rating": 73.6,
-        "mcap": 24.22,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "mcap": 25.16,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "PRU": {
         "engine_version": "2.3",
@@ -599,7 +1329,7 @@
         "msg": "[B&R] Setup Quality 62",
         "last_seen": "2026-08-28",
         "signal_date": "2026-08-28",
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00",
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00",
         "symbol": "PRU",
         "price": 119.79000091552734,
         "rvol": 0.75,
@@ -610,10 +1340,10 @@
     "PSX": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 67,
-        "grade": "B",
+        "score": 90,
+        "grade": "S",
         "setups": {
-            "MTF": 67
+            "MTF": 90
         },
         "setup_meta": {
             "MTF": {
@@ -632,15 +1362,75 @@
         "rvol": 0.77,
         "rs_rating": 96.1,
         "mcap": 97.37,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "REGN": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 73,
+        "grade": "A",
+        "setups": {
+            "20EMA": 54,
+            "MTF": 73
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 792.54,
+                "ema_low_distance_pct": -0.44,
+                "close_location_pct": 25.1
+            },
+            "MTF": {
+                "max_runup_40d_pct": 29.5,
+                "flag_range_10d_pct": 6.84,
+                "drawdown_from_40d_high_pct": 6.23,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "REGN",
+        "price": 794.1900024414062,
+        "rvol": 0.73,
+        "rs_rating": 92.1,
+        "mcap": 81.77,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "SLB": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 65,
+        "grade": "B",
+        "setups": {
+            "MTF": 65
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 25.4,
+                "flag_range_10d_pct": 9.47,
+                "drawdown_from_40d_high_pct": 0.16,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "SLB",
+        "price": 57.33000183105469,
+        "rvol": 1.03,
+        "rs_rating": 84.6,
+        "mcap": 85.09,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "SOLV": {
         "state": "setup",
         "strategy": "VCP",
-        "score": 61,
-        "grade": "B",
+        "score": 86,
+        "grade": "S",
         "setups": {
-            "VCP": 61
+            "VCP": 86
         },
         "setup_meta": {
             "VCP": {
@@ -658,7 +1448,33 @@
         "rvol": 0.66,
         "rs_rating": 78.2,
         "mcap": 15.51,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "STT": {
+        "state": "setup",
+        "strategy": "20EMA",
+        "score": 68,
+        "grade": "B",
+        "setups": {
+            "20EMA": 68
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 188.82,
+                "ema_low_distance_pct": 1.76,
+                "close_location_pct": 56.4
+            }
+        },
+        "msg": "[20EMA] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "STT",
+        "price": 193.3300018310547,
+        "rvol": 0.41,
+        "rs_rating": 94.0,
+        "mcap": 53.11,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "SWK": {
         "engine_version": "2.3",
@@ -681,7 +1497,7 @@
         "msg": "[B&R] Setup Quality 67",
         "last_seen": "2026-08-28",
         "signal_date": "2026-08-28",
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00",
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00",
         "symbol": "SWK",
         "price": 97.80000305175781,
         "rvol": 0.72,
@@ -689,14 +1505,68 @@
         "rs_change_20d_pct": 0.4,
         "mcap": 14.77
     },
+    "TGT": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 63,
+        "grade": "B",
+        "setups": {
+            "MTF": 63
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 35.8,
+                "flag_range_10d_pct": 14.37,
+                "drawdown_from_40d_high_pct": 4.43,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "TGT",
+        "price": 163.17999267578125,
+        "rvol": 0.96,
+        "rs_rating": 95.9,
+        "mcap": 74.11,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "TMO": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 77,
+        "grade": "A",
+        "setups": {
+            "MTF": 77
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 24.2,
+                "flag_range_10d_pct": 10.36,
+                "drawdown_from_40d_high_pct": 3.84,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "TMO",
+        "price": 622.1799926757812,
+        "rvol": 0.7,
+        "rs_rating": 86.9,
+        "mcap": 230.05,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
     "TRV": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 68,
+        "score": 61,
         "grade": "B",
         "setups": {
-            "20EMA": 51,
-            "MTF": 68
+            "20EMA": 58,
+            "MTF": 61
         },
         "setup_meta": {
             "20EMA": {
@@ -720,15 +1590,15 @@
         "rvol": 0.63,
         "rs_rating": 90.3,
         "mcap": 77.15,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "VLO": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 75,
-        "grade": "A",
+        "score": 92,
+        "grade": "S",
         "setups": {
-            "MTF": 75
+            "MTF": 92
         },
         "setup_meta": {
             "MTF": {
@@ -747,17 +1617,50 @@
         "rvol": 0.7,
         "rs_rating": 96.9,
         "mcap": 101.45,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
+    },
+    "WTW": {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 71,
+        "grade": "A",
+        "setups": {
+            "20EMA": 60,
+            "MTF": 71
+        },
+        "setup_meta": {
+            "20EMA": {
+                "ema20": 334.94,
+                "ema_low_distance_pct": 1.6,
+                "close_location_pct": 63.0
+            },
+            "MTF": {
+                "max_runup_40d_pct": 23.0,
+                "flag_range_10d_pct": 7.35,
+                "drawdown_from_40d_high_pct": 2.21,
+                "mtf_rs_threshold": 80
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-08-30",
+        "signal_date": "2026-08-28",
+        "engine_version": "2.3",
+        "symbol": "WTW",
+        "price": 343.75,
+        "rvol": 0.72,
+        "rs_rating": 83.8,
+        "mcap": 31.92,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     },
     "ZBRA": {
         "state": "setup",
         "strategy": "MTF",
-        "score": 64,
-        "grade": "B",
+        "score": 83,
+        "grade": "A",
         "setups": {
-            "20EMA": 49,
-            "VCP": 46,
-            "MTF": 64
+            "20EMA": 60,
+            "VCP": 61,
+            "MTF": 83
         },
         "setup_meta": {
             "20EMA": {
@@ -785,7 +1688,7 @@
         "price": 356.45001220703125,
         "rvol": 0.69,
         "rs_rating": 90.9,
-        "mcap": 16.86,
-        "scan_ts_utc": "2026-08-30T22:58:41+00:00"
+        "mcap": 16.98,
+        "scan_ts_utc": "2026-08-30T23:14:25+00:00"
     }
 }
