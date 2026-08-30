@@ -181,12 +181,23 @@
   // 시가총액 드롭다운 이벤트
   document.getElementById('mcapFilter').addEventListener('change', renderFeed);
 
-  // 데이터 로드
-  fetch('dashboard_data.json').then(r => r.json()).then(data => {
-    globalData = data;
-    document.getElementById('updateTimeText').textContent = new Date().toLocaleString('ko-KR', {timeZone: 'America/New_York', hour:'2-digit', minute:'2-digit'}) + ' ET';
-    renderFeed();
-  }).catch(() => { document.getElementById('updateTimeText').textContent = "데이터 오류"; });
+  // 데이터 로드 및 실제 업데이트 시간(Last-Modified) 추적
+    fetch('dashboard_data.json').then(response => {
+      const lastModified = response.headers.get('Last-Modified');
+      if (lastModified) {
+        const updateDate = new Date(lastModified);
+        document.getElementById('updateTimeText').textContent = 
+          updateDate.toLocaleString('ko-KR', {timeZone: 'America/New_York', month: '2-digit', day: '2-digit', hour:'2-digit', minute:'2-digit'}) + ' ET';
+      } else {
+        document.getElementById('updateTimeText').textContent = "업데이트 완료";
+      }
+      return response.json();
+    }).then(data => {
+      globalData = data;
+      renderFeed();
+    }).catch(() => { 
+      document.getElementById('updateTimeText').textContent = "데이터 오류"; 
+    });
 </script>
 </body>
 </html>
