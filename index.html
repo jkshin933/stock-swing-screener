@@ -18,7 +18,7 @@
   
   .top-actions { display: flex; gap: 6px; }
   .manual-update-btn { background: var(--color-primary); border: 1px solid var(--color-primary); padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; color: #071018; text-decoration: none; cursor: pointer; }
-  .reload-btn { background: var(--color-surface-2); border-color: var(--color-border); color: var(--color-text); }
+  .about-btn { background: var(--color-surface-2); border-color: var(--color-border); color: var(--color-text); }
 
   /* 모바일 필터 영역 */
   .filter-container { padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
@@ -30,8 +30,23 @@
   .pill-btn.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
 
   /* 카드 피드 영역 */
-  .feed-container { padding: 16px; }
+  .feed-container { padding: 16px; max-width: 920px; margin: 0 auto; }
   .section-title { font-size: 1rem; font-weight: 700; margin: 24px 0 12px; display: flex; justify-content: space-between; align-items: center; }
+  .s-table-panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .s-table-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--color-border); }
+  .s-table-title { font-weight: 700; color: #f3d675; }
+  .copy-btn { background: #d4af37; color: #0a0e14; border: 0; border-radius: 6px; padding: 7px 12px; font-weight: 800; cursor: pointer; }
+  .copy-btn:disabled { opacity: 0.45; cursor: default; }
+  .copy-status { min-height: 18px; padding: 0 16px 10px; color: #8a94a6; font-size: 0.75rem; }
+  .table-scroll { overflow-x: auto; }
+  .s-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .s-table th, .s-table td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--color-border); }
+  .s-table th { color: #8a94a6; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .s-table td { font-size: 0.9rem; }
+  .s-table tbody tr:last-child td { border-bottom: 0; }
+  .s-table .score-cell { color: var(--color-primary); font-weight: 800; }
+  .s-table .ticker-cell { font-weight: 800; }
+  .empty-row { color: #8a94a6; text-align: center !important; padding: 20px !important; }
   
   .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
   .card-header { padding: 16px; border-bottom: 1px solid var(--color-border); }
@@ -70,7 +85,7 @@
       <div class="update-time" id="updateTimeText">데이터 로딩 중...</div>
     </div>
     <div class="top-actions">
-      <button id="reloadResults" class="manual-update-btn reload-btn" type="button">결과 새로고침</button>
+      <a href="about.html" class="manual-update-btn about-btn">스캐너 설명</a>
       <a href="https://github.com/jkshin933/stock-swing-screener/actions/workflows/scan.yml" target="_blank" class="manual-update-btn" title="GitHub Actions에서 Run workflow를 누르세요">새 스캔 실행</a>
     </div>
   </header>
@@ -94,6 +109,21 @@
   </div>
 
   <main class="feed-container">
+    <div class="section-title"><span style="color:#f3d675">🏆 S급 리스트</span><span id="cnt-s">0</span></div>
+    <section class="s-table-panel" aria-labelledby="s-table-heading">
+      <div class="s-table-header">
+        <span class="s-table-title" id="s-table-heading">최상위 Setup Quality</span>
+        <button class="copy-btn" id="copySTable" type="button">Copy</button>
+      </div>
+      <div class="table-scroll">
+        <table class="s-table">
+          <thead><tr><th>Score</th><th>Ticker</th><th>Strategy</th></tr></thead>
+          <tbody id="sTableBody"></tbody>
+        </table>
+      </div>
+      <div class="copy-status" id="copyStatus" role="status" aria-live="polite"></div>
+    </section>
+
     <div class="section-title"><span style="color:var(--color-success)">🟢 당장 매수 (Action)</span><span id="cnt-action">0</span></div>
     <div id="feed-action"></div>
 
@@ -107,6 +137,69 @@
 <script>
   let globalData = [];
   let stratFilter = 'ALL';
+
+  function getSGradeRows() {
+    return globalData
+      .filter(item => item.grade === 'S' && ['action', 'setup'].includes(item.state))
+      .sort((a, b) => (b.score || 0) - (a.score || 0) || String(a.symbol).localeCompare(String(b.symbol)));
+  }
+
+  function renderSTable() {
+    const rows = getSGradeRows();
+    const body = document.getElementById('sTableBody');
+    const copyButton = document.getElementById('copySTable');
+    body.innerHTML = '';
+    document.getElementById('cnt-s').textContent = rows.length;
+    copyButton.disabled = rows.length === 0;
+
+    if (rows.length === 0) {
+      const row = body.insertRow();
+      const cell = row.insertCell();
+      cell.colSpan = 3;
+      cell.className = 'empty-row';
+      cell.textContent = '현재 S급 종목이 없습니다.';
+      return;
+    }
+
+    rows.forEach(item => {
+      const row = body.insertRow();
+      const score = row.insertCell();
+      const ticker = row.insertCell();
+      const strategy = row.insertCell();
+      score.textContent = item.score ?? '';
+      ticker.textContent = item.symbol ?? '';
+      strategy.textContent = item.strategy ?? '';
+      score.className = 'score-cell';
+      ticker.className = 'ticker-cell';
+    });
+  }
+
+  async function copySTable() {
+    const rows = getSGradeRows();
+    if (!rows.length) return;
+
+    const text = [
+      'Score\tTicker\tStrategy',
+      ...rows.map(item => `${item.score ?? ''}\t${item.symbol ?? ''}\t${item.strategy ?? ''}`)
+    ].join('\n');
+
+    const status = document.getElementById('copyStatus');
+    try {
+      await navigator.clipboard.writeText(text);
+      status.textContent = `${rows.length}개 S급 종목을 복사했습니다.`;
+    } catch (error) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      status.textContent = `${rows.length}개 S급 종목을 복사했습니다.`;
+    }
+    window.setTimeout(() => { status.textContent = ''; }, 2500);
+  }
 
   function renderFeed() {
     document.getElementById('feed-action').innerHTML = '';
@@ -209,12 +302,11 @@
 
   // 시가총액 드롭다운 이벤트
   document.getElementById('mcapFilter').addEventListener('change', renderFeed);
+  document.getElementById('copySTable').addEventListener('click', copySTable);
 
   async function loadResults() {
     const label = document.getElementById('updateTimeText');
-    const button = document.getElementById('reloadResults');
     label.textContent = '결과 불러오는 중...';
-    button.disabled = true;
 
     try {
       const response = await fetch(`dashboard_data.json?t=${Date.now()}`, { cache: 'no-store' });
@@ -229,16 +321,14 @@
         timeZone: 'America/New_York', month: '2-digit', day: '2-digit',
         hour: '2-digit', minute: '2-digit'
       }) + ' ET 스캔';
+      renderSTable();
       renderFeed();
     } catch (error) {
       label.textContent = '데이터 오류';
       console.error(error);
-    } finally {
-      button.disabled = false;
     }
   }
 
-  document.getElementById('reloadResults').addEventListener('click', loadResults);
   loadResults();
 </script>
 </body>
