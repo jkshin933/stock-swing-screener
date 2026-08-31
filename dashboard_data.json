@@ -16,7 +16,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 194.42,
         "stop_loss": 177.95,
@@ -28,7 +28,7 @@
         "rvol": 0.97,
         "rs_rating": 94.6,
         "mcap": 111.69,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -52,7 +52,7 @@
             }
         },
         "msg": "[VCP] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 305.46,
         "stop_loss": 281.41,
@@ -64,7 +64,7 @@
         "rvol": 0.65,
         "rs_rating": 82.9,
         "mcap": 14.09,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -82,7 +82,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 269.45,
         "stop_loss": 249.29,
@@ -94,7 +94,7 @@
         "rvol": 0.76,
         "rs_rating": 73.4,
         "mcap": 68.59,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -118,7 +118,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 261.76,
         "stop_loss": 250.26,
@@ -130,7 +130,7 @@
         "rvol": 0.65,
         "rs_rating": 88.4,
         "mcap": 65.89,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -155,7 +155,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 449.27,
         "stop_loss": 407.76,
@@ -167,7 +167,7 @@
         "rvol": 0.75,
         "rs_rating": 94.4,
         "mcap": 233.78,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -185,7 +185,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 562.33,
         "stop_loss": 534.72,
@@ -197,7 +197,7 @@
         "rvol": 0.49,
         "rs_rating": 80.7,
         "mcap": 49.41,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -222,7 +222,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 207.16,
         "stop_loss": 185.8,
@@ -234,7 +234,7 @@
         "rvol": 0.66,
         "rs_rating": 80.4,
         "mcap": 246.42,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -253,7 +253,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 45.28,
         "stop_loss": 40.21,
@@ -265,7 +265,7 @@
         "rvol": 0.7,
         "rs_rating": 92.5,
         "mcap": 14.9,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -283,7 +283,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 64.47,
         "stop_loss": 60.99,
@@ -295,7 +295,7 @@
         "rvol": 0.6,
         "rs_rating": 80.5,
         "mcap": 16.88,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -326,7 +326,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 26.36,
         "stop_loss": 25.18,
@@ -338,7 +338,7 @@
         "rvol": 0.69,
         "rs_rating": 89.8,
         "mcap": 13.51,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -357,7 +357,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 194.04,
         "stop_loss": 179.82,
@@ -369,7 +369,7 @@
         "rvol": 0.68,
         "rs_rating": 90.2,
         "mcap": 51.62,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -387,7 +387,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 222.44,
         "stop_loss": 206.29,
@@ -399,7 +399,7 @@
         "rvol": 0.47,
         "rs_rating": 86.5,
         "mcap": 32.28,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -424,7 +424,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 68.98,
         "stop_loss": 63.51,
@@ -436,7 +436,7 @@
         "rvol": 0.5,
         "rs_rating": 90.5,
         "mcap": 136.0,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -454,7 +454,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 163.79,
         "stop_loss": 154.88,
@@ -466,7 +466,7 @@
         "rvol": 0.64,
         "rs_rating": 88.2,
         "mcap": 110.26,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -490,7 +490,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 109.37,
         "stop_loss": 104.05,
@@ -502,7 +502,7 @@
         "rvol": 0.6,
         "rs_rating": 82.1,
         "mcap": 48.15,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -521,7 +521,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 136.56,
         "stop_loss": 124.51,
@@ -533,7 +533,7 @@
         "rvol": 0.8,
         "rs_rating": 81.9,
         "mcap": 158.8,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -551,7 +551,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 324.39,
         "stop_loss": 306.92,
@@ -563,7 +563,7 @@
         "rvol": 0.57,
         "rs_rating": 75.2,
         "mcap": 61.45,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -587,7 +587,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 410.08,
         "stop_loss": 389.06,
@@ -599,7 +599,7 @@
         "rvol": 0.54,
         "rs_rating": 75.9,
         "mcap": 26.78,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -618,7 +618,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 304.83,
         "stop_loss": 277.63,
@@ -630,7 +630,7 @@
         "rvol": 1.0,
         "rs_rating": 97.3,
         "mcap": 13.92,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -653,7 +653,7 @@
             }
         },
         "msg": "[B&R] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 52.05,
         "stop_loss": 49.49,
@@ -665,7 +665,7 @@
         "rvol": 0.59,
         "rs_rating": 87.3,
         "mcap": 94.99,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -683,7 +683,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 202.64,
         "stop_loss": 190.87,
@@ -695,7 +695,7 @@
         "rvol": 0.8,
         "rs_rating": 72.1,
         "mcap": 395.97,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -714,7 +714,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 239.71,
         "stop_loss": 212.39,
@@ -726,7 +726,7 @@
         "rvol": 0.86,
         "rs_rating": 85.2,
         "mcap": 102.58,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -744,7 +744,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 633.28,
         "stop_loss": 597.53,
@@ -756,7 +756,7 @@
         "rvol": 0.64,
         "rs_rating": 81.7,
         "mcap": 169.95,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -781,7 +781,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 475.69,
         "stop_loss": 435.38,
@@ -793,7 +793,7 @@
         "rvol": 0.67,
         "rs_rating": 97.8,
         "mcap": 294.8,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -818,7 +818,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 248.43,
         "stop_loss": 231.84,
@@ -830,7 +830,7 @@
         "rvol": 0.8,
         "rs_rating": 89.0,
         "mcap": 26.79,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -854,7 +854,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 91.02,
         "stop_loss": 84.41,
@@ -866,7 +866,7 @@
         "rvol": 0.63,
         "rs_rating": 77.5,
         "mcap": 34.27,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -891,7 +891,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 330.38,
         "stop_loss": 307.09,
@@ -903,7 +903,7 @@
         "rvol": 0.81,
         "rs_rating": 95.2,
         "mcap": 39.54,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -921,7 +921,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 334.75,
         "stop_loss": 315.61,
@@ -933,7 +933,7 @@
         "rvol": 0.54,
         "rs_rating": 85.9,
         "mcap": 78.31,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -951,7 +951,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 137.82,
         "stop_loss": 129.03,
@@ -963,7 +963,7 @@
         "rvol": 0.73,
         "rs_rating": 88.6,
         "mcap": 18.96,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -987,7 +987,7 @@
             }
         },
         "msg": "[VCP] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 96.36,
         "stop_loss": 91.09,
@@ -999,7 +999,7 @@
         "rvol": 0.71,
         "rs_rating": 74.2,
         "mcap": 24.3,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1017,7 +1017,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 398.12,
         "stop_loss": 370.68,
@@ -1029,7 +1029,7 @@
         "rvol": 0.61,
         "rs_rating": 86.1,
         "mcap": 46.3,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1048,7 +1048,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 89.0,
         "stop_loss": 81.64,
@@ -1060,7 +1060,7 @@
         "rvol": 0.75,
         "rs_rating": 85.4,
         "mcap": 22.44,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1083,7 +1083,7 @@
             }
         },
         "msg": "[B&R] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 128.0,
         "stop_loss": 116.49,
@@ -1095,7 +1095,7 @@
         "rvol": 0.52,
         "rs_rating": 93.0,
         "mcap": 25.21,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1114,7 +1114,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 266.58,
         "stop_loss": 239.63,
@@ -1126,7 +1126,7 @@
         "rvol": 0.99,
         "rs_rating": 93.6,
         "mcap": 43.08,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1145,7 +1145,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 33.82,
         "stop_loss": 31.04,
@@ -1157,7 +1157,7 @@
         "rvol": 0.61,
         "rs_rating": 89.4,
         "mcap": 14.51,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1175,7 +1175,7 @@
             }
         },
         "msg": "[VCP] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 154.07,
         "stop_loss": 148.91,
@@ -1187,7 +1187,7 @@
         "rvol": 0.67,
         "rs_rating": 73.0,
         "mcap": 17.79,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1205,7 +1205,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 268.92,
         "stop_loss": 255.27,
@@ -1217,7 +1217,7 @@
         "rvol": 0.85,
         "rs_rating": 90.7,
         "mcap": 645.95,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1235,7 +1235,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 359.45,
         "stop_loss": 343.24,
@@ -1247,7 +1247,7 @@
         "rvol": 0.6,
         "rs_rating": 77.3,
         "mcap": 950.62,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1265,7 +1265,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 90.22,
         "stop_loss": 85.53,
@@ -1277,7 +1277,7 @@
         "rvol": 0.77,
         "rs_rating": 80.9,
         "mcap": 385.77,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1296,7 +1296,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 342.77,
         "stop_loss": 314.44,
@@ -1308,7 +1308,7 @@
         "rvol": 0.87,
         "rs_rating": 87.5,
         "mcap": 27.18,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1326,7 +1326,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 91.74,
         "stop_loss": 86.91,
@@ -1338,7 +1338,7 @@
         "rvol": 0.87,
         "rs_rating": 70.0,
         "mcap": 116.77,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1357,7 +1357,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 369.44,
         "stop_loss": 345.93,
@@ -1369,7 +1369,7 @@
         "rvol": 1.0,
         "rs_rating": 96.7,
         "mcap": 103.58,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1388,7 +1388,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 157.7,
         "stop_loss": 137.96,
@@ -1400,7 +1400,7 @@
         "rvol": 0.79,
         "rs_rating": 95.7,
         "mcap": 366.0,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1418,7 +1418,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 350.25,
         "stop_loss": 331.38,
@@ -1430,7 +1430,7 @@
         "rvol": 0.82,
         "rs_rating": 75.7,
         "mcap": 78.32,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1448,7 +1448,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 188.32,
         "stop_loss": 179.62,
@@ -1460,7 +1460,7 @@
         "rvol": 0.72,
         "rs_rating": 82.5,
         "mcap": 34.17,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1478,7 +1478,7 @@
             }
         },
         "msg": "[VCP] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 90.02,
         "stop_loss": 86.05,
@@ -1490,7 +1490,7 @@
         "rvol": 0.54,
         "rs_rating": 73.6,
         "mcap": 24.22,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1509,7 +1509,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 248.18,
         "stop_loss": 230.57,
@@ -1521,7 +1521,7 @@
         "rvol": 0.77,
         "rs_rating": 96.1,
         "mcap": 97.37,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1546,7 +1546,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 851.23,
         "stop_loss": 785.13,
@@ -1558,7 +1558,7 @@
         "rvol": 0.73,
         "rs_rating": 92.1,
         "mcap": 81.77,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1577,7 +1577,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 56.17,
         "stop_loss": 51.72,
@@ -1589,7 +1589,7 @@
         "rvol": 1.03,
         "rs_rating": 84.6,
         "mcap": 85.09,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1607,7 +1607,7 @@
             }
         },
         "msg": "[VCP] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 93.17,
         "stop_loss": 88.85,
@@ -1619,7 +1619,7 @@
         "rvol": 0.66,
         "rs_rating": 78.2,
         "mcap": 15.51,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1637,7 +1637,7 @@
             }
         },
         "msg": "[20EMA] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 194.64,
         "stop_loss": 182.24,
@@ -1649,7 +1649,7 @@
         "rvol": 0.41,
         "rs_rating": 94.0,
         "mcap": 53.11,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1668,7 +1668,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 171.6,
         "stop_loss": 151.73,
@@ -1680,7 +1680,7 @@
         "rvol": 0.96,
         "rs_rating": 95.9,
         "mcap": 74.13,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1699,7 +1699,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 650.23,
         "stop_loss": 586.27,
@@ -1711,7 +1711,7 @@
         "rvol": 0.7,
         "rs_rating": 86.9,
         "mcap": 230.05,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1736,7 +1736,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 375.78,
         "stop_loss": 358.03,
@@ -1748,7 +1748,7 @@
         "rvol": 0.63,
         "rs_rating": 90.3,
         "mcap": 77.15,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1767,7 +1767,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 354.76,
         "stop_loss": 333.32,
@@ -1779,7 +1779,7 @@
         "rvol": 0.7,
         "rs_rating": 96.9,
         "mcap": 101.45,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1804,7 +1804,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 353.27,
         "stop_loss": 324.89,
@@ -1816,7 +1816,7 @@
         "rvol": 0.72,
         "rs_rating": 83.8,
         "mcap": 31.92,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     },
     {
         "state": "setup",
@@ -1847,7 +1847,7 @@
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-08-30",
+        "last_seen": "2026-08-31",
         "signal_date": "2026-08-28",
         "entry_trigger": 386.12,
         "stop_loss": 348.61,
@@ -1859,6 +1859,6 @@
         "rvol": 0.69,
         "rs_rating": 90.9,
         "mcap": 16.86,
-        "scan_ts_utc": "2026-08-30T23:28:53+00:00"
+        "scan_ts_utc": "2026-08-31T00:04:36+00:00"
     }
 ]
