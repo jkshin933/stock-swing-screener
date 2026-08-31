@@ -214,20 +214,20 @@ Action은 진입 가능 구간을 의미하며 2일 동안 유지됩니다. 이�
 - 시장 휴장일에는 마지막 거래일 데이터를 사용합니다.
 - 이 프로그램은 기술적 후보를 정렬하는 도구이며 매수·매도 추천이나 수익 보장을 제공하지 않습니다.
 
-## 새로고침과 새 스캔
+## 결과 로드와 새 스캔
 
-두 동작은 서로 다릅니다.
+결과 페이지는 열릴 때마다 캐시를 사용하지 않고 최신 `dashboard_data.json`을 자동으로 읽습니다. 별도의 결과 새로고침 버튼은 없습니다. 자동 스캔이 끝난 뒤 브라우저 페이지를 다시 열거나 일반 새로고침하면 새 결과가 표시됩니다.
 
-- **결과 새로고침:** 캐시를 사용하지 않고 최신 `dashboard_data.json`을 다시 읽습니다.
-- **새 스캔 실행:** GitHub Actions의 `scan.yml`을 열어 `Run workflow`로 Python 스크리너를 실행합니다.
+**새 스캔 실행**은 GitHub Actions의 `scan.yml`을 열어 `Run workflow`로 Python 스크리너를 실행하는 기능입니다. GitHub Pages는 정적 사이트이므로 인증 없이 브라우저에서 GitHub Actions를 직접 시작할 수 없습니다. 저장소의 `.github/workflows/scan.yml`에 제공된 워크플로를 넣으면 수동 실행이 가능하고, 미국 시장 마감 후 평일 자동 실행도 예약됩니다.
 
-GitHub Pages는 정적 사이트이므로 인증 없이 브라우저에서 GitHub Actions를 직접 시작할 수 없습니다. 저장소의 `.github/workflows/scan.yml`에 제공된 워크플로를 넣으면 수동 실행이 가능하고, 미국 시장 마감 후 평일 자동 실행도 예약됩니다. 워크플로가 끝난 다음 대시보드에서 **결과 새로고침**을 누르면 새로운 결과가 표시됩니다.
+결과 페이지 상단에는 모든 S급 종목을 `Score / Ticker / Strategy` 순서로 보여주는 표가 있으며, Copy 버튼으로 탭 구분 텍스트를 복사할 수 있습니다.
 
 ## 파일
 
 - `screener.py`: 스크리닝 엔진
 - `README.md`: 설치 및 알고리즘 설명
-- `index.html`: S/A 결과와 B Watch를 표시하는 대시보드
+- `index.html`: S급 복사 표, S/A 결과와 B Watch를 표시하는 대시보드
+- `about.html`: 스캐너 목적, 네 가지 전략과 등급·상태 설명 페이지
 - `scan.yml`: `.github/workflows/scan.yml`에 배치할 GitHub Actions 워크플로
 - `state.json`: 실행 후 생성되는 상태 파일
 - `dashboard_data.json`: 실행 후 생성되는 결과 파일
