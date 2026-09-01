@@ -3,8 +3,9 @@ name: Run stock screener
 on:
   workflow_dispatch:
   schedule:
-    # Weekdays after the US market close (23:00 UTC).
-    - cron: "0 23 * * 1-5"
+    # Weekdays after the US market close. Avoid minute 0 because scheduled
+    # GitHub Actions can be delayed or dropped during top-of-hour congestion.
+    - cron: "17 23 * * 1-5"
 
 permissions:
   contents: write
