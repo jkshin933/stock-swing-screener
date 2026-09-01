@@ -234,13 +234,13 @@ Action은 진입 가능 구간을 의미하며 2일 동안 유지됩니다. 이�
 
 카드 이미지와 `Open Finviz Chart` 버튼은 Finviz 종목 페이지로 연결됩니다. 가격 데이터 다운로드는 Yahoo Finance를 계속 사용하지만 무거운 Yahoo 대화형 차트 페이지는 열지 않습니다.
 
-결과 페이지 상단에는 모든 S급 종목을 `Score / Ticker / Strategy / Status` 순서로 보여주는 표가 있습니다. `ACTION`과 `SETUP`을 구분하며 Action을 먼저 배치합니다. Copy 버튼으로 같은 네 개 열을 탭 구분 텍스트로 복사할 수 있습니다.
+결과 페이지 상단에는 모든 S급·A급 종목을 `Score / Ticker / Strategy / Grade / Status` 순서로 보여주는 표가 있습니다. `ACTION`과 `SETUP`을 모두 포함하고 Action을 먼저 배치합니다. 표는 처음에는 접혀 있으며 `Expand` 버튼으로 펼치거나 `Collapse` 버튼으로 다시 접을 수 있습니다. Copy 버튼은 표가 접혀 있어도 사용할 수 있고, 같은 다섯 개 열을 탭 구분 텍스트로 복사합니다.
 
 ## 파일
 
 - `screener.py`: 스크리닝 엔진
 - `README.md`: 설치 및 알고리즘 설명
-- `index.html`: S급 복사 표, S/A 결과와 B Watch를 표시하는 대시보드
+- `index.html`: 접을 수 있는 S·A급 복사 표, S/A 결과와 B Watch를 표시하는 대시보드
 - `about.html`: 스캐너 목적, 네 가지 전략과 등급·상태 설명 페이지
 - `scan.yml`: `.github/workflows/scan.yml`에 배치할 GitHub Actions 워크플로
 - `state.json`: 실행 후 생성되는 상태 파일
