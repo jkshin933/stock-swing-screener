@@ -46,6 +46,9 @@
   .s-table tbody tr:last-child td { border-bottom: 0; }
   .s-table .score-cell { color: var(--color-primary); font-weight: 800; }
   .s-table .ticker-cell { font-weight: 800; }
+  .status-pill { display: inline-flex; padding: 3px 7px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; }
+  .status-action { background: rgba(52, 211, 153, 0.15); color: var(--color-success); border: 1px solid rgba(52, 211, 153, 0.35); }
+  .status-setup { background: rgba(251, 191, 36, 0.12); color: var(--color-warning); border: 1px solid rgba(251, 191, 36, 0.3); }
   .empty-row { color: #8a94a6; text-align: center !important; padding: 20px !important; }
   
   .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -70,7 +73,7 @@
   .m-val { font-size: 0.85rem; font-weight: 700; }
   .sl-red { color: var(--color-error); }
 
-  .card-img-wrap { width: 100%; background: #fff; padding: 10px; border-bottom: 1px solid var(--color-border); }
+  .card-img-wrap { display: block; width: 100%; background: #fff; padding: 10px; border-bottom: 1px solid var(--color-border); }
   .card-img-wrap img { width: 100%; display: block; filter: invert(0.9) hue-rotate(180deg); }
   
   .card-actions { padding: 12px; }
@@ -117,7 +120,7 @@
       </div>
       <div class="table-scroll">
         <table class="s-table">
-          <thead><tr><th>Score</th><th>Ticker</th><th>Strategy</th></tr></thead>
+          <thead><tr><th>Score</th><th>Ticker</th><th>Strategy</th><th>Status</th></tr></thead>
           <tbody id="sTableBody"></tbody>
         </table>
       </div>
@@ -141,7 +144,12 @@
   function getSGradeRows() {
     return globalData
       .filter(item => item.grade === 'S' && ['action', 'setup'].includes(item.state))
-      .sort((a, b) => (b.score || 0) - (a.score || 0) || String(a.symbol).localeCompare(String(b.symbol)));
+      .sort((a, b) => {
+        const stateOrder = { action: 0, setup: 1 };
+        return stateOrder[a.state] - stateOrder[b.state]
+          || (b.score || 0) - (a.score || 0)
+          || String(a.symbol).localeCompare(String(b.symbol));
+      });
   }
 
   function renderSTable() {
@@ -155,7 +163,7 @@
     if (rows.length === 0) {
       const row = body.insertRow();
       const cell = row.insertCell();
-      cell.colSpan = 3;
+      cell.colSpan = 4;
       cell.className = 'empty-row';
       cell.textContent = '현재 S급 종목이 없습니다.';
       return;
@@ -166,9 +174,14 @@
       const score = row.insertCell();
       const ticker = row.insertCell();
       const strategy = row.insertCell();
+      const status = row.insertCell();
       score.textContent = item.score ?? '';
       ticker.textContent = item.symbol ?? '';
       strategy.textContent = item.strategy ?? '';
+      const statusPill = document.createElement('span');
+      statusPill.className = `status-pill status-${item.state}`;
+      statusPill.textContent = item.state === 'action' ? 'ACTION' : 'SETUP';
+      status.appendChild(statusPill);
       score.className = 'score-cell';
       ticker.className = 'ticker-cell';
     });
@@ -179,8 +192,8 @@
     if (!rows.length) return;
 
     const text = [
-      'Score\tTicker\tStrategy',
-      ...rows.map(item => `${item.score ?? ''}\t${item.symbol ?? ''}\t${item.strategy ?? ''}`)
+      'Score\tTicker\tStrategy\tStatus',
+      ...rows.map(item => `${item.score ?? ''}\t${item.symbol ?? ''}\t${item.strategy ?? ''}\t${item.state === 'action' ? 'ACTION' : 'SETUP'}`)
     ].join('\n');
 
     const status = document.getElementById('copyStatus');
@@ -282,11 +295,11 @@
             ${slHtml}
           </div>
         </div>
-        <div class="card-img-wrap">
+        <a class="card-img-wrap" href="https://finviz.com/quote.ashx?t=${item.symbol}&p=d" target="_blank" rel="noopener noreferrer" aria-label="Open ${item.symbol} on Finviz">
           <img src="https://charts2.finviz.com/chart.ashx?t=${item.symbol}" alt="chart">
-        </div>
+        </a>
         <div class="card-actions">
-          <a href="https://finance.yahoo.com/chart/${item.symbol}" target="_blank" class="btn-full">Yahoo 차트 열기</a>
+          <a href="https://finviz.com/quote.ashx?t=${item.symbol}&p=d" target="_blank" rel="noopener noreferrer" class="btn-full">Open Finviz Chart</a>
         </div>
       </div>
     `;
