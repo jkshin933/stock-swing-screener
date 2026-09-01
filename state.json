@@ -37,7 +37,7 @@
         "rvol": 0.67,
         "rs_rating": 80.4,
         "mcap": 13.9,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "AMGN": {
         "state": "setup",
@@ -110,7 +110,7 @@
         "rvol": 0.79,
         "rs_rating": 94.4,
         "mcap": 232.41,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "ANET": {
         "state": "setup",
@@ -173,7 +173,7 @@
         "rvol": 0.55,
         "rs_rating": 78.4,
         "mcap": 246.81,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "APA": {
         "state": "setup",
@@ -214,7 +214,7 @@
         "rvol": 0.72,
         "rs_rating": 93.2,
         "mcap": 15.12,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "BDX": {
         "state": "setup",
@@ -255,7 +255,7 @@
         "rvol": 0.9,
         "rs_rating": 90.3,
         "mcap": 51.24,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "BIIB": {
         "state": "setup",
@@ -269,12 +269,12 @@
             "20EMA": {
                 "ema20": 214.01,
                 "ema_low_distance_pct": -0.2,
-                "close_location_pct": 57.8,
+                "close_location_pct": 57.9,
                 "ema20_slope_5d_pct": 1.69,
                 "score_components": {
                     "volume_dry_up": 14.6,
                     "rs_line_improvement": 10.0,
-                    "candle_recovery": 13.9,
+                    "candle_recovery": 14.0,
                     "ema_touch_precision": 20.0,
                     "ema20_slope": 8.4,
                     "trend_extension": 10.0,
@@ -285,7 +285,7 @@
         "msg": "[20EMA] 셋업 구조 형성",
         "last_seen": "2026-09-01",
         "signal_date": "2026-08-31",
-        "entry_trigger": 219.33,
+        "entry_trigger": 219.32,
         "stop_loss": 206.55,
         "sl": 206.55,
         "action_rvol_min": 0.9,
@@ -295,7 +295,7 @@
         "rvol": 0.53,
         "rs_rating": 86.7,
         "mcap": 32.01,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "BMY": {
         "state": "setup",
@@ -352,7 +352,7 @@
         "rvol": 0.66,
         "rs_rating": 91.7,
         "mcap": 136.47,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "CCEP": {
         "state": "setup",
@@ -408,7 +408,7 @@
         "rvol": 0.65,
         "rs_rating": 78.2,
         "mcap": 47.68,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "COP": {
         "state": "setup",
@@ -449,7 +449,7 @@
         "rvol": 0.98,
         "rs_rating": 85.4,
         "mcap": 161.41,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "COR": {
         "state": "setup",
@@ -489,7 +489,7 @@
         "rvol": 0.7,
         "rs_rating": 76.9,
         "mcap": 61.75,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "CPAY": {
         "state": "setup",
@@ -545,7 +545,7 @@
         "rvol": 0.52,
         "rs_rating": 75.4,
         "mcap": 26.55,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "CRL": {
         "state": "setup",
@@ -602,7 +602,7 @@
         "rvol": 0.95,
         "rs_rating": 97.5,
         "mcap": 13.76,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "DASH": {
         "state": "setup",
@@ -643,7 +643,7 @@
         "rvol": 0.75,
         "rs_rating": 88.0,
         "mcap": 100.41,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "DXCM": {
         "state": "setup",
@@ -700,7 +700,7 @@
         "rvol": 0.59,
         "rs_rating": 81.7,
         "mcap": 34.36,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "EXPD": {
         "state": "setup",
@@ -740,7 +740,7 @@
         "rvol": 0.79,
         "rs_rating": 90.9,
         "mcap": 24.65,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "FDX": {
         "state": "setup",
@@ -780,7 +780,7 @@
         "rvol": 0.68,
         "rs_rating": 87.3,
         "mcap": 77.49,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "GILD": {
         "state": "setup",
@@ -820,7 +820,7 @@
         "rvol": 0.75,
         "rs_rating": 80.5,
         "mcap": 181.46,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "GPN": {
         "state": "setup",
@@ -876,7 +876,7 @@
         "rvol": 0.75,
         "rs_rating": 75.0,
         "mcap": 24.09,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "HAS": {
         "state": "setup",
@@ -916,7 +916,7 @@
         "rvol": 0.53,
         "rs_rating": 76.7,
         "mcap": 13.27,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "HSIC": {
         "state": "setup",
@@ -955,8 +955,8 @@
         "price": 89.80000305175781,
         "rvol": 0.72,
         "rs_rating": 83.6,
-        "mcap": 10.23,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "mcap": 10.01,
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "IBKR": {
         "state": "setup",
@@ -970,7 +970,7 @@
             "20EMA": {
                 "ema20": 93.44,
                 "ema_low_distance_pct": 1.07,
-                "close_location_pct": 82.9,
+                "close_location_pct": 87.7,
                 "ema20_slope_5d_pct": 2.48,
                 "score_components": {
                     "volume_dry_up": 5.6,
@@ -986,7 +986,7 @@
         "msg": "[20EMA] 셋업 구조 형성",
         "last_seen": "2026-09-01",
         "signal_date": "2026-08-31",
-        "entry_trigger": 98.08,
+        "entry_trigger": 97.89,
         "stop_loss": 90.18,
         "sl": 90.18,
         "action_rvol_min": 0.9,
@@ -996,7 +996,7 @@
         "rvol": 0.82,
         "rs_rating": 85.7,
         "mcap": 44.08,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "IFF": {
         "state": "setup",
@@ -1036,8 +1036,8 @@
         "price": 86.33000183105469,
         "rvol": 0.85,
         "rs_rating": 86.1,
-        "mcap": 22.04,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "mcap": 22.03,
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "IQV": {
         "state": "setup",
@@ -1078,7 +1078,7 @@
         "rvol": 1.03,
         "rs_rating": 94.6,
         "mcap": 42.99,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "IVZ": {
         "state": "setup",
@@ -1135,7 +1135,7 @@
         "rvol": 0.68,
         "rs_rating": 90.0,
         "mcap": 14.47,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "LH": {
         "state": "setup",
@@ -1192,7 +1192,7 @@
         "rvol": 0.95,
         "rs_rating": 86.9,
         "mcap": 26.98,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "LITE": {
         "state": "setup",
@@ -1232,7 +1232,7 @@
         "rvol": 0.75,
         "rs_rating": 98.4,
         "mcap": 82.05,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "MU": {
         "state": "setup",
@@ -1288,7 +1288,7 @@
         "rvol": 0.58,
         "rs_rating": 98.6,
         "mcap": 1082.78,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "OMC": {
         "state": "setup",
@@ -1343,8 +1343,8 @@
         "price": 87.52999877929688,
         "rvol": 0.61,
         "rs_rating": 73.4,
-        "mcap": 24.95,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "mcap": 24.01,
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "PFE": {
         "state": "setup",
@@ -1384,7 +1384,7 @@
         "rvol": 0.81,
         "rs_rating": 74.2,
         "mcap": 162.21,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "PSX": {
         "state": "setup",
@@ -1425,7 +1425,7 @@
         "rvol": 1.04,
         "rs_rating": 96.5,
         "mcap": 98.39,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "REGN": {
         "state": "setup",
@@ -1482,7 +1482,7 @@
         "rvol": 0.89,
         "rs_rating": 92.3,
         "mcap": 82.27,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "SHOP": {
         "state": "setup",
@@ -1522,7 +1522,7 @@
         "rvol": 0.67,
         "rs_rating": 72.3,
         "mcap": 189.61,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "SOLV": {
         "state": "setup",
@@ -1562,7 +1562,7 @@
         "rvol": 0.65,
         "rs_rating": 79.0,
         "mcap": 15.5,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "TECH": {
         "state": "setup",
@@ -1618,7 +1618,7 @@
         "rvol": 0.35,
         "rs_rating": 95.0,
         "mcap": 11.34,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "TGT": {
         "state": "setup",
@@ -1658,8 +1658,8 @@
         "price": 160.8800048828125,
         "rvol": 0.91,
         "rs_rating": 96.3,
-        "mcap": 73.07,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "mcap": 73.09,
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "TMO": {
         "state": "setup",
@@ -1716,7 +1716,7 @@
         "rvol": 0.64,
         "rs_rating": 88.4,
         "mcap": 228.17,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "TRGP": {
         "state": "setup",
@@ -1756,7 +1756,7 @@
         "rvol": 0.95,
         "rs_rating": 92.7,
         "mcap": 62.97,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "VLO": {
         "state": "action",
@@ -1800,7 +1800,7 @@
         "rvol": 0.88,
         "rs_rating": 97.3,
         "mcap": 103.34,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "VRTX": {
         "state": "setup",
@@ -1856,7 +1856,7 @@
         "rvol": 0.64,
         "rs_rating": 91.3,
         "mcap": 138.01,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "WAT": {
         "state": "setup",
@@ -1896,7 +1896,7 @@
         "rvol": 0.72,
         "rs_rating": 77.3,
         "mcap": 40.71,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     },
     "ZBRA": {
         "state": "setup",
@@ -1968,7 +1968,7 @@
         "price": 353.54998779296875,
         "rvol": 0.68,
         "rs_rating": 89.0,
-        "mcap": 16.84,
-        "scan_ts_utc": "2026-09-01T00:49:57+00:00"
+        "mcap": 16.73,
+        "scan_ts_utc": "2026-09-01T01:02:23+00:00"
     }
 }
