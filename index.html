@@ -1,247 +1,373 @@
-# 4-Core Stock Screener v2.5
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>모바일 스윙 스캐너</title>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+<style>
+  :root { --color-bg: #0a0e14; --color-surface: #11161f; --color-surface-2: #151b26; --color-border: #232b39; --color-text: #e4e9f0; --color-primary: #22d3ee; --color-success: #34d399; --color-warning: #fbbf24; --color-error: #f87171; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Satoshi', sans-serif; background: var(--color-bg); color: var(--color-text); -webkit-font-smoothing: antialiased; }
+  
+  /* 모바일 상단 바 */
+  .topbar { position: sticky; top: 0; z-index: 100; background: rgba(17, 22, 31, 0.95); backdrop-filter: blur(10px); padding: 16px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; }
+  .brand-group { display: flex; flex-direction: column; gap: 4px; }
+  .brand { font-size: 1.1rem; font-weight: 700; }
+  .update-time { font-size: 0.75rem; color: #8a94a6; font-weight: 400; }
+  
+  .top-actions { display: flex; gap: 6px; }
+  .manual-update-btn { background: var(--color-primary); border: 1px solid var(--color-primary); padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; color: #071018; text-decoration: none; cursor: pointer; }
+  .about-btn { background: var(--color-surface-2); border-color: var(--color-border); color: var(--color-text); }
 
-S&P 500과 Nasdaq-100 종목을 대상으로 네 가지 기술적 셋업을 탐색하고, 각 셋업의 품질을 0~100점으로 평가하는 Python 스크리너입니다.
+  /* 모바일 필터 영역 */
+  .filter-container { padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
+  .select-group { width: 100%; margin-bottom: 12px; }
+  .mcap-select { width: 100%; padding: 10px; border-radius: 8px; background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); font-size: 0.9rem; outline: none; }
+  .pill-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .pill-scroll::-webkit-scrollbar { display: none; }
+  .pill-btn { padding: 8px 14px; border-radius: 20px; background: var(--color-surface-2); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.85rem; font-weight: 600; white-space: nowrap; transition: 0.2s; cursor: pointer; }
+  .pill-btn.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
 
-RS Rating은 후보군 진입 조건으로만 사용합니다. 최종 S/A/B 등급은 RS가 아니라 거래량 감소, 상대강도 개선, 패턴 구조와 정밀도를 합산한 **Setup Quality Score**로 결정됩니다.
+  /* 카드 피드 영역 */
+  .feed-container { padding: 16px; max-width: 920px; margin: 0 auto; }
+  .section-title { font-size: 1rem; font-weight: 700; margin: 24px 0 12px; display: flex; justify-content: space-between; align-items: center; }
+  .s-table-panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .s-table-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--color-border); }
+  .s-table-title { font-weight: 700; color: #f3d675; }
+  .s-table-controls { display: flex; gap: 7px; align-items: center; }
+  .copy-btn { background: #d4af37; color: #0a0e14; border: 0; border-radius: 6px; padding: 7px 12px; font-weight: 800; cursor: pointer; }
+  .copy-btn:disabled { opacity: 0.45; cursor: default; }
+  .expand-btn { background: var(--color-surface-2); color: var(--color-text); border: 1px solid var(--color-border); border-radius: 6px; padding: 7px 12px; font-weight: 800; cursor: pointer; }
+  .s-table-content[hidden] { display: none; }
+  .copy-status { min-height: 18px; padding: 0 16px 10px; color: #8a94a6; font-size: 0.75rem; }
+  .table-scroll { overflow-x: auto; }
+  .s-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .s-table th, .s-table td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--color-border); }
+  .s-table th { color: #8a94a6; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .s-table td { font-size: 0.9rem; }
+  .s-table tbody tr:last-child td { border-bottom: 0; }
+  .s-table .score-cell { color: var(--color-primary); font-weight: 800; }
+  .s-table .ticker-cell { font-weight: 800; }
+  .status-pill { display: inline-flex; padding: 3px 7px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; }
+  .status-action { background: rgba(52, 211, 153, 0.15); color: var(--color-success); border: 1px solid rgba(52, 211, 153, 0.35); }
+  .status-setup { background: rgba(251, 191, 36, 0.12); color: var(--color-warning); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .empty-row { color: #8a94a6; text-align: center !important; padding: 20px !important; }
+  
+  .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  .card-header { padding: 16px; border-bottom: 1px solid var(--color-border); }
+  .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .ticker-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .ticker { font-size: 1.2rem; font-weight: 700; }
+  .price { font-size: 1.1rem; font-weight: 700; }
+  
+  .badge-S { background: linear-gradient(135deg, #d4af37, #f3e5ab); color: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+  .badge-A { background: #10b981; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+  .badge-B { background: #64748b; color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+  .tag-strat { font-size: 0.75rem; color: #8a94a6; border: 1px solid #232b39; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+  .score-badge { font-size: 0.85rem; font-weight: 800; color: var(--color-primary); }
+  
+  .overlap-text { font-size: 0.75rem; color: #a1a1aa; margin-top: 2px; }
+  .msg { font-size: 0.9rem; color: #a1a1aa; margin: 10px 0; line-height: 1.4; }
+  
+  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+  .metric-item { background: var(--color-surface-2); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid var(--color-border); }
+  .m-label { font-size: 0.7rem; color: #8a94a6; margin-bottom: 2px; }
+  .m-val { font-size: 0.85rem; font-weight: 700; }
+  .sl-red { color: var(--color-error); }
 
-## 주요 기능
+  .card-img-wrap { display: block; width: 100%; background: #fff; padding: 10px; border-bottom: 1px solid var(--color-border); }
+  .card-img-wrap img { width: 100%; display: block; filter: invert(0.9) hue-rotate(180deg); }
+  
+  .card-actions { padding: 12px; }
+  .btn-full { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; color: #fff; text-decoration: none; background: #720e9e; }
+</style>
+</head>
+<body>
 
-- S&P 500 + Nasdaq-100 통합 종목 검색
-- 중복 티커 자동 제거
-- SPY 대비 20거래일 상대강도 변화 측정
-- 20EMA, VCP, B&R, MTF 셋업 탐색
-- 한 종목에서 여러 셋업이 발견되면 모두 저장
-- 가장 높은 점수의 셋업을 대표 전략으로 선택
-- S/A/B 등급 및 전략별 세부 측정값 출력
-- 이전 셋업을 최대 2일간 보존하는 TTL 상태 관리
-- 엔진 버전이 다른 과거 상태 자동 제외
-- Setup → Action → Working/Failed 라이프사이클 자동 전환
+  <header class="topbar">
+    <div class="brand-group">
+      <div class="brand">🎯 4-Core 스캐너</div>
+      <div class="update-time" id="updateTimeText">데이터 로딩 중...</div>
+    </div>
+    <div class="top-actions">
+      <a href="about.html" class="manual-update-btn about-btn">스캐너 설명</a>
+      <a href="https://github.com/jkshin933/stock-swing-screener/actions/workflows/scan.yml" target="_blank" class="manual-update-btn" title="GitHub Actions에서 Run workflow를 누르세요">새 스캔 실행</a>
+    </div>
+  </header>
 
-## 설치
+  <div class="filter-container">
+    <div class="select-group">
+      <select class="mcap-select" id="mcapFilter">
+        <option value="ALL" selected>전체 시가총액</option> <!-- 기본값 해제 해제 -->
+        <option value="OVER10B">대형주 집중 ($10B 이상)</option>
+        <option value="MEGA">초대형주 ($200B 이상)</option>
+        <option value="MID">중소형주 ($10B 미만)</option>
+      </select>
+    </div>
+    <div class="pill-scroll">
+      <button class="pill-btn active" data-filter="ALL">전체</button>
+      <button class="pill-btn" data-filter="20EMA">📉 20EMA</button>
+      <button class="pill-btn" data-filter="VCP">🎯 VCP</button>
+      <button class="pill-btn" data-filter="B&R">🔄 B&R</button>
+      <button class="pill-btn" data-filter="MTF">🔥 MTF</button>
+    </div>
+  </div>
 
-Python 3.10 이상을 권장합니다.
+  <main class="feed-container">
+    <div class="section-title"><span style="color:#f3d675">🏆 S · A Grade List</span><span id="cnt-s">0</span></div>
+    <section class="s-table-panel" aria-labelledby="s-table-heading">
+      <div class="s-table-header">
+        <span class="s-table-title" id="s-table-heading">Top Setup Quality</span>
+        <div class="s-table-controls">
+          <button class="copy-btn" id="copySTable" type="button">Copy</button>
+          <button class="expand-btn" id="toggleSTable" type="button" aria-expanded="false" aria-controls="sTableContent">Expand</button>
+        </div>
+      </div>
+      <div class="s-table-content" id="sTableContent" hidden>
+        <div class="table-scroll">
+          <table class="s-table">
+            <thead><tr><th>Score</th><th>Ticker</th><th>Strategy</th><th>Grade</th><th>Status</th></tr></thead>
+            <tbody id="sTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="copy-status" id="copyStatus" role="status" aria-live="polite"></div>
+    </section>
 
-```bash
-pip install pandas yfinance lxml html5lib
-```
+    <div class="section-title"><span style="color:var(--color-success)">🟢 당장 매수 (Action)</span><span id="cnt-action">0</span></div>
+    <div id="feed-action"></div>
 
-## 실행
+    <div class="section-title" style="margin-top: 32px;"><span style="color:var(--color-warning)">🟡 구조 대기 (Setup)</span><span id="cnt-setup">0</span></div>
+    <div id="feed-setup"></div>
 
-```bash
-python screener.py
-```
+    <div class="section-title" style="margin-top: 32px;"><span style="color:#94a3b8">⚪ B급 Watch</span><span id="cnt-watch">0</span></div>
+    <div id="feed-watch"></div>
+  </main>
 
-실행 위치에 다음 파일이 생성되거나 갱신됩니다.
+<script>
+  let globalData = [];
+  let stratFilter = 'ALL';
 
-- `dashboard_data.json`: 대시보드와 외부 프로그램에서 사용할 검색 결과
-- `state.json`: 셋업 상태와 TTL 유지를 위한 내부 상태
+  function getSGradeRows() {
+    return globalData
+      .filter(item => ['S', 'A'].includes(item.grade) && ['action', 'setup'].includes(item.state))
+      .sort((a, b) => {
+        const stateOrder = { action: 0, setup: 1 };
+        const gradeOrder = { S: 0, A: 1 };
+        return stateOrder[a.state] - stateOrder[b.state]
+          || gradeOrder[a.grade] - gradeOrder[b.grade]
+          || (b.score || 0) - (a.score || 0)
+          || String(a.symbol).localeCompare(String(b.symbol));
+      });
+  }
 
-두 파일의 위치를 바꾸려면 `screener.py` 상단의 `STATE_FILE`, `DASHBOARD_FILE` 값을 수정하면 됩니다.
+  function renderSTable() {
+    const rows = getSGradeRows();
+    const body = document.getElementById('sTableBody');
+    const copyButton = document.getElementById('copySTable');
+    body.innerHTML = '';
+    document.getElementById('cnt-s').textContent = rows.length;
+    copyButton.disabled = rows.length === 0;
 
-## 공통 후보 조건
-
-아래 조건을 모두 만족해야 네 가지 전략 검사를 시작합니다.
-
-| 조건 | 기준 |
-|---|---:|
-| 주가 | $10 이상 |
-| 최근 50일 평균 거래대금 | $50M 이상 |
-| RS Rating | 70 이상 |
-| 최소 가격 데이터 | 230거래일 |
-
-평균 거래대금은 `종가 × 거래량`의 50일 이동평균입니다. RS Rating은 전체 검색 종목의 3개월·12개월 가중 수익률을 비교한 백분위입니다.
-
-## 전략 조건
-
-### 1. 20EMA Pullback
-
-상승 중인 20EMA 부근까지 조정받은 뒤 종가가 EMA 위를 지키는 종목을 찾습니다.
-
-- 현재가가 SMA50 위
-- EMA20이 5거래일 전보다 상승
-- 당일 저가가 EMA20 대비 -3%~+2%
-- 종가가 EMA20 이상
-- RVOL3 ≤ 1.00
-
-구조 점수는 당일 캔들의 종가 위치와 EMA 접촉 정밀도로 평가합니다.
-
-### 2. VCP
-
-변동성이 단계적으로 줄어들면서 최근 피벗 부근에 위치한 종목을 찾습니다.
-
-- `Price > SMA50 > SMA200`
-- 최근 변동성이 이전 구간 대비 두 단계 연속 8% 이상 감소
-- 최근 5일 가격 범위 ≤ 7.5%
-- 현재가가 직전 20일 피벗의 -10%~+2.5%
-- RVOL3 ≤ 0.80
-
-구조 점수는 5일 범위의 타이트함과 피벗 근접도로 평가합니다.
-
-### 3. Breakout & Retest (B&R)
-
-장기 저항을 거래량과 함께 돌파한 뒤 피벗을 다시 테스트하는 종목을 찾습니다.
-
-- 최근 3~30거래일 사이 직전 200일 고점 돌파
-- 돌파 전 종가가 피벗의 101% 이하
-- 돌파일 종가가 피벗의 101.5% 초과
-- 돌파일 거래량이 직전 50일 평균의 1.5배 이상
-- 돌파 뒤 피벗 대비 4% 이상 상승
-- 고점에서 현재가까지 3% 이상 조정
-- 당일 저가가 피벗의 -3%~+2%
-- 종가가 피벗의 99% 이상을 유지
-- 현재가가 SMA200 위
-- RVOL3 ≤ 0.65
-
-구조 점수는 당일 저가와 돌파 피벗 사이의 거리로 평가합니다.
-
-### 4. Momentum Tight Flag (MTF)
-
-강한 선행 상승 뒤 고점 부근에서 거래량이 줄고 가격 범위가 압축된 종목을 찾습니다.
-
-- **RS Rating > 80**
-- 최근 40거래일의 시간순 최대 상승률 ≥ 18%
-- `Price > EMA20 > SMA50`
-- 최근 10일 전체 가격 범위 ≤ 18%
-- 현재가가 최근 40일 고점에서 15% 이내
-- RVOL3 ≤ 1.10
-
-최대 상승률은 최근 40일의 각 시점까지 발생한 저점 이후 상승률을 계산하므로, 고점이 저점보다 먼저 나온 경우를 잘못된 상승으로 취급하지 않습니다.
-
-## 점수 체계
-
-각 셋업의 총점은 100점입니다. v2.5에서는 소수 지표만으로 95~100점에 도달하지 못하도록 만점 기준을 강화하고 구조점수를 여러 독립 요소로 분해했습니다.
-
-| 구성 요소 | 최대 점수 |
-|---|---:|
-| 3일 상대 거래량 감소 | 20 |
-| SPY 대비 20일 상대강도 개선 | 10 |
-| 전략별 구조와 정밀도 | 70 |
-| 합계 | 100 |
-
-점수는 구간 내에서 연속적으로 계산됩니다. RVOL3 만점 기준은 0.35, RS Line 개선 만점 기준은 SPY 대비 +6%로 강화했습니다. 각 결과의 `setup_meta → 전략 → score_components`에서 항목별 점수를 확인할 수 있습니다.
-
-MTF의 70점 구조점수는 다음처럼 나뉩니다.
-
-| MTF 구조 항목 | 최대 점수 |
-|---|---:|
-| 10일 Flag Tightness | 25 |
-| 40일 고점 근접도 | 15 |
-| 40일 선행 상승 강도 | 15 |
-| Price와 EMA20 간 적정 간격 | 8 |
-| EMA20과 SMA50 간 추세 간격 | 7 |
-
-B&R의 70점 구조점수는 다음처럼 나뉩니다.
-
-| B&R 구조 항목 | 최대 점수 |
-|---|---:|
-| Retest Precision | 20 |
-| Breakout Volume | 12 |
-| Breakout Close Quality | 10 |
-| Post-breakout Separation | 8 |
-| Pullback Quality | 8 |
-| Retest Candle Quality | 7 |
-| Breakout Age | 5 |
-
-## 등급
-
-| 등급 | Setup Quality Score | 의미 |
-|---|---:|---|
-| S | 85~100 | 최상위 셋업 |
-| A | 70~84 | 우수 셋업 |
-| B | 60~69 | Watch 후보 |
-| 제외 | 0~59 | 결과에 표시하지 않음 |
-
-**등급은 RS Rating으로 정하지 않습니다.** 예를 들어 RS 82인 종목도 셋업 점수가 88이면 S등급이며, RS 95인 종목도 셋업 점수가 65이면 B등급입니다.
-
-## 구조 대기와 당장 매수
-
-새로 발견된 패턴은 먼저 `setup`(구조 대기)으로 저장됩니다. S/A등급 셋업이 전략별 진입가격을 종가로 돌파하고 당일 거래량 확인 조건까지 만족하면 `action`(당장 매수)으로 자동 승격됩니다. B등급은 Watch 후보이므로 Action으로 승격하지 않습니다.
-
-| 전략 | Action 진입 트리거 | 당일 거래량 확인 | 구조 손절가 |
-|---|---|---:|---|
-| 20EMA | 셋업 캔들 고가 +0.2% | RVOL ≥ 0.90 | 셋업 저가와 EMA20 하단 중 낮은 값 아래 |
-| VCP | 피벗 +0.5% 종가 돌파 | RVOL ≥ 1.20 | 최근 5일 저가 아래 |
-| B&R | 리테스트 캔들 고가 +0.2% | RVOL ≥ 0.90 | 고정 피벗 -3.5% |
-| MTF | 직전 10일 고가 +0.5% 종가 돌파 | RVOL ≥ 1.20 | Flag 저가 또는 EMA20 구조 하단 |
-
-여기서 Action용 RVOL은 최근 3일 평균이 아니라 **당일 거래량 ÷ 직전 50일 평균 거래량**입니다. 돌파 당일의 실제 수급 확인에 사용합니다.
-
-상태 흐름은 다음과 같습니다.
-
-```text
-S/A Setup
-  ├─ 진입 트리거 + 거래량 확인 → Action
-  ├─ 구조 손절가 이탈         → Failed
-  └─ 패턴 소멸 후 2일 초과    → 제거
-
-Action
-  ├─ 2일 초과 또는 진입가 +5% 초과 → Working
-  └─ 구조 손절가 이탈               → Failed
-```
-
-Action은 진입 가능 구간을 의미하며 2일 동안 유지됩니다. 이미 진입가격보다 5% 넘게 상승했거나 2일이 지나면 추세 진행 상태인 `working`으로 바뀌어 당장 매수 목록에서 제외됩니다. `failed`는 3일간 내부 상태에 보존됩니다.
-
-## 출력 데이터 예시
-
-```json
-{
-  "state": "setup",
-  "symbol": "NVDA",
-  "strategy": "MTF",
-  "score": 88,
-  "grade": "S",
-  "setups": {
-    "MTF": 88,
-    "VCP": 74
-  },
-  "setup_meta": {
-    "MTF": {
-      "max_runup_40d_pct": 31.4,
-      "flag_range_10d_pct": 7.82,
-      "drawdown_from_40d_high_pct": 3.15,
-      "mtf_rs_threshold": 80
+    if (rows.length === 0) {
+      const row = body.insertRow();
+      const cell = row.insertCell();
+      cell.colSpan = 5;
+      cell.className = 'empty-row';
+      cell.textContent = '현재 S · A 등급 종목이 없습니다.';
+      return;
     }
-  },
-  "price": 182.35,
-  "rvol": 0.61,
-  "rs_rating": 93.2,
-  "mcap": 4450.0,
-    "engine_version": "2.5"
-}
-```
 
-실제 값은 실행 시점의 시장 데이터에 따라 달라집니다.
+    rows.forEach(item => {
+      const row = body.insertRow();
+      const score = row.insertCell();
+      const ticker = row.insertCell();
+      const strategy = row.insertCell();
+      const grade = row.insertCell();
+      const status = row.insertCell();
+      score.textContent = item.score ?? '';
+      ticker.textContent = item.symbol ?? '';
+      strategy.textContent = item.strategy ?? '';
+      const gradeBadge = document.createElement('span');
+      gradeBadge.className = `badge-${item.grade}`;
+      gradeBadge.textContent = item.grade ?? '';
+      grade.appendChild(gradeBadge);
+      const statusPill = document.createElement('span');
+      statusPill.className = `status-pill status-${item.state}`;
+      statusPill.textContent = item.state === 'action' ? 'ACTION' : 'SETUP';
+      status.appendChild(statusPill);
+      score.className = 'score-cell';
+      ticker.className = 'ticker-cell';
+    });
+  }
 
-## 상태 유지
+  async function copySTable() {
+    const rows = getSGradeRows();
+    if (!rows.length) return;
 
-- 오늘 셋업이 사라져도 이전 `setup` 상태를 최대 2일간 유지합니다.
-- `action`, `working`, `failed` 같은 기존 라이프사이클 상태도 정해진 규칙에 따라 보존합니다.
-- `engine_version`이 `2.5`가 아닌 과거 상태는 불러오지 않습니다.
-- `state.json`을 삭제하면 상태 이력 없이 새로 시작합니다.
+    const text = [
+      'Score\tTicker\tStrategy\tGrade\tStatus',
+      ...rows.map(item => `${item.score ?? ''}\t${item.symbol ?? ''}\t${item.strategy ?? ''}\t${item.grade ?? ''}\t${item.state === 'action' ? 'ACTION' : 'SETUP'}`)
+    ].join('\n');
 
-## 주의사항
+    const status = document.getElementById('copyStatus');
+    try {
+      await navigator.clipboard.writeText(text);
+      status.textContent = `${rows.length}개 S · A 등급 종목을 복사했습니다.`;
+    } catch (error) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+      status.textContent = `${rows.length}개 S · A 등급 종목을 복사했습니다.`;
+    }
+    window.setTimeout(() => { status.textContent = ''; }, 2500);
+  }
 
-- Wikipedia와 Yahoo Finance에서 데이터를 가져오므로 인터넷 연결이 필요합니다.
-- 데이터 누락, 티커 변경, 공급자 지연으로 일부 종목이 제외될 수 있습니다.
-- 시장 휴장일에는 마지막 거래일 데이터를 사용합니다.
-- 이 프로그램은 기술적 후보를 정렬하는 도구이며 매수·매도 추천이나 수익 보장을 제공하지 않습니다.
+  function toggleSTable() {
+    const content = document.getElementById('sTableContent');
+    const button = document.getElementById('toggleSTable');
+    const willExpand = content.hidden;
+    content.hidden = !willExpand;
+    button.textContent = willExpand ? 'Collapse' : 'Expand';
+    button.setAttribute('aria-expanded', String(willExpand));
+  }
 
-## 결과 로드와 새 스캔
+  function renderFeed() {
+    document.getElementById('feed-action').innerHTML = '';
+    document.getElementById('feed-setup').innerHTML = '';
+    document.getElementById('feed-watch').innerHTML = '';
+    const mcapFilter = document.getElementById('mcapFilter').value;
+    let counts = { action: 0, setup: 0, watch: 0 };
 
-결과 페이지는 열릴 때마다 캐시를 사용하지 않고 최신 `dashboard_data.json`을 자동으로 읽습니다. 별도의 결과 새로고침 버튼은 없습니다. 자동 스캔이 끝난 뒤 브라우저 페이지를 다시 열거나 일반 새로고침하면 새 결과가 표시됩니다.
+    globalData.filter(item => {
+      // 1. Working, Failed 제외 (Action, Setup만 표시)
+      if (item.state !== 'action' && item.state !== 'setup') return false;
+      
+      // 2. 60점 이상 S/A/B만 표시
+      if (!['S', 'A', 'B'].includes(item.grade)) return false;
 
-**새 스캔 실행**은 GitHub Actions의 `scan.yml`을 열어 `Run workflow`로 Python 스크리너를 실행하는 기능입니다. 저장소의 `.github/workflows/scan.yml`에 제공된 워크플로를 넣으면 수동 실행이 가능하고, 평일 `23:17 UTC`에 자동 실행됩니다. GitHub Actions의 정각 혼잡을 피하기 위해 17분에 예약했습니다.
+      // 3. 전략 및 시가총액 필터 적용
+      let passStrat = (stratFilter === 'ALL' || item.strategy === stratFilter);
+      let passMcap = true;
+      if(mcapFilter === 'OVER10B') passMcap = item.mcap >= 10;
+      else if(mcapFilter === 'MEGA') passMcap = item.mcap >= 200;
+      else if(mcapFilter === 'MID') passMcap = item.mcap < 10;
+      
+      return passStrat && passMcap;
+    }).sort((a, b) => {
+      // Setup 및 Action 내부 정렬: 점수(Score) 내림차순 최우선
+      if (a.state === 'setup') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
+      if (a.state === 'action') return (b.score || 0) - (a.score || 0) || (b.rs_rating || 0) - (a.rs_rating || 0);
+      return 0;
+    }).forEach(item => {
+      const displayState = item.grade === 'B' ? 'watch' : item.state;
+      const container = document.getElementById(`feed-${displayState}`);
+      if(container) { 
+        container.insertAdjacentHTML('beforeend', createFeedCard(item)); 
+        counts[displayState]++; 
+      }
+    });
 
-카드 이미지와 `Open Finviz Chart` 버튼은 Finviz 종목 페이지로 연결됩니다. 가격 데이터 다운로드는 Yahoo Finance를 계속 사용하지만 무거운 Yahoo 대화형 차트 페이지는 열지 않습니다.
+    document.getElementById('cnt-action').textContent = counts.action;
+    document.getElementById('cnt-setup').textContent = counts.setup;
+    document.getElementById('cnt-watch').textContent = counts.watch;
+  }
 
-결과 페이지 상단에는 모든 S급·A급 종목을 `Score / Ticker / Strategy / Grade / Status` 순서로 보여주는 표가 있습니다. `ACTION`과 `SETUP`을 모두 포함하고 Action을 먼저 배치합니다. 표는 처음에는 접혀 있으며 `Expand` 버튼으로 펼치거나 `Collapse` 버튼으로 다시 접을 수 있습니다. Copy 버튼은 표가 접혀 있어도 사용할 수 있고, 같은 다섯 개 열을 탭 구분 텍스트로 복사합니다.
+  function createFeedCard(item) {
+    const badgeHtml = `<span class="badge-${item.grade}">${item.grade}급</span>`;
+    const mcapText = item.mcap >= 1000 ? `$${(item.mcap/1000).toFixed(1)}T` : `$${item.mcap.toFixed(1)}B`;
+    const scoreHtml = item.score ? `<span class="score-badge">[${item.score}점]</span>` : '';
 
-## 파일
+    // 다중 셋업(Overlap) 렌더링
+    let overlapHtml = '';
+    if (item.setups && Object.keys(item.setups).length > 1) {
+      let otherSetups = [];
+      for (const [strat, score] of Object.entries(item.setups)) {
+        if (strat !== item.strategy) otherSetups.push(`${strat} ${score}`);
+      }
+      if(otherSetups.length > 0) {
+        overlapHtml = `<div class="overlap-text">+ Also: ${otherSetups.join(', ')}</div>`;
+      }
+    }
 
-- `screener.py`: 스크리닝 엔진
-- `README.md`: 설치 및 알고리즘 설명
-- `index.html`: 접을 수 있는 S·A급 복사 표, S/A 결과와 B Watch를 표시하는 대시보드
-- `about.html`: 스캐너 목적, 네 가지 전략과 등급·상태 설명 페이지
-- `scan.yml`: `.github/workflows/scan.yml`에 배치할 GitHub Actions 워크플로
-- `state.json`: 실행 후 생성되는 상태 파일
-- `dashboard_data.json`: 실행 후 생성되는 결과 파일
+    let slHtml = item.state === 'action' ? `<div class="metric-item"><div class="m-label">구조손절가</div><div class="m-val sl-red">$${item.sl}</div></div>` : '';
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-top-row">
+            <div class="ticker-wrap">
+              ${badgeHtml}
+              <span class="ticker">${item.symbol}</span>
+              <span class="tag-strat">${item.strategy}</span>
+              ${scoreHtml}
+            </div>
+            <span class="price">$${item.price.toFixed(2)}</span>
+          </div>
+          ${overlapHtml}
+          <div class="msg">${item.msg}</div>
+          <div class="metrics-grid">
+            <div class="metric-item"><div class="m-label">RS 점수</div><div class="m-val">${item.rs_rating}</div></div>
+            <div class="metric-item"><div class="m-label">상대거래량</div><div class="m-val">${item.rvol}</div></div>
+            <div class="metric-item"><div class="m-label">시가총액</div><div class="m-val">${mcapText}</div></div>
+            ${slHtml}
+          </div>
+        </div>
+        <a class="card-img-wrap" href="https://finviz.com/quote.ashx?t=${item.symbol}&p=d" target="_blank" rel="noopener noreferrer" aria-label="Open ${item.symbol} on Finviz">
+          <img src="https://charts2.finviz.com/chart.ashx?t=${item.symbol}" alt="chart">
+        </a>
+        <div class="card-actions">
+          <a href="https://finviz.com/quote.ashx?t=${item.symbol}&p=d" target="_blank" rel="noopener noreferrer" class="btn-full">Open Finviz Chart</a>
+        </div>
+      </div>
+    `;
+  }
+
+  // 필터 버튼 이벤트
+  document.querySelectorAll('.pill-btn').forEach(btn => btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    stratFilter = e.target.dataset.filter;
+    renderFeed();
+  }));
+
+  // 시가총액 드롭다운 이벤트
+  document.getElementById('mcapFilter').addEventListener('change', renderFeed);
+  document.getElementById('copySTable').addEventListener('click', copySTable);
+  document.getElementById('toggleSTable').addEventListener('click', toggleSTable);
+
+  async function loadResults() {
+    const label = document.getElementById('updateTimeText');
+    label.textContent = '결과 불러오는 중...';
+
+    try {
+      const response = await fetch(`dashboard_data.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const lastModified = response.headers.get('Last-Modified');
+      const data = await response.json();
+      globalData = Array.isArray(data) ? data : [];
+
+      const scanTimestamp = globalData.find(item => item.scan_ts_utc)?.scan_ts_utc;
+      const updateDate = new Date(scanTimestamp || lastModified || Date.now());
+      label.textContent = updateDate.toLocaleString('ko-KR', {
+        timeZone: 'America/New_York', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      }) + ' ET 스캔';
+      renderSTable();
+      renderFeed();
+    } catch (error) {
+      label.textContent = '데이터 오류';
+      console.error(error);
+    }
+  }
+
+  loadResults();
+</script>
+</body>
+</html>
