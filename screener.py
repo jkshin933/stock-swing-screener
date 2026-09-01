@@ -7,7 +7,7 @@ import yfinance as yf
 
 STATE_FILE = "state.json"
 DASHBOARD_FILE = "dashboard_data.json"
-ENGINE_VERSION = "2.4"
+ENGINE_VERSION = "2.5"
 TODAY_DATE = datetime.now(timezone.utc)
 TODAY_STR = TODAY_DATE.strftime("%Y-%m-%d")
 SCAN_TS_UTC = TODAY_DATE.isoformat(timespec="seconds")
@@ -56,6 +56,17 @@ def score_high(value, worst, best, max_points):
         return float(max_points)
     return float(max_points) * (value - worst) / (best - worst)
 
+
+def score_band(value, ideal_low, ideal_high, worst_low, worst_high, max_points):
+    """Return full points inside an ideal band and taper on both sides."""
+    if pd.isna(value) or value <= worst_low or value >= worst_high:
+        return 0.0
+    if ideal_low <= value <= ideal_high:
+        return float(max_points)
+    if value < ideal_low:
+        return float(max_points) * (value - worst_low) / (ideal_low - worst_low)
+    return float(max_points) * (worst_high - value) / (worst_high - ideal_high)
+
 def calculate_continuous_score(rvol3, rs_change_20d, setup_type, **kwargs):
     """Calculate a 0-100 setup-quality score.
 
@@ -64,36 +75,59 @@ def calculate_continuous_score(rvol3, rs_change_20d, setup_type, **kwargs):
     strong, realistic candidate can reach S grade without requiring every
     component to be mathematically perfect.
     """
-    score = 0
+    parts = {}
 
-    # 1. Volume Contraction Score (Max 25)
+    # Common quality: 30 points. Perfect common scores now require genuinely
+    # exceptional dry-up and RS-line improvement.
     rvol_ceiling = {
         "20EMA": 1.00,
         "VCP": 0.80,
         "B&R": 0.65,
         "MTF": 1.10,
     }[setup_type]
-    score += score_low(rvol3, best=0.55, worst=rvol_ceiling, max_points=25)
+    parts["volume_dry_up"] = score_low(
+        rvol3, best=0.35, worst=rvol_ceiling, max_points=20
+    )
+    parts["rs_line_improvement"] = score_high(
+        rs_change_20d, worst=0.00, best=0.06, max_points=10
+    )
 
-    # 2. RS Line Improvement Score (Max 15)
-    score += score_high(rs_change_20d, worst=-0.03, best=0.04, max_points=15)
-
-    # 3. Structure & Precision Score (Max 60)
+    # Strategy structure: 70 points.
     if setup_type == "20EMA":
         close_loc = kwargs.get('close_loc', 0.5)
         ema_dist = kwargs.get('ema_dist', 0.01)
-        score += score_high(close_loc, worst=0.30, best=0.75, max_points=30)
-        score += score_low(abs(ema_dist), best=0.005, worst=0.03, max_points=30)
+        ema_slope = kwargs.get('ema_slope_5d', 0.0)
+        sma50_gap = kwargs.get('sma50_gap', 0.0)
+        parts["candle_recovery"] = score_high(close_loc, 0.30, 0.80, 25)
+        parts["ema_touch_precision"] = score_low(abs(ema_dist), 0.003, 0.03, 20)
+        parts["ema20_slope"] = score_high(ema_slope, 0.00, 0.03, 15)
+        parts["trend_extension"] = score_band(sma50_gap, 0.02, 0.10, 0.00, 0.25, 10)
         
     elif setup_type == "VCP":
         range_5d = kwargs.get('range_5d', 0.05)
         pivot_dist = kwargs.get('pivot_dist', 0.05)
-        score += score_low(range_5d, best=0.035, worst=0.075, max_points=35)
-        score += score_low(pivot_dist, best=0.02, worst=0.10, max_points=25)
+        compression_ratio = kwargs.get('compression_ratio', 0.85)
+        trend_gap = kwargs.get('trend_gap', 0.0)
+        parts["range_tightness"] = score_low(range_5d, 0.025, 0.075, 25)
+        parts["pivot_proximity"] = score_low(pivot_dist, 0.015, 0.10, 20)
+        parts["volatility_compression"] = score_low(compression_ratio, 0.50, 0.85, 15)
+        parts["trend_alignment"] = score_high(trend_gap, 0.00, 0.08, 10)
         
     elif setup_type == "B&R":
         retest_dist = kwargs.get('retest_dist', 0.02)
-        score += score_low(retest_dist, best=0.008, worst=0.04, max_points=60)
+        breakout_rvol = kwargs.get('breakout_rvol', 1.5)
+        breakout_close_pct = kwargs.get('breakout_close_pct', 0.015)
+        separation_pct = kwargs.get('separation_pct', 0.04)
+        pullback_pct = kwargs.get('pullback_pct', 0.03)
+        retest_close_loc = kwargs.get('retest_close_loc', 0.30)
+        breakout_age = kwargs.get('breakout_age', 30)
+        parts["retest_precision"] = score_low(retest_dist, 0.005, 0.04, 20)
+        parts["breakout_volume"] = score_high(breakout_rvol, 1.50, 2.50, 12)
+        parts["breakout_close"] = score_high(breakout_close_pct, 0.015, 0.05, 10)
+        parts["post_breakout_separation"] = score_high(separation_pct, 0.04, 0.12, 8)
+        parts["pullback_quality"] = score_band(pullback_pct, 0.05, 0.12, 0.03, 0.25, 8)
+        parts["retest_candle"] = score_high(retest_close_loc, 0.30, 0.80, 7)
+        parts["breakout_age"] = score_band(float(breakout_age), 5.0, 20.0, 2.0, 31.0, 5)
         
     elif setup_type == "MTF":
         flag_range = kwargs.get('flag_range', 0.08)
@@ -102,15 +136,18 @@ def calculate_continuous_score(rvol3, rs_change_20d, setup_type, **kwargs):
         ema20_gap = kwargs.get('ema20_gap', 0.0)
         ema50_gap = kwargs.get('ema50_gap', 0.0)
 
-        # MTF structure is multi-dimensional: tightness alone must not decide
-        # the entire 60-point structure score.
-        score += score_low(flag_range, best=0.06, worst=0.18, max_points=25)
-        score += score_low(drawdown, best=0.04, worst=0.15, max_points=15)
-        score += score_high(max_runup, worst=0.18, best=0.35, max_points=10)
-        score += score_high(ema20_gap, worst=0.00, best=0.04, max_points=5)
-        score += score_high(ema50_gap, worst=0.00, best=0.06, max_points=5)
-        
-    return min(100, int(round(score)))
+        parts["flag_tightness"] = score_low(flag_range, 0.05, 0.18, 25)
+        parts["high_proximity"] = score_low(drawdown, 0.03, 0.15, 15)
+        parts["runup_strength"] = score_high(max_runup, 0.18, 0.40, 15)
+        parts["price_ema_extension"] = score_band(ema20_gap, 0.02, 0.08, 0.00, 0.18, 8)
+        parts["ema_trend_spread"] = score_high(ema50_gap, 0.00, 0.08, 7)
+
+    total = min(100, int(round(sum(parts.values()))))
+    breakdown = {name: round(points, 1) for name, points in parts.items()}
+    breakdown["total"] = total
+    if kwargs.get("return_breakdown", False):
+        return total, breakdown
+    return total
 
 
 def grade_from_score(score):
@@ -207,6 +244,8 @@ def run_lifecycle_screener():
             # [Gate 2-1] 20EMA Pullback (Ceiling RVOL <= 0.80)
             # =================================================================
             ema20_rising = c["EMA20"] > df["EMA20"].shift(5).iloc[-1]
+            ema20_slope_5d = float(c["EMA20"] / df["EMA20"].shift(5).iloc[-1] - 1.0)
+            sma50_gap = float(price / c["SMA50"] - 1.0)
             ema_dist_low = (c["Low"] / c["EMA20"]) - 1
             
             is_touching = -0.03 <= ema_dist_low <= 0.02
@@ -215,12 +254,23 @@ def run_lifecycle_screener():
             close_loc = (c["Close"] - c["Low"]) / range_today
             
             if (price > c["SMA50"]) and ema20_rising and is_touching and is_holding and (rvol3 <= 1.00):
-                score = calculate_continuous_score(rvol3, rs_change_20d, "20EMA", close_loc=close_loc, ema_dist=ema_dist_low)
+                score, score_parts = calculate_continuous_score(
+                    rvol3,
+                    rs_change_20d,
+                    "20EMA",
+                    close_loc=close_loc,
+                    ema_dist=ema_dist_low,
+                    ema_slope_5d=ema20_slope_5d,
+                    sma50_gap=sma50_gap,
+                    return_breakdown=True,
+                )
                 setups["20EMA"] = score
                 setup_meta["20EMA"] = {
                     "ema20": round(float(c["EMA20"]), 2),
                     "ema_low_distance_pct": round(float(ema_dist_low) * 100, 2),
                     "close_location_pct": round(float(close_loc) * 100, 1),
+                    "ema20_slope_5d_pct": round(ema20_slope_5d * 100, 2),
+                    "score_components": score_parts,
                 }
                 trade_levels["20EMA"] = {
                     "entry_trigger": float(c["High"]) * 1.002,
@@ -252,12 +302,25 @@ def run_lifecycle_screener():
             near_pivot = (price >= vcp_pivot * 0.90) and (price <= vcp_pivot * 1.025)
 
             if (price > c["SMA50"] > c["SMA200"]) and is_contracting and (range_5d <= 0.075) and near_pivot and (rvol3 <= 0.80):
-                score = calculate_continuous_score(rvol3, rs_change_20d, "VCP", range_5d=range_5d, pivot_dist=pivot_dist)
+                compression_ratio = float(vol_new / vol_old) if vol_old > 0 else 1.0
+                trend_gap = float(c["SMA50"] / c["SMA200"] - 1.0)
+                score, score_parts = calculate_continuous_score(
+                    rvol3,
+                    rs_change_20d,
+                    "VCP",
+                    range_5d=range_5d,
+                    pivot_dist=pivot_dist,
+                    compression_ratio=compression_ratio,
+                    trend_gap=trend_gap,
+                    return_breakdown=True,
+                )
                 setups["VCP"] = score
                 setup_meta["VCP"] = {
                     "range_5d_pct": round(float(range_5d) * 100, 2),
                     "pivot": round(float(vcp_pivot), 2),
                     "pivot_distance_pct": round(float(pivot_dist) * 100, 2),
+                    "compression_ratio": round(compression_ratio, 3),
+                    "score_components": score_parts,
                 }
                 trade_levels["VCP"] = {
                     "entry_trigger": float(vcp_pivot) * 1.005,
@@ -281,7 +344,12 @@ def run_lifecycle_screener():
                 day_c = df["Close"].iloc[idx]
                 
                 if (prev_c <= pivot * 1.01) and (day_c > pivot * 1.015):
-                    if df["Volume"].iloc[idx] >= prior_vol50.iloc[idx] * 1.5:
+                    breakout_vol_base = float(prior_vol50.iloc[idx])
+                    breakout_rvol = (
+                        float(df["Volume"].iloc[idx]) / breakout_vol_base
+                        if breakout_vol_base > 0 else 0.0
+                    )
+                    if breakout_rvol >= 1.5:
                         peak_since = df["High"].iloc[idx+1:].max()
                         if peak_since >= pivot * 1.04:
                             pullback_from_peak = (peak_since - price) / peak_since
@@ -292,8 +360,33 @@ def run_lifecycle_screener():
                                 holding_pivot = c["Close"] >= pivot * 0.99
                                 
                                 if (price > c["SMA200"]) and touching_pivot and holding_pivot and (rvol3 <= 0.65):
-                                    score = calculate_continuous_score(rvol3, rs_change_20d, "B&R", retest_dist=low_retest_dist)
-                                    br_candidates.append({"score": score, "pivot": pivot, "days_ago": i})
+                                    breakout_close_pct = float(day_c / pivot - 1.0)
+                                    separation_pct = float(peak_since / pivot - 1.0)
+                                    score, score_parts = calculate_continuous_score(
+                                        rvol3,
+                                        rs_change_20d,
+                                        "B&R",
+                                        retest_dist=low_retest_dist,
+                                        breakout_rvol=breakout_rvol,
+                                        breakout_close_pct=breakout_close_pct,
+                                        separation_pct=separation_pct,
+                                        pullback_pct=float(pullback_from_peak),
+                                        retest_close_loc=float(close_loc),
+                                        breakout_age=i,
+                                        return_breakdown=True,
+                                    )
+                                    br_candidates.append({
+                                        "score": score,
+                                        "score_components": score_parts,
+                                        "pivot": float(pivot),
+                                        "days_ago": i,
+                                        "retest_dist": float(low_retest_dist),
+                                        "breakout_rvol": breakout_rvol,
+                                        "breakout_close_pct": breakout_close_pct,
+                                        "separation_pct": separation_pct,
+                                        "pullback_pct": float(pullback_from_peak),
+                                        "retest_close_loc": float(close_loc),
+                                    })
                                     break
             if br_candidates:
                 best_br = max(br_candidates, key=lambda x: x["score"])
@@ -301,6 +394,13 @@ def run_lifecycle_screener():
                 setup_meta["B&R"] = {
                     "pivot": round(float(best_br["pivot"]), 2),
                     "breakout_days_ago": int(best_br["days_ago"]),
+                    "retest_distance_pct": round(best_br["retest_dist"] * 100, 2),
+                    "breakout_rvol": round(best_br["breakout_rvol"], 2),
+                    "breakout_close_pct": round(best_br["breakout_close_pct"] * 100, 2),
+                    "post_breakout_separation_pct": round(best_br["separation_pct"] * 100, 2),
+                    "pullback_from_peak_pct": round(best_br["pullback_pct"] * 100, 2),
+                    "retest_close_location_pct": round(best_br["retest_close_loc"] * 100, 1),
+                    "score_components": best_br["score_components"],
                 }
                 trade_levels["B&R"] = {
                     "entry_trigger": float(c["High"]) * 1.002,
@@ -335,7 +435,7 @@ def run_lifecycle_screener():
                 )
 
                 if is_mtf_eligible:
-                    score = calculate_continuous_score(
+                    score, score_parts = calculate_continuous_score(
                         rvol3,
                         rs_change_20d,
                         "MTF",
@@ -344,6 +444,7 @@ def run_lifecycle_screener():
                         max_runup=max_runup,
                         ema20_gap=ema20_gap,
                         ema50_gap=ema50_gap,
+                        return_breakdown=True,
                     )
                     setups["MTF"] = score
                     setup_meta["MTF"] = {
@@ -351,6 +452,7 @@ def run_lifecycle_screener():
                         "flag_range_10d_pct": round(flag_range * 100, 2),
                         "drawdown_from_40d_high_pct": round(drawdown_from_high * 100, 2),
                         "mtf_rs_threshold": 80,
+                        "score_components": score_parts,
                     }
                     mtf_pivot = float(df["High"].shift(1).tail(10).max())
                     trade_levels["MTF"] = {
