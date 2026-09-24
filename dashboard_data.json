@@ -36,8 +36,8 @@
         "price": 83.37999725341797,
         "rvol": 1.47,
         "rs_rating": 79.6,
-        "mcap": 39.68,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "mcap": 39.59,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-11",
         "triggered_price": 86.55,
         "daily_rvol": 1.44
@@ -78,9 +78,9 @@
         "symbol": "BBY",
         "price": 93.22000122070312,
         "rvol": 1.02,
-        "rs_rating": 89.2,
-        "mcap": 19.89,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 88.6,
+        "mcap": 19.04,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-16",
         "triggered_price": 94.83,
         "daily_rvol": 1.32
@@ -138,9 +138,9 @@
         "symbol": "CF",
         "price": 123.2699966430664,
         "rvol": 1.25,
-        "rs_rating": 88.2,
-        "mcap": 18.25,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 87.7,
+        "mcap": 18.26,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "failed_date": "2026-09-22"
     },
     {
@@ -197,8 +197,8 @@
         "price": 236.4199981689453,
         "rvol": 1.14,
         "rs_rating": 92.5,
-        "mcap": 191.99,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "mcap": 195.53,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "failed_date": "2026-09-22"
     },
     {
@@ -237,12 +237,53 @@
         "symbol": "FTNT",
         "price": 175.22999572753906,
         "rvol": 1.44,
-        "rs_rating": 94.6,
-        "mcap": 127.86,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 94.8,
+        "mcap": 131.14,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-19",
         "triggered_price": 172.58,
         "daily_rvol": 1.15
+    },
+    {
+        "state": "setup",
+        "strategy": "MTF",
+        "score": 62,
+        "grade": "B",
+        "setups": {
+            "MTF": 62
+        },
+        "setup_meta": {
+            "MTF": {
+                "max_runup_40d_pct": 39.7,
+                "flag_range_10d_pct": 14.06,
+                "drawdown_from_40d_high_pct": 4.43,
+                "mtf_rs_threshold": 80,
+                "score_components": {
+                    "volume_dry_up": 1.8,
+                    "rs_line_improvement": 10.0,
+                    "flag_tightness": 7.6,
+                    "high_proximity": 13.2,
+                    "runup_strength": 14.8,
+                    "price_ema_extension": 8.0,
+                    "ema_trend_spread": 6.7,
+                    "total": 62
+                }
+            }
+        },
+        "msg": "[MTF] 셋업 구조 형성",
+        "last_seen": "2026-09-24",
+        "signal_date": "2026-09-22",
+        "entry_trigger": 64.18,
+        "stop_loss": 55.24,
+        "sl": 55.24,
+        "action_rvol_min": 1.2,
+        "engine_version": "2.5",
+        "symbol": "HPE",
+        "price": 61.029998779296875,
+        "rvol": 1.03,
+        "rs_rating": 96.3,
+        "mcap": 82.74,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "working",
@@ -281,9 +322,9 @@
         "symbol": "IQV",
         "price": 269.8800048828125,
         "rvol": 2.07,
-        "rs_rating": 95.2,
-        "mcap": 44.46,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 95.3,
+        "mcap": 44.09,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-05",
         "triggered_price": 271.62,
         "daily_rvol": 1.46
@@ -324,9 +365,9 @@
         "symbol": "JNJ",
         "price": 269.4700012207031,
         "rvol": 1.29,
-        "rs_rating": 85.9,
-        "mcap": 648.72,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 85.7,
+        "mcap": 648.67,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-04",
         "triggered_price": 275.21,
         "daily_rvol": 1.03
@@ -382,11 +423,11 @@
         "action_rvol_min": 1.2,
         "engine_version": "2.5",
         "symbol": "MSFT",
-        "price": 501.6099853515625,
-        "rvol": 0.97,
-        "rs_rating": 82.5,
-        "mcap": 3697.92,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00"
+        "price": 498.0,
+        "rvol": 1.02,
+        "rs_rating": 84.0,
+        "mcap": 3717.15,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "setup",
@@ -423,125 +464,125 @@
         "action_rvol_min": 1.2,
         "engine_version": "2.5",
         "symbol": "MU",
-        "price": 1043.9599609375,
-        "rvol": 0.83,
+        "price": 1096.1600341796875,
+        "rvol": 0.91,
         "rs_rating": 98.4,
-        "mcap": 1238.0,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00"
+        "mcap": 1210.57,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "setup",
         "strategy": "MTF",
-        "score": 71,
-        "grade": "A",
+        "score": 62,
+        "grade": "B",
         "setups": {
-            "20EMA": 64,
-            "MTF": 71
+            "20EMA": 52,
+            "VCP": 44,
+            "MTF": 62
         },
         "setup_meta": {
             "20EMA": {
-                "ema20": 135.25,
-                "ema_low_distance_pct": 0.27,
-                "close_location_pct": 45.4,
-                "ema20_slope_5d_pct": 1.55,
+                "ema20": 135.42,
+                "ema_low_distance_pct": -0.14,
+                "close_location_pct": 25.8,
+                "ema20_slope_5d_pct": 1.04,
                 "score_components": {
-                    "volume_dry_up": 10.1,
-                    "rs_line_improvement": 9.7,
-                    "candle_recovery": 7.7,
+                    "volume_dry_up": 8.6,
+                    "rs_line_improvement": 8.9,
+                    "candle_recovery": 0.0,
                     "ema_touch_precision": 20.0,
-                    "ema20_slope": 7.7,
-                    "trend_extension": 8.9,
-                    "total": 64
+                    "ema20_slope": 5.2,
+                    "trend_extension": 9.5,
+                    "total": 52
+                }
+            },
+            "VCP": {
+                "range_5d_pct": 5.2,
+                "pivot": 149.6,
+                "pivot_distance_pct": 8.42,
+                "compression_ratio": 0.628,
+                "score_components": {
+                    "volume_dry_up": 3.6,
+                    "rs_line_improvement": 8.9,
+                    "range_tightness": 11.5,
+                    "pivot_proximity": 3.7,
+                    "volatility_compression": 9.5,
+                    "trend_alignment": 7.1,
+                    "total": 44
                 }
             },
             "MTF": {
-                "max_runup_40d_pct": 40.2,
+                "max_runup_40d_pct": 34.5,
                 "flag_range_10d_pct": 11.64,
-                "drawdown_from_40d_high_pct": 7.97,
+                "drawdown_from_40d_high_pct": 8.42,
                 "mtf_rs_threshold": 80,
                 "score_components": {
-                    "volume_dry_up": 11.5,
-                    "rs_line_improvement": 9.7,
+                    "volume_dry_up": 10.2,
+                    "rs_line_improvement": 8.9,
                     "flag_tightness": 12.2,
-                    "high_proximity": 8.8,
-                    "runup_strength": 15.0,
-                    "price_ema_extension": 7.2,
+                    "high_proximity": 8.2,
+                    "runup_strength": 11.2,
+                    "price_ema_extension": 4.7,
                     "ema_trend_spread": 7.0,
-                    "total": 71
+                    "total": 62
                 }
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-09-23",
-        "signal_date": "2026-09-21",
+        "last_seen": "2026-09-24",
+        "signal_date": "2026-09-22",
         "entry_trigger": 148.31,
-        "stop_loss": 131.19,
-        "sl": 131.19,
+        "stop_loss": 131.35,
+        "sl": 131.35,
         "action_rvol_min": 1.2,
         "engine_version": "2.5",
         "symbol": "NOW",
-        "price": 137.67999267578125,
-        "rvol": 0.67,
-        "rs_rating": 80.7,
-        "mcap": 141.64,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00"
+        "price": 137.0,
+        "rvol": 0.72,
+        "rs_rating": 82.9,
+        "mcap": 145.55,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "setup",
         "strategy": "MTF",
-        "score": 69,
-        "grade": "B",
+        "score": 73,
+        "grade": "A",
         "setups": {
-            "20EMA": 55,
-            "MTF": 69
+            "MTF": 73
         },
         "setup_meta": {
-            "20EMA": {
-                "ema20": 173.65,
-                "ema_low_distance_pct": 1.79,
-                "close_location_pct": 95.6,
-                "ema20_slope_5d_pct": 1.37,
-                "score_components": {
-                    "volume_dry_up": 6.9,
-                    "rs_line_improvement": 0.8,
-                    "candle_recovery": 25.0,
-                    "ema_touch_precision": 9.0,
-                    "ema20_slope": 6.9,
-                    "trend_extension": 6.8,
-                    "total": 55
-                }
-            },
             "MTF": {
                 "max_runup_40d_pct": 52.4,
-                "flag_range_10d_pct": 10.27,
-                "drawdown_from_40d_high_pct": 2.8,
+                "flag_range_10d_pct": 11.31,
+                "drawdown_from_40d_high_pct": 1.79,
                 "mtf_rs_threshold": 80,
                 "score_components": {
-                    "volume_dry_up": 8.7,
-                    "rs_line_improvement": 0.8,
-                    "flag_tightness": 14.9,
+                    "volume_dry_up": 8.9,
+                    "rs_line_improvement": 5.9,
+                    "flag_tightness": 12.9,
                     "high_proximity": 15.0,
                     "runup_strength": 15.0,
                     "price_ema_extension": 8.0,
                     "ema_trend_spread": 7.0,
-                    "total": 69
+                    "total": 73
                 }
             }
         },
         "msg": "[MTF] 셋업 구조 형성",
-        "last_seen": "2026-09-23",
-        "signal_date": "2026-09-21",
-        "entry_trigger": 183.1,
-        "stop_loss": 168.44,
-        "sl": 168.44,
+        "last_seen": "2026-09-24",
+        "signal_date": "2026-09-22",
+        "entry_trigger": 184.3,
+        "stop_loss": 169.49,
+        "sl": 169.49,
         "action_rvol_min": 1.2,
         "engine_version": "2.5",
         "symbol": "PLTR",
-        "price": 183.08999633789062,
+        "price": 184.99000549316406,
         "rvol": 0.77,
-        "rs_rating": 93.2,
-        "mcap": 444.54,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00"
+        "rs_rating": 94.0,
+        "mcap": 460.88,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "working",
@@ -596,9 +637,9 @@
         "symbol": "TMO",
         "price": 658.760009765625,
         "rvol": 1.77,
-        "rs_rating": 92.1,
-        "mcap": 243.49,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 91.9,
+        "mcap": 245.99,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-17",
         "triggered_price": 648.43,
         "daily_rvol": 1.5
@@ -644,8 +685,8 @@
         "price": 393.2699890136719,
         "rvol": 1.88,
         "rs_rating": 98.0,
-        "mcap": 108.59,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00"
+        "mcap": 108.21,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00"
     },
     {
         "state": "action",
@@ -683,9 +724,9 @@
         "symbol": "VRSN",
         "price": 308.17999267578125,
         "rvol": 1.47,
-        "rs_rating": 82.7,
-        "mcap": 27.07,
-        "scan_ts_utc": "2026-09-23T01:29:59+00:00",
+        "rs_rating": 82.3,
+        "mcap": 26.51,
+        "scan_ts_utc": "2026-09-24T01:23:13+00:00",
         "action_date": "2026-09-22",
         "triggered_price": 308.18,
         "daily_rvol": 1.76
